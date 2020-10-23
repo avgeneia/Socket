@@ -1,0 +1,43 @@
+package com.mhms.sqlite.models;
+
+
+
+public class UserLoginModel {
+
+	private String USER_ID;
+	private String PASSWORD;
+	private String USER_NM;
+	private String AUTH_ID;
+	private String ADDRESS_GROUP;
+	
+	public String getUSER_ID() {
+		return USER_ID;
+	}
+	public void setUSER_ID(String uSER_ID) {
+		USER_ID = uSER_ID;
+	}
+	public String getPASSWORD() {
+		return PASSWORD;
+	}
+	public void setPASSWORD(String pASSWORD) {
+		PASSWORD = pASSWORD;
+	}
+	public String getUSER_NM() {
+		return USER_NM;
+	}
+	public void setUSER_NM(String uSER_NM) {
+		USER_NM = uSER_NM;
+	}
+	public String getAUTH_ID() {
+		return AUTH_ID;
+	}
+	public void setAUTH_ID(String aUTH_ID) {
+		AUTH_ID = aUTH_ID;
+	}
+	public String getADDRESS_GROUP() {
+		return ADDRESS_GROUP;
+	}
+	public void setADDRESS_GROUP(String aDDRESS_GROUP) {
+		ADDRESS_GROUP = aDDRESS_GROUP;
+	}
+}
