@@ -1,7 +1,5 @@
 package com.mhms.sqlite.config;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,29 +19,34 @@ public class DBInitializeConfig {
 	@PostConstruct
 	public void initialize(){
 		
-		InetAddress local;
-		
 		try {
 			
 			Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement();
 			
 			/*USER 테이블 확인 및 생성, ADMIN 계정 주입*/
-			/*
-			 * statement.execute("DROP TABLE IF EXISTS TB_USER");
-			 * 
-			 * statement.executeUpdate( "CREATE TABLE TB_USER (" +
-			 * "UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-			 * "USER_ID TEXT NOT NULL, " + "USER_PW TEXT NOT NULL, " +
-			 * "ISDEL INTEGER DEFAULT 0 NOT NULL)" );
-			 * 
-			 * local = InetAddress.getLocalHost(); String ip = local.getHostAddress();
-			 * 
-			 * System.out.println();
-			 * 
-			 * statement.executeUpdate( "INSERT INTO TB_USER" + "(USER_ID, USER_PW, ISDEL)"
-			 * + "VALUES('ADMIN', " + "ADMIN" + ip + ", 0)" );
-			 */
+			statement.execute("DROP TABLE IF EXISTS TB_USER");
+			
+			statement.executeUpdate(
+					"CREATE TABLE TB_USER (" +
+					"UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+					"USER_ID TEXT NOT NULL UNIQUE, " +
+					"USER_PW TEXT NOT NULL UNIQUE, " +
+					"ISDEL INTEGER DEFAULT 0 NOT NULL)"
+					);
+			
+			statement.execute("DROP TABLE IF EXISTS tb_building");
+			
+			statement.executeUpdate(
+					"CREATE TABLE \"tb_building\" (\n"
+					+ "	\"bid\"	integer NOT NULL,\n"
+					+ "	\"bnm\"	varchar,\n"
+					+ "	\"rid\"	integer NOT NULL,\n"
+					+ "	\"rnm\"	varchar,\n"
+					+ "	PRIMARY KEY(\"bid\",\"rid\")\n"
+					+ ")"
+					);
+			
 			/*
 			 * CREATE TABLE TB_USER (
 					UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -104,18 +107,11 @@ public class DBInitializeConfig {
 
 			 * */
 			
-			
-			statement.executeUpdate(
-					"INSERT INTO UserLogin " +
-					"(userName,password,firstName,lastName,email,mobile) " +
-					"VALUES " + "('bharat0126','dbase123','Bharat','Verma',"
-						+ " 'bharatverma2488@gmail.com','8861456151')"
-					);
 			statement.close();
 			connection.close();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 }
