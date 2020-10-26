@@ -1,0 +1,44 @@
+{
+	"folders": {},
+	"connections": {
+		"sqlite_jdbc-1750c74739f-4b7836bb0890593a": {
+			"provider": "generic",
+			"driver": "sqlite_jdbc",
+			"name": "sqlite.db",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"database": "D:\\workspace\\MHMS\\src\\main\\resources\\files\\sqlite.db",
+				"url": "jdbc:sqlite:D:\\workspace\\MHMS\\src\\main\\resources\\files\\sqlite.db",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		},
+		"sqlite_jdbc-1755b37f1da-88546881971fbe1": {
+			"provider": "generic",
+			"driver": "sqlite_jdbc",
+			"name": "mhms.db",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"database": "C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
+				"url": "jdbc:sqlite:C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
+				"type": "dev",
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false
+		}
+	}
+}

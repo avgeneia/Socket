@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mhms.sqlite.entities.User;
 
 @Repository
-public interface UserLoginRepository extends JpaRepository<User, Long> {
-
-   User findUserLoginByUserNameAndPassword(String username,String password);
+public interface UserRepository extends JpaRepository<User, Long> {
+	 
 }
