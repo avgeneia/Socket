@@ -1,5 +1,8 @@
 package com.mhms;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -9,6 +12,19 @@ public class MhmsApplication{
 	
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(MhmsApplication.class, args);
+		
+		InetAddress local;
+		try {
+			local = InetAddress.getLocalHost();
+			String ip = local.getHostAddress();
+			
+			String lastIp = ip.split(".")[3];
+			System.out.println("lastIp :::::::::::::::::::::::: " + lastIp);
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		Connection connection = null;
 //		PreparedStatement prep = null;
