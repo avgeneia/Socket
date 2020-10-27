@@ -5,8 +5,12 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+
+import com.mhms.sqlite.pk.BuildingPK;
 
 @Entity
+@Table(name = "TB_BUILDING")
 @IdClass(BuildingPK.class)
 public class Building implements Serializable{
 	

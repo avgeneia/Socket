@@ -47,35 +47,59 @@ public class DBInitializeConfig {
 					+ ")"
 					);
 			
+			statement.execute("DROP TABLE IF EXISTS TB_CODE");
+			
+			statement.executeUpdate(
+					"CREATE TABLE TB_CODE ( " +
+					"UPR_CD TEXT NOT NULL UNIQUE, " +
+					"CD TEXT NOT NULL UNIQUE, " +
+					"CD_NM TEXT, " +
+					"COMMENT TEXT, " +
+					"SORT INTEGER, " +
+					"ISDEL INTEGER DEFAULT 0, " +
+					"CONSTRAINT TB_CODE_PK PRIMARY KEY (UPR_CD,CD)) "
+					);
+			
+			statement.execute("DROP TABLE IF EXISTS TB_BBS");
+			
+			statement.executeUpdate(
+					"CREATE TABLE \"TB_BBS\" (\n"
+					+ "	\"SID\"	INTEGER NOT NULL UNIQUE,\n"
+					+ "	\"CID\"	INTEGER NOT NULL UNIQUE,\n"
+					+ "	\"BID\"	INTEGER NOT NULL UNIQUE,\n"
+					+ "	\"TITLE\"	TEXT,\n"
+					+ "	\"CONTENT\"	TEXT,\n"
+					+ "	\"LINK\"	TEXT,\n"
+					+ "	\"VIEWCNT\"	INTEGER,\n"
+					+ "	\"NOTICE\"	INTEGER,\n"
+					+ "	\"WRITER\"	TEXT,\n"
+					+ "	\"WRITEDATE\"	TEXT,\n"
+					+ "	FOREIGN KEY(\"BID\") REFERENCES \"TB_BUILDING\"(\"BID\"),\n"
+					+ "	PRIMARY KEY(\"SID\",\"CID\",\"BID\")\n"
+					+ ")"
+					);
+			
+					/*
+					 * statement.execute("DROP TABLE IF EXISTS TB_USERROLE");
+					 * 
+					 * statement.executeUpdate( "CREATE TABLE TB_USERROLE (\n" +
+					 * "					UID INTEGER NOT NULL UNIQUE,\n" +
+					 * "					BID INTEGER NOT NULL UNIQUE,\n" +
+					 * "					RID INTEGER NOT NULL UNIQUE,\n" +
+					 * "					AUTHLV INTEGER,\n" + "					COMMENT TEXT,\n"
+					 * + "					WRITER TEXT,\n" + "					WRITERDT TEXT,\n" +
+					 * "					CONSTRAINT TB_USERROLE_PK PRIMARY KEY (UID,BID,RID),\n"
+					 * +
+					 * "					CONSTRAINT TB_USERROLE_FK FOREIGN KEY (UID) REFERENCES TB_USER(UID),\n"
+					 * +
+					 * "					CONSTRAINT TB_USERROLE_FK_1 FOREIGN KEY (BID,RID) REFERENCES TB_BUILDING(BID,RID)"
+					 * );
+					 */
 			/*
-			 * CREATE TABLE TB_USER (
-					UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-					USER_ID TEXT NOT NULL UNIQUE,
-					USER_PW TEXT NOT NULL UNIQUE,
-					ISDEL INTEGER DEFAULT 0 NOT NULL
-				);
-				
+			 *
 				INSERT INTO TB_USER
 				(USER_ID, USER_PW, ISDEL)
 				VALUES('ADMIN', '', 0);
-				
-				CREATE TABLE TB_BUILDING (
-					BID INTEGER NOT NULL UNIQUE,
-					RID INTEGER NOT NULL UNIQUE,
-					BNM TEXT,
-					RNM TEXT,
-					CONSTRAINT TB_BUILDING_PK PRIMARY KEY (BID,RID)
-				);
-
-				CREATE TABLE TB_CODE (
-					UPR_CD TEXT NOT NULL UNIQUE,
-					CD TEXT NOT NULL UNIQUE,
-					CD_NM TEXT,
-					COMMENT TEXT,
-					SORT INTEGER,
-					ISDEL INTEGER DEFAULT 0,
-					CONSTRAINT TB_CODE_PK PRIMARY KEY (UPR_CD,CD)
-				);
 				
 				CREATE TABLE TB_USERROLE (
 					UID INTEGER NOT NULL UNIQUE,
@@ -90,20 +114,7 @@ public class DBInitializeConfig {
 					CONSTRAINT TB_USERROLE_FK_1 FOREIGN KEY (BID,RID) REFERENCES TB_BUILDING(BID,RID)
 				);
 				
-				CREATE TABLE TB_BBS (
-					SID	INTEGER NOT NULL UNIQUE,
-					CID	INTEGER NOT NULL UNIQUE,
-					BID	INTEGER NOT NULL UNIQUE,
-					TITLE	TEXT,
-					CONTENT	TEXT,
-					LINK	TEXT,
-					VIEWCNT	INTEGER,
-					NOTICE	INTEGER,
-					WRITER	TEXT,
-					WRITEDATE	TEXT,
-					CONSTRAINT TB_BBS_PK PRIMARY KEY (UID,BID,RID),
-					CONSTRAINT TB_BBS_FK FOREIGN KEY (UID) REFERENCES TB_USER(UID)
-				)
+				
 
 			 * */
 			

@@ -1,4 +1,4 @@
-package com.mhms.sqlite.entities;
+package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ public class BuildingPK implements Serializable{
 	
 	public BuildingPK(int rid, int bid) {
 		this.rid = rid;
-		this.bid = rid;
+		this.bid = bid;
 	}
 	
 	public BuildingPK() {

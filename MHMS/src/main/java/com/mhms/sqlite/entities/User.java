@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class User {
 	
 	@Id
-	@Column(name = "UID")
+	@Column(name = "UID")  
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private int UID ;
@@ -31,6 +31,10 @@ public class User {
 	@Column(name = "ISDEL")
 	private int ISDEL;
 
+//	@OneToMany
+//	@JoinColumn(name = "UID")
+//	private Set<Userrole> userrole;
+	
 	public int getUID() {
 		return UID;
 	}
@@ -62,4 +66,12 @@ public class User {
 	public void setISDEL(int iSDEL) {
 		ISDEL = iSDEL;
 	}
+
+//	public Set<Userrole> getUserrole() {
+//		return userrole;
+//	}
+//
+//	public void setUserrole(Set<Userrole> userrole) {
+//		this.userrole = userrole;
+//	}
 }
