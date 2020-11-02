@@ -1,7 +1,6 @@
 package com.mhms.sqlite.entities;
 
-import java.io.Serializable;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -10,81 +9,101 @@ import javax.persistence.Table;
 import com.mhms.sqlite.pk.BbsPK;
 
 @Entity
-@Table(name = "TB_BBS")
 @IdClass(BbsPK.class)
-public class Bbs implements Serializable{
+@Table(name = "TB_BBS")
+public class Bbs {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Id
+	@Column(name="SID")
 	private int SID;
-
+	
 	@Id
+	@Column(name="CID")
 	private int CID;
 	
-	private String TITLE;
-	private String COMMENT;
-	private String LINK;
-	private int VIEWCNT;
-	private int NOTICE;
-	private String WRITER;
-	private String WRITERDATE;
+	@Id
+	@Column(name="BID")
+	private int BID;
 	
+	@Column(name="TITLE")
+	private String title;
+	
+	@Column(name="CONTENT")
+	private String content;
+	
+	@Column(name="LINK")
+	private String link;
+	
+	@Column(name="VIEWCNT")
+	private int viewcnt;
+
+	@Column(name="WRITER")
+	private String Writer;
+	
+	@Column(name="WRITEDATE")
+	private String WriteDate;
+
 	public int getSID() {
 		return SID;
 	}
+
 	public void setSID(int sID) {
 		SID = sID;
 	}
+
 	public int getCID() {
 		return CID;
 	}
+
 	public void setCID(int cID) {
 		CID = cID;
 	}
-	public String getTITLE() {
-		return TITLE;
+	
+	public String getTitle() {
+		return title;
 	}
-	public void setTITLE(String tITLE) {
-		TITLE = tITLE;
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getCOMMENT() {
-		return COMMENT;
+
+	public String getContent() {
+		return content;
 	}
-	public void setCOMMENT(String cOMMENT) {
-		COMMENT = cOMMENT;
+
+	public void setContent(String content) {
+		this.content = content;
 	}
-	public String getLINK() {
-		return LINK;
+
+	public String getLink() {
+		return link;
 	}
-	public void setLINK(String lINK) {
-		LINK = lINK;
+
+	public void setLink(String link) {
+		this.link = link;
 	}
-	public int getVIEWCNT() {
-		return VIEWCNT;
+
+	public int getViewcnt() {
+		return viewcnt;
 	}
-	public void setVIEWCNT(int vIEWCNT) {
-		VIEWCNT = vIEWCNT;
+
+	public void setViewcnt(int viewcnt) {
+		this.viewcnt = viewcnt;
 	}
-	public int getNOTICE() {
-		return NOTICE;
+
+	public String getWriter() {
+		return Writer;
 	}
-	public void setNOTICE(int nOTICE) {
-		NOTICE = nOTICE;
+
+	public void setWriter(String writer) {
+		Writer = writer;
 	}
-	public String getWRITER() {
-		return WRITER;
+
+	public String getWriteDate() {
+		return WriteDate;
 	}
-	public void setWRITER(String wRITER) {
-		WRITER = wRITER;
-	}
-	public String getWRITERDATE() {
-		return WRITERDATE;
-	}
-	public void setWRITERDATE(String wRITERDATE) {
-		WRITERDATE = wRITERDATE;
+
+	public void setWriteDate(String writeDate) {
+		WriteDate = writeDate;
 	}
 }

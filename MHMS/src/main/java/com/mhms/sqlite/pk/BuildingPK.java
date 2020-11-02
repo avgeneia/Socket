@@ -2,35 +2,44 @@ package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
-public class BuildingPK implements Serializable{
-	
+public class BuildingPK implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private int RID;
 	
-	private int rid;
-	private int bid;
+	private int BID;
 	
-	public BuildingPK(int rid, int bid) {
-		this.rid = rid;
-		this.bid = bid;
-	}
-	
-	public BuildingPK() {
-		
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
 	}
 	
-	public int getRid() {
-		return rid;
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
 	}
-	public void setRid(int rid) {
-		this.rid = rid;
+
+	public int getRID() {
+		return RID;
 	}
-	public int getBid() {
-		return bid;
+
+	public void setRID(int rID) {
+		RID = rID;
 	}
-	public void setBid(int bid) {
-		this.bid = bid;
+
+	public int getBID() {
+		return BID;
 	}
+
+	public void setBID(int bID) {
+		BID = bID;
+	}
+	
+	
 }

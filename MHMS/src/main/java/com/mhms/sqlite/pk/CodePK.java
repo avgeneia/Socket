@@ -2,38 +2,42 @@ package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
-public class CodePK implements Serializable{
-	
+public class CodePK implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private String upr_cd;
 	
-	private String UPR_CD;
-	private String CD;
+	private String cd;
 	
-	public CodePK(String uprCd, String cd) {
-		this.UPR_CD = uprCd;
-		this.CD = cd;
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
 	}
 	
-	public CodePK() {
-		
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
 	}
 
 	public String getUPR_CD() {
-		return UPR_CD;
+		return upr_cd;
 	}
 
 	public void setUPR_CD(String uPR_CD) {
-		UPR_CD = uPR_CD;
+		upr_cd = uPR_CD;
 	}
 
 	public String getCD() {
-		return CD;
+		return cd;
 	}
 
 	public void setCD(String cD) {
-		CD = cD;
+		cd = cD;
 	}
 }

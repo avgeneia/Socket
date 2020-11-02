@@ -38,7 +38,7 @@ public class DBInitializeConfig {
 			statement.execute("DROP TABLE IF EXISTS tb_building");
 			
 			statement.executeUpdate(
-					"CREATE TABLE \"tb_building\" (\n"
+					"CREATE TABLE TB_BUILDING (\n"
 					+ "	\"bid\"	integer NOT NULL,\n"
 					+ "	\"bnm\"	varchar,\n"
 					+ "	\"rid\"	integer NOT NULL,\n"
@@ -63,7 +63,7 @@ public class DBInitializeConfig {
 			statement.execute("DROP TABLE IF EXISTS TB_BBS");
 			
 			statement.executeUpdate(
-					"CREATE TABLE \"TB_BBS\" (\n"
+					"CREATE TABLE TB_BBS (\n"
 					+ "	\"SID\"	INTEGER NOT NULL UNIQUE,\n"
 					+ "	\"CID\"	INTEGER NOT NULL UNIQUE,\n"
 					+ "	\"BID\"	INTEGER NOT NULL UNIQUE,\n"
@@ -79,44 +79,22 @@ public class DBInitializeConfig {
 					+ ")"
 					);
 			
-					/*
-					 * statement.execute("DROP TABLE IF EXISTS TB_USERROLE");
-					 * 
-					 * statement.executeUpdate( "CREATE TABLE TB_USERROLE (\n" +
-					 * "					UID INTEGER NOT NULL UNIQUE,\n" +
-					 * "					BID INTEGER NOT NULL UNIQUE,\n" +
-					 * "					RID INTEGER NOT NULL UNIQUE,\n" +
-					 * "					AUTHLV INTEGER,\n" + "					COMMENT TEXT,\n"
-					 * + "					WRITER TEXT,\n" + "					WRITERDT TEXT,\n" +
-					 * "					CONSTRAINT TB_USERROLE_PK PRIMARY KEY (UID,BID,RID),\n"
-					 * +
-					 * "					CONSTRAINT TB_USERROLE_FK FOREIGN KEY (UID) REFERENCES TB_USER(UID),\n"
-					 * +
-					 * "					CONSTRAINT TB_USERROLE_FK_1 FOREIGN KEY (BID,RID) REFERENCES TB_BUILDING(BID,RID)"
-					 * );
-					 */
-			/*
-			 *
-				INSERT INTO TB_USER
-				(USER_ID, USER_PW, ISDEL)
-				VALUES('ADMIN', '', 0);
-				
-				CREATE TABLE TB_USERROLE (
-					UID INTEGER NOT NULL UNIQUE,
-					BID INTEGER NOT NULL UNIQUE,
-					RID INTEGER NOT NULL UNIQUE,
-					AUTHLV INTEGER,
-					COMMENT TEXT,
-					WRITER TEXT,
-					WRITERDT TEXT,
-					CONSTRAINT TB_USERROLE_PK PRIMARY KEY (UID,BID,RID),
-					CONSTRAINT TB_USERROLE_FK FOREIGN KEY (UID) REFERENCES TB_USER(UID),
-					CONSTRAINT TB_USERROLE_FK_1 FOREIGN KEY (BID,RID) REFERENCES TB_BUILDING(BID,RID)
-				);
-				
-				
-
-			 * */
+			
+			statement.execute("DROP TABLE IF EXISTS TB_USERROLE");
+			
+			statement.executeUpdate( "CREATE TABLE TB_USERROLE (\n" +
+					  "					UID INTEGER NOT NULL UNIQUE,\n" +
+					  "					BID INTEGER NOT NULL UNIQUE,\n" +
+					  "					RID INTEGER NOT NULL UNIQUE,\n" +
+					  "					AUTHLV INTEGER,\n" + "					COMMENT TEXT,\n"
+					  + "					WRITER TEXT,\n" + "					WRITERDT TEXT,\n" +
+					  "					CONSTRAINT TB_USERROLE_PK PRIMARY KEY (UID,BID,RID),\n"
+					  +
+					  "					CONSTRAINT TB_USERROLE_FK FOREIGN KEY (UID) REFERENCES TB_USER(UID),\n"
+					  +
+					  "					CONSTRAINT TB_USERROLE_FK_1 FOREIGN KEY (BID,RID) REFERENCES TB_BUILDING(BID,RID)"
+					  );
+					 
 			
 			statement.close();
 			connection.close();

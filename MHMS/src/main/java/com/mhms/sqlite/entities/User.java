@@ -8,10 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 @Entity
-@EnableJpaRepositories
 @Table(name = "TB_USER")
 public class User {
 	

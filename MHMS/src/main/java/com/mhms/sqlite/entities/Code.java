@@ -1,7 +1,6 @@
 package com.mhms.sqlite.entities;
 
-import java.io.Serializable;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -10,60 +9,75 @@ import javax.persistence.Table;
 import com.mhms.sqlite.pk.CodePK;
 
 @Entity
-@Table(name = "TB_CODE")
 @IdClass(CodePK.class)
-public class Code implements Serializable{
+@Table(name = "TB_CODE")
+public class Code {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Id
-	private String UPR_CD;
-
+	@Column(name="UPR_CD")
+	private String upr_cd;
+	
 	@Id
-	private String CD;
+	@Column(name="CD")
+	private String cd;
 	
-	private String CD_NM;
-	private String COMMENT;
-	private int SORT;
-	private int ISDEL;
+	@Column(name="CD_NM")
+	private String cd_nm;
 	
+	@Column(name="COMMENT")
+	private String comment;
+	
+	@Column(name="SORT")
+	private int sort;
+	
+	@Column(name="ISDEL")
+	private int isdel;
+
 	public String getUPR_CD() {
-		return UPR_CD;
+		return upr_cd;
 	}
+
 	public void setUPR_CD(String uPR_CD) {
-		UPR_CD = uPR_CD;
+		upr_cd = uPR_CD;
 	}
-	public String getCD() {
-		return CD;
+
+	public String getCd() {
+		return cd;
 	}
-	public void setCD(String cD) {
-		CD = cD;
+
+	public void setCd(String cd) {
+		this.cd = cd;
 	}
-	public String getCD_NM() {
-		return CD_NM;
+
+	public String getCd_nm() {
+		return cd_nm;
 	}
-	public void setCD_NM(String cD_NM) {
-		CD_NM = cD_NM;
+
+	public void setCd_nm(String cd_nm) {
+		this.cd_nm = cd_nm;
 	}
-	public String getCOMMENT() {
-		return COMMENT;
+
+	public String getComment() {
+		return comment;
 	}
-	public void setCOMMENT(String cOMMENT) {
-		COMMENT = cOMMENT;
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
-	public int getSORT() {
-		return SORT;
+
+	public int getSort() {
+		return sort;
 	}
-	public void setSORT(int sORT) {
-		SORT = sORT;
+
+	public void setSort(int sort) {
+		this.sort = sort;
 	}
-	public int getISDEL() {
-		return ISDEL;
+
+	public int getIsdel() {
+		return isdel;
 	}
-	public void setISDEL(int iSDEL) {
-		ISDEL = iSDEL;
+
+	public void setIsdel(int isdel) {
+		this.isdel = isdel;
 	}
 }
