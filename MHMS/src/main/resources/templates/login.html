@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
 	<title>다세대 주거 관리 시스템</title>
 	<meta charset="UTF-8">
@@ -30,19 +32,19 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178" th:action="@{/login.do}" th:object="${loginVO}" action="#" method="post">
 					<span class="login100-form-title">
 						다세대 주거 관리 시스템
 						<!-- Multigenerational Housing Management System -->
 					</span>
 
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<input class="input100" type="text" name="username" placeholder="Username">
+						<input class="input100" th:field="*{user_nm}"  type="text" name="user_nm" placeholder="Username">
 						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Please enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+						<input class="input100" th:field="*{user_pw}" type="password" name="user_pw" placeholder="Password">
 						<span class="focus-input100"></span>
 					</div>
 
