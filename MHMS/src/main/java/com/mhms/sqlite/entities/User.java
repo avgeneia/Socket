@@ -20,10 +20,10 @@ public class User {
 	
 
 	@Column(name = "USER_NM")
-	private String USER_NM;
+	private String USERNM;
 	
 	@Column(name = "USER_PW")
-	private String USER_PW;
+	private String USERPW;
 	
 	@Column(name = "ISDEL")
 	private int ISDEL;
@@ -40,20 +40,20 @@ public class User {
 		UID = uID;
 	}
 
-	public String getUSER_NM() {
-		return USER_NM;
+	public String getUSERNM() {
+		return USERNM;
 	}
 
-	public void setUSER_NM(String uSER_NM) {
-		USER_NM = uSER_NM;
+	public void setUSERNM(String uSERNM) {
+		USERNM = uSERNM;
 	}
 
-	public String getUSER_PW() {
-		return USER_PW;
+	public String getUSERPW() {
+		return USERPW;
 	}
 
-	public void setUSER_PW(String uSER_PW) {
-		USER_PW = uSER_PW;
+	public void setUSERPW(String uSERPW) {
+		USERPW = uSERPW;
 	}
 
 	public int getISDEL() {

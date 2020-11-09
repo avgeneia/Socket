@@ -7,5 +7,6 @@ import com.mhms.sqlite.entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	 
+
+	User findByUSERNMAndUSERPW(String name, String pw);
 }

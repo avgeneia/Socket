@@ -1,4 +1,4 @@
-package com.mhms.util.vo;
+package com.mhms.vo;
 
 public class LoginVO {
 	

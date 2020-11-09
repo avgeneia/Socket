@@ -1,20 +1,30 @@
 package com.mhms.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mhms.util.vo.LoginVO;
+import com.mhms.sqlite.Repository.UserRepository;
+import com.mhms.sqlite.entities.User;
+import com.mhms.util.SessionInfo;
+import com.mhms.vo.LoginVO;
 
 @Controller
 public class MainController {
 	
+	@Resource
+	private SessionInfo userInfo;
+	
+	@Autowired
+	private UserRepository usersRepo;
+
 	@RequestMapping(path="/")
 	public ModelAndView Main(@ModelAttribute LoginVO loginVO, HttpServletRequest request) {
 		
@@ -35,14 +45,39 @@ public class MainController {
 	}
 	
 	@RequestMapping("/login.do")
-	private ModelAndView doLogin(@Validated LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("---------------------> login!!!!!!!!!!!");
-        
-        ModelAndView modelAndView = new ModelAndView();
-        
-        modelAndView.setViewName("dashboard");
-        
-        return modelAndView;
+	private ModelAndView doLogin(@Validated LoginVO loginVO, HttpServletRequest request) throws Exception {
+		String userId = loginVO.getUser_nm();
+		String userPw = loginVO.getUser_pw();
+		User doc = usersRepo.findByUSERNMAndUSERPW(userId, userPw);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		if(doc == null) {
+			System.out.println("로그인실패");
+			
+			//로그인 성공 시 메인화면 연결
+			modelAndView.setViewName("login");
+			
+			return modelAndView;
+		}
+		
+		userInfo.setUser_Nm(doc.getUSERNM());
+		userInfo.setSessionId(request.getSession().getId());
+		userInfo.setDeviceType("1");
+		
+		//로그인 성공 시 메인화면 연결
+		modelAndView.setViewName("home");
+      
+		return modelAndView;
     }
-
+	
+	@RequestMapping("/logout.do")
+	private String doLogout(HttpServletRequest request) throws Exception {
+		
+		request.getSession().invalidate();
+		
+		return "redirect:/";
+		
+    }
+	
 }
