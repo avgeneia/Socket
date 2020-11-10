@@ -66,7 +66,7 @@ public class MainController {
 		userInfo.setDeviceType("1");
 		
 		//로그인 성공 시 메인화면 연결
-		modelAndView.setViewName("home");
+		modelAndView.setViewName("default");
       
 		return modelAndView;
     }

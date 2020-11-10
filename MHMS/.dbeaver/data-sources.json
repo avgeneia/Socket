@@ -12,8 +12,7 @@
 				"database": "C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
 				"url": "jdbc:sqlite:C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
 				"type": "dev",
-				"auth-model": "native",
-				"handlers": {}
+				"auth-model": "native"
 			}
 		}
 	},
