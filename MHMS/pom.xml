@@ -11,7 +11,7 @@
 	<groupId>com.mhms</groupId>
 	<artifactId>MHMS</artifactId>
 	<version>0.0.1</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>MHMS</name>
 	<description>Multigenerational Housing management System</description>
 
