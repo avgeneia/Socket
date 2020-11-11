@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse justify-content-end">
           <form class="navbar-form">
             <div class="input-group no-border">
-              <input type="text" value="" class="form-control" placeholder="Search...">
+              <input id="textID" type="text" value="" class="form-control" placeholder="Search...">
               <button type="submit" class="btn btn-white btn-round btn-just-icon">
                 <i class="material-icons">search</i>
                 <div class="ripple-container"></div>
@@ -28,7 +28,7 @@
           </form>
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link">
+              <a class="nav-link" onclick="doSend()">
                 <i class="material-icons">dashboard</i>
                 <p class="d-lg-none d-md-block">
                   Stats
@@ -70,6 +70,58 @@
       </div>
     </nav>
     <!-- End of Topbar -->
-
+	<script type="text/javascript">
+	    var wsUri = "ws://localhost:8080/websocket";
+	    var websocket;
+	    var output;
+	    
+	    function send_message() {
+	        websocket = new WebSocket(wsUri);
+	        websocket.onopen = function (evt) {
+	            onOpen(evt)
+	        };
+	        websocket.onmessage = function (evt) {
+	            onMessage(evt)
+	        };
+	        websocket.onerror = function (evt) {
+	            onError(evt)
+	        };
+	    }
+	
+	   function onOpen(evt) {
+	       writeToScreen("Connected to Endpoint!");
+	       var textID = document.getElementById("textID");
+	       doSend(textID.value);
+	    }
+	    function onMessage(evt) {
+	        writeToScreen("Message Received: " + evt.data);
+	    }
+	    function onError(evt) {
+	        writeToScreen('ERROR: ' + evt.data);
+	    }
+	    function doSend() {
+	    	var textID = document.getElementById("textID");
+	        writeToScreen("Message Sent: " + textID.value);
+	        websocket.send(textID.value);
+	        //websocket.close();
+	    }
+	    function writeToScreen(message) {
+	    
+	       	$.notify({
+		      icon: "add_alert",
+		      message: message
+		
+		    }, {
+		      type: 'info',
+		      timer: 1000,
+		      placement: {
+		        from: 'top',
+		        align: 'right'
+		      }
+		    });		    
+	    }
+	    window.addEventListener("load", send_message, false);
+	</script>
+	
 </th:block>
 </html>
