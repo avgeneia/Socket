@@ -14,21 +14,6 @@
 				"type": "dev",
 				"auth-model": "native"
 			}
-		},
-		"sqlite_jdbc-175acea646f-35f12c2c2c78a334": {
-			"provider": "generic",
-			"driver": "sqlite_jdbc",
-			"name": "mhms.db 2",
-			"save-password": true,
-			"show-system-objects": true,
-			"read-only": false,
-			"configuration": {
-				"database": "C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
-				"url": "jdbc:sqlite:C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
-				"type": "dev",
-				"auth-model": "native",
-				"handlers": {}
-			}
 		}
 	},
 	"connection-types": {

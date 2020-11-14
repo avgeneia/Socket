@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>com.mhms</groupId>
 	<artifactId>MHMS</artifactId>
-	<version>0.0.1</version>
-	<packaging>jar</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>MHMS</name>
 	<description>Multigenerational Housing management System</description>
 
@@ -46,11 +46,20 @@
 		    <groupId>org.xerial</groupId>
 		    <artifactId>sqlite-jdbc</artifactId>
 		</dependency>
-		
-		<!-- Session 컨트롤을 위한 Lib(미구현) -->
 		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-core</artifactId>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.18.10</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.thymeleaf.extras</groupId>
+		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		</dependency>
 		
 		<!-- WebSocket module 2020-11-11 -->

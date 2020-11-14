@@ -1,7 +1,7 @@
 {
 	"folders": {},
 	"connections": {
-		"sqlite_jdbc-1755b37f1da-88546881971fbe1": {
+		"sqlite_jdbc-175c6ae3b85-5ffced737c3d61ce": {
 			"provider": "generic",
 			"driver": "sqlite_jdbc",
 			"name": "mhms.db",
@@ -12,7 +12,8 @@
 				"database": "C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
 				"url": "jdbc:sqlite:C:\\Users\\USER\\git\\HYCU\\MHMS\\src\\main\\resources\\db\\mhms.db",
 				"type": "dev",
-				"auth-model": "native"
+				"auth-model": "native",
+				"handlers": {}
 			}
 		}
 	},

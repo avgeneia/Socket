@@ -11,23 +11,23 @@
         Tip 2: you can also add an image using data-image tag
     -->
       <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-         	다세대 주거관리 시스템
+         	다세대 주거 관리 시스템
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item " th:classappend="${pageInfo} == dashboard ? active">
             <a class="nav-link" href="./dashboard.html">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./user.html">
+          <li class="nav-item " th:classappend="${pageInfo} == userProfile ? active">
+            <a class="nav-link" href="/userProfile">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item " th:classappend="${pageInfo} == tables ? active">
             <a class="nav-link" href="./tables.html">
               <i class="material-icons">content_paste</i>
               <p>Table List</p>
@@ -66,6 +66,9 @@
         </ul>
       </div>
     </div>
+    <script>
+    
+    </script>
     <!-- End of Sidebar -->
 	
 </th:block>
