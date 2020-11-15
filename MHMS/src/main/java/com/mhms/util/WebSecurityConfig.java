@@ -23,15 +23,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/write", "/write/*").authenticated()
-                .antMatchers("/admin", "/admin/*").authenticated()
-                .antMatchers("/users", "/users/*").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/login").permitAll()
+                .anyRequest().authenticated()
             .and()
             	.formLogin()
 	                .loginPage("/login")
 	                .permitAll()
-	                .defaultSuccessUrl("/main")
+	                .defaultSuccessUrl("/index")
             .and()
             	.logout()	
             		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -51,6 +49,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web
 			.ignoring()
-				.antMatchers("/favicon.ico", "/css/**", "/image/**", "/js/**", "/webjars/**");
+				.antMatchers("/bootstrap/**");
 	}
 }

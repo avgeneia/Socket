@@ -8,7 +8,7 @@
     <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
       <div class="container-fluid">
         <div class="navbar-wrapper">
-          <a class="navbar-brand" href="javascript:;">Dashboard</a>
+          <a class="navbar-brand" href="javascript:;" th:text="${infoVO.title}">Dashboard</a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
           <span class="sr-only">Toggle navigation</span>
@@ -91,19 +91,19 @@
 	    }
 	
 	   function onOpen(evt) {
-	       writeToScreen("Connected to Endpoint!");
+	       //writeToScreen("Connected to Endpoint!");
 	       var textID = document.getElementById("textID");
 	       doSend(textID.value);
 	    }
 	    function onMessage(evt) {
-	        writeToScreen("Message Received: " + evt.data);
+	        //writeToScreen("Message Received: " + evt.data);
 	    }
 	    function onError(evt) {
-	        writeToScreen('ERROR: ' + evt.data);
+	        //writeToScreen('ERROR: ' + evt.data);
 	    }
 	    function doSend() {
 	    	var textID = document.getElementById("textID");
-	        writeToScreen("Message Sent: " + textID.value);
+	        //writeToScreen("Message Sent: " + textID.value);
 	        websocket.send(textID.value);
 	        //websocket.close();
 	    }

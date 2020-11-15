@@ -16,51 +16,52 @@
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item " th:classappend="${pageInfo} == dashboard ? active">
-            <a class="nav-link" href="./dashboard.html">
+            <a class="nav-link" href="/index">
               <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
+              <p>메인</p>
             </a>
           </li>
-          <li class="nav-item " th:classappend="${pageInfo} == userProfile ? active">
+          <!-- <li class="nav-item " th:classappend="${pageInfo} == userProfile ? active">
             <a class="nav-link" href="/userProfile">
               <i class="material-icons">person</i>
-              <p>User Profile</p>
+              <p>사용자 정보</p>
             </a>
-          </li>
-          <li class="nav-item " th:classappend="${pageInfo} == tables ? active">
-            <a class="nav-link" href="./tables.html">
+          </li> -->
+          <li class="nav-item " th:classappend="${pageInfo} == userList ? active">
+            <a class="nav-link" href="/userList">
               <i class="material-icons">content_paste</i>
-              <p>Table List</p>
+              <p>사용자 관리</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
+          <li class="nav-item " th:classappend="${pageInfo} == buildingList ? active">
+            <a class="nav-link" href="/buildingList">
+              <i class="material-icons">apartment</i>
+              <p>건물 관리</p>
+            </a>
+          </li>
+          <li class="nav-item " th:classappend="${pageInfo} == codeList ? active">
+            <a class="nav-link" href="/codeList">
+              <i class="material-icons">source</i>
+              <p>코드 관리</p>
+            </a>
+          </li>
+          <li class="nav-item " th:classappend="${pageInfo} == authList ? active">
+            <a class="nav-link" href="/authList">
               <i class="material-icons">library_books</i>
-              <p>Typography</p>
+              <p>권한 관리</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./icons.html">
+          <li class="nav-item " th:classappend="${pageInfo} == noticBoard ? active">
+            <a class="nav-link" href="/noticBoard">
+              <i class="material-icons">view_list</i>
+              <p>게시판</p>
+            </a>
+          </li>
+          <!-- 개발참고용 ICON -->
+          <li class="nav-item " th:classappend="${pageInfo} == icons ? active">
+            <a class="nav-link" href="/icons">
               <i class="material-icons">bubble_chart</i>
-              <p>Icons</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./map.html">
-              <i class="material-icons">location_ons</i>
-              <p>Maps</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./notifications.html">
-              <i class="material-icons">notifications</i>
-              <p>Notifications</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./rtl.html">
-              <i class="material-icons">language</i>
-              <p>RTL Support</p>
+              <p>아이콘</p>
             </a>
           </li>
         </ul>
