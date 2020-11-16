@@ -2,12 +2,12 @@ package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
+import com.mhms.sqlite.entities.Account;
 import com.mhms.sqlite.entities.Building;
-import com.mhms.sqlite.entities.User;
 
 public class UserRolePK implements Serializable {
 
-	private User user;
+	private Account user;
 	
 	private Building building;
 }

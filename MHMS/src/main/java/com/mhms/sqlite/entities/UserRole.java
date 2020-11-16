@@ -11,7 +11,12 @@ import javax.persistence.Table;
 
 import com.mhms.sqlite.pk.UserRolePK;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @IdClass(UserRolePK.class)
 @Table(name = "TB_USERROLE")
 public class UserRole {
@@ -19,7 +24,7 @@ public class UserRole {
 	@Id
 	@ManyToOne
 	@JoinColumn(name="UID")
-	private User user;
+	private Account user;
 	
 	@Id
 	@ManyToOne
@@ -40,52 +45,5 @@ public class UserRole {
 	
 	@Column(name="WRITEDATE")
 	private String WriteDate;
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Building getBuilding() {
-		return building;
-	}
-
-	public void setBuilding(Building building) {
-		this.building = building;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getWriter() {
-		return Writer;
-	}
-
-	public void setWriter(String writer) {
-		Writer = writer;
-	}
-
-	public String getWriteDate() {
-		return WriteDate;
-	}
-
-	public void setWriteDate(String writeDate) {
-		WriteDate = writeDate;
-	}
+	
 }

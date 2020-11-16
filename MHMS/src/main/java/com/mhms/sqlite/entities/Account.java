@@ -8,9 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @Table(name = "TB_USER")
-public class User {
+public class Account {
 	
 	@Id
 	@Column(name = "UID")  
@@ -27,48 +32,7 @@ public class User {
 	
 	@Column(name = "ISDEL")
 	private int ISDEL;
-
-//	@OneToMany
-//	@JoinColumn(name = "UID")
-//	private Set<Userrole> userrole;
 	
-	public int getUID() {
-		return UID;
-	}
-
-	public void setUID(int uID) {
-		UID = uID;
-	}
-
-	public String getUSERNM() {
-		return USERNM;
-	}
-
-	public void setUSERNM(String uSERNM) {
-		USERNM = uSERNM;
-	}
-
-	public String getUSERPW() {
-		return USERPW;
-	}
-
-	public void setUSERPW(String uSERPW) {
-		USERPW = uSERPW;
-	}
-
-	public int getISDEL() {
-		return ISDEL;
-	}
-
-	public void setISDEL(int iSDEL) {
-		ISDEL = iSDEL;
-	}
-
-//	public Set<Userrole> getUserrole() {
-//		return userrole;
-//	}
-//
-//	public void setUserrole(Set<Userrole> userrole) {
-//		this.userrole = userrole;
-//	}
+	@Column(name = "ROLE")
+	private String ROLE;
 }

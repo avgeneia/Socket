@@ -1,11 +1,12 @@
 package com.mhms.sqlite.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mhms.sqlite.Repository.UserRepository;
-import com.mhms.sqlite.models.LoginModel;
-import com.mhms.sqlite.models.UserLoginModel;
+import com.mhms.sqlite.entities.Account;
 import com.mhms.sqlite.service.IUserService;
 
 @Service
@@ -15,10 +16,20 @@ public class UserService implements IUserService {
 	private UserRepository userDao;
 	
 	@Override
-	public UserLoginModel getUser(LoginModel loginModel){
-	    UserLoginModel model=new UserLoginModel();
+	public List<Account> getUser(){
 	    
-	    return model;
+		List<Account> resultList = (List<Account>) userDao.findAll();
+	    
+	    return resultList;
+	}
+
+	@Override
+	public Account getUser(String username, String password) {
+		// TODO Auto-generated method stub
+		
+		Account resultMap = userDao.findByUSERNMAndUSERPW(username, password);
+		
+		return resultMap;
 	}
 	
 	/*public List<UserLogin> getAllUsers() {

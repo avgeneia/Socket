@@ -8,7 +8,12 @@ import javax.persistence.Table;
 
 import com.mhms.sqlite.pk.CodePK;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @IdClass(CodePK.class)
 @Table(name = "TB_CODE")
 public class Code {
@@ -33,51 +38,4 @@ public class Code {
 	@Column(name="ISDEL")
 	private int isdel;
 
-	public String getUPR_CD() {
-		return upr_cd;
-	}
-
-	public void setUPR_CD(String uPR_CD) {
-		upr_cd = uPR_CD;
-	}
-
-	public String getCd() {
-		return cd;
-	}
-
-	public void setCd(String cd) {
-		this.cd = cd;
-	}
-
-	public String getCd_nm() {
-		return cd_nm;
-	}
-
-	public void setCd_nm(String cd_nm) {
-		this.cd_nm = cd_nm;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public int getSort() {
-		return sort;
-	}
-
-	public void setSort(int sort) {
-		this.sort = sort;
-	}
-
-	public int getIsdel() {
-		return isdel;
-	}
-
-	public void setIsdel(int isdel) {
-		this.isdel = isdel;
-	}
 }

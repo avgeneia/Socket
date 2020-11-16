@@ -1,7 +1,8 @@
 package com.mhms.sqlite.service;
 
-import com.mhms.sqlite.models.LoginModel;
-import com.mhms.sqlite.models.UserLoginModel;
+import java.util.List;
+
+import com.mhms.sqlite.entities.Account;
 
 
 public interface IUserService {
@@ -10,5 +11,7 @@ public interface IUserService {
 	
 	public void save(UserLogin person);*/
     
-    public UserLoginModel getUser(LoginModel loginModel);
+    public List<Account> getUser();
+    
+    public Account getUser(String username, String password);
 }

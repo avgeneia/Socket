@@ -3,10 +3,12 @@ package com.mhms.sqlite.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mhms.sqlite.entities.User;
+import com.mhms.sqlite.entities.Account;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<Account, Long> {
 
-	User findByUSERNMAndUSERPW(String name, String pw);
+	Account findByUSERNMAndUSERPW(String name, String pw);
+	
+	Account findByUSERNM(String name);
 }

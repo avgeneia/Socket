@@ -8,7 +8,12 @@ import javax.persistence.Table;
 
 import com.mhms.sqlite.pk.BuildingPK;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @IdClass(BuildingPK.class)
 @Table(name = "TB_BUILDING")
 public class Building {
@@ -27,35 +32,4 @@ public class Building {
 	@Column(name = "RNM")
 	private String RNM;
 
-	public int getBID() {
-		return BID;
-	}
-
-	public void setBID(int bID) {
-		BID = bID;
-	}
-
-	public int getRID() {
-		return RID;
-	}
-
-	public void setRID(int rID) {
-		RID = rID;
-	}
-
-	public String getBNM() {
-		return BNM;
-	}
-
-	public void setBNM(String bNM) {
-		BNM = bNM;
-	}
-
-	public String getRNM() {
-		return RNM;
-	}
-
-	public void setRNM(String rNM) {
-		RNM = rNM;
-	}
 }
