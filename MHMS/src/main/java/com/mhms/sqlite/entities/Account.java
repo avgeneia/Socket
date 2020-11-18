@@ -30,8 +30,8 @@ public class Account {
 	@Column(name = "USER_PW")
 	private String USERPW;
 	
-	@Column(name = "ISDEL")
-	private int ISDEL;
+	@Column(name = "USEYN")
+	private int USEYN;
 	
 	@Column(name = "ROLE")
 	private String ROLE;
