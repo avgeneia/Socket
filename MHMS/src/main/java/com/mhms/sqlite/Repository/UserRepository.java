@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<Account, Long> {
 	Account findByUSERNMAndUSERPW(String name, String pw);
 	
 	Account findByUSERNM(String name);
+	
 }

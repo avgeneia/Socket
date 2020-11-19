@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.mhms.sqlite.Repository.UserRepository;
 import com.mhms.sqlite.entities.Account;
-import com.mhms.sqlite.service.IUserService;
+import com.mhms.sqlite.service.UserService;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userDao;
@@ -22,7 +22,7 @@ public class UserService implements IUserService {
 	    
 	    return resultList;
 	}
-
+	
 	@Override
 	public Account getUser(String username, String password) {
 		// TODO Auto-generated method stub

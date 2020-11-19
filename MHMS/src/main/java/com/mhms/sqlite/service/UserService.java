@@ -5,7 +5,7 @@ import java.util.List;
 import com.mhms.sqlite.entities.Account;
 
 
-public interface IUserService {
+public interface UserService {
 
 	/*public List<UserLogin> getAllUsers();
 	

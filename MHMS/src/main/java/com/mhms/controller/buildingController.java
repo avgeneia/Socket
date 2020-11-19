@@ -15,7 +15,7 @@ public class buildingController {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		map.put("title", "건물 관리");
+		map.put("title", "건축물 관리");
 		
 		model.addAttribute("infoVO", map);
 		model.addAttribute("pageInfo", "buildingList");
