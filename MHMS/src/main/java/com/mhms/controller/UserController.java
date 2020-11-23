@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mhms.sqlite.service.impl.UserService;
+import com.mhms.sqlite.service.UserService;
 
 @Controller
 public class UserController {
@@ -28,5 +28,6 @@ public class UserController {
 		model.addAttribute("pageInfo", "userList");
 		
 		return "userList";
+		
 	}
 }
