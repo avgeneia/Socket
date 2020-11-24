@@ -68,12 +68,15 @@
 														<td></td>
 														<td></td>
 														<td class="td-actions text-right">
-														<button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
-														<i class="material-icons">edit</i>
-														</button>
-														<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-														<i class="material-icons">close</i>
-														</button>
+														
+															<button type="button" rel="tooltip" title="Edit Task" th:data-uid="${user.UID}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
+															<i class="material-icons">edit</i>
+															</button>
+															
+															<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+															<i class="material-icons">close</i>
+															</button>
+														
 														</td>
 														</tr>
 													</tbody>
@@ -110,7 +113,17 @@
 		
 		<!-- 공통 스크립트 -->
 		<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+		 
+		<script th:inline="javascript">
+		var userVO = {
+			userVO:[[${userVO}]]
+		};
 		
+		function chkArg() {
+			console.log(userVO);
+		}
+		</script>
+				
 	</body>
 	
 </html>

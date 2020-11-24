@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mhms.sqlite.service.UserService;
 
@@ -30,4 +31,13 @@ public class UserController {
 		return "userList";
 		
 	}
+	
+	@RequestMapping("/userModify")
+	public void userModify(@RequestParam("uid") int uid, Model model) {
+		
+		System.out.println("================== uid ::" + uid);
+		
+		//return "";
+	}
+	
 }
