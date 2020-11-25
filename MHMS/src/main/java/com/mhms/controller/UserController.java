@@ -38,7 +38,7 @@ public class UserController {
 	public String userModify(@RequestParam(value = "uid") String uid) {
 		
 		System.out.println("================== uid ::" + uid);
-		
+		 
 		return String.format("{ name: \"%s\" }", uid);
 	}
 	
