@@ -37,7 +37,7 @@
 										
 											<div class="table-responsive">
 											
-												<table class="table">
+												<table class="table" id="table">
 												
 													<thead class=" text-primary">
 													<!-- <th>ID</th> -->
@@ -88,7 +88,7 @@
 												</button>
 												
 												<!-- Modal -->
-												<article th:replace="fragments/popup/userPopup :: userPopup(${userVO})"></article>
+												<article id="modal" th:replace="fragments/popup/userPopup :: userPopup(${userVO})"></article>
 												<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
 												
 											</div>
@@ -115,13 +115,35 @@
 		<th:block th:replace="fragments/script :: scriptFragment"></th:block>
 		 
 		<script th:inline="javascript">
+		/*<![CDATA[*/
 		var userVO = {
 			userVO:[[${userVO}]]
 		};
+		/*]]*/
 		
-		function chkArg() {
-			console.log(userVO);
-		}
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
+		$('#userPopup').on('show.bs.modal', function(e) {
+			
+			var uid = $(e.relatedTarget).data('uid');
+			console.log(uid);
+			$.ajax({
+				type : "POST",
+				data : {"uid" : uid},
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/userModify",
+				success : function(data) {
+					console.log("success :: " + data);
+                },
+                done : function(data) {
+					console.log("done :: " + data);
+                }
+			});
+		});
 		</script>
 				
 	</body>

@@ -2,6 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="headFragment">
     <head>
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+  		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  		
         <meta charset="utf-8" />
 	  	<link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
 	  	<link rel="icon" type="image/png" href="../assets/img/favicon.png">

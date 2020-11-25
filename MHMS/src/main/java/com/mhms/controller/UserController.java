@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mhms.sqlite.service.UserService;
 
@@ -33,11 +34,12 @@ public class UserController {
 	}
 	
 	@RequestMapping("/userModify")
-	public void userModify(@RequestParam("uid") int uid, Model model) {
+	@ResponseBody
+	public String userModify(@RequestParam(value = "uid") String uid) {
 		
 		System.out.println("================== uid ::" + uid);
 		
-		//return "";
+		return String.format("{ name: \"%s\" }", uid);
 	}
 	
 }

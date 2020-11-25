@@ -7,8 +7,10 @@ import lombok.Setter;
 @Setter
 public class LoginVO {
 	
-	private int UID;
+	private int uid;
 	private String user_nm;
 	private String user_pw;
+	private String role;
+	private int useyn;
 	
 }
