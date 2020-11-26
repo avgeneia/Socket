@@ -1,6 +1,7 @@
 package com.mhms.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mhms.sqlite.entities.UserRole;
 import com.mhms.sqlite.service.UserService;
 
 @Controller
@@ -35,11 +39,16 @@ public class UserController {
 	
 	@RequestMapping("/userModify")
 	@ResponseBody
-	public String userModify(@RequestParam(value = "uid") String uid) {
+	public String userModify(@RequestParam(value = "uid") int uid) throws JsonProcessingException {
 		
-		System.out.println("================== uid ::" + uid);
-		 
-		return String.format("{ name: \"%s\" }", uid);
+		ObjectMapper om = new ObjectMapper();
+		
+		List<UserRole> result = userService.getModifyUser(uid);
+		System.out.println(result);
+		
+		String jsonStr = om.writeValueAsString(result);
+
+		return jsonStr;
 	}
 	
 }

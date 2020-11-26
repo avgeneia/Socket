@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -14,7 +13,12 @@ import org.springframework.stereotype.Service;
 
 import com.mhms.sqlite.Repository.UserRepository;
 import com.mhms.sqlite.entities.Account;
+import com.mhms.sqlite.entities.QAccount;
+import com.mhms.sqlite.entities.QBuilding;
+import com.mhms.sqlite.entities.QUserRole;
+import com.mhms.sqlite.entities.UserRole;
 import com.mhms.sqlite.service.UserService;
+import com.mysema.query.jpa.impl.JPAQuery;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,7 +31,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<Account> getUser(){
-	    
 
 		// CriteriaBuilder 인스턴스를 작성한다.
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -44,7 +47,7 @@ public class UserServiceImpl implements UserService {
 		// ORDER BY절. CriteriaQuery로 생성
 		//criteriaQuery.orderBy(criteriaBuilder.desc(root.get("boardIdx")));
 		
-		TypedQuery<Account> boardListQuery = entityManager.createQuery(criteriaQuery);
+		//TypedQuery<Account> boardListQuery = entityManager.createQuery(criteriaQuery);
 		
 		List<Account> resultList = (List<Account>) userDao.findAll();
 	    
@@ -69,4 +72,21 @@ public class UserServiceImpl implements UserService {
 		userDao.save(person);
 	}*/
 
+	@Override
+	public List<UserRole> getModifyUser(int uid) {
+		
+		JPAQuery query = new JPAQuery(entityManager);
+		
+		QUserRole userRole = QUserRole.userRole;
+		QAccount account = QAccount.account;
+		QBuilding building = QBuilding.building;
+		List<UserRole> userRoleList = query.from(userRole)
+				                     .join(userRole.user, account)
+				                     .join(userRole.building, building)
+				                     .on(userRole.building.BID.eq(building.BID))
+				                     .where(userRole.user.UID.eq(uid))
+				                     .list(userRole);
+								
+        return userRoleList;
+	}
 }
