@@ -2,7 +2,6 @@ package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
-import com.mhms.sqlite.entities.Account;
 import com.mhms.sqlite.entities.Building;
 
 import lombok.Getter;
@@ -16,8 +15,6 @@ public class UserRolePK implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private Account user;
 	
-	private Building building;
+	Building building;
 }

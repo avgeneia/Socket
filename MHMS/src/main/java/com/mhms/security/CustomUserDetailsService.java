@@ -25,14 +25,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-    	Account user = userRepository.findByUSERNM(username);
+    	Account user = userRepository.findByusernm(username);
 
         if(user == null){
             throw new UsernameNotFoundException("UsernameNotFoundException");
         }
 
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(user.getROLE()));
+        roles.add(new SimpleGrantedAuthority(user.getRole()));
 
         UserContext accountContext = new UserContext(user,roles);
 

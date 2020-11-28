@@ -11,8 +11,8 @@ public class BuildingPK implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int RID;
+	private int bid;
 	
-	private int BID;
+	private int rid;
 	
 }

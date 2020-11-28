@@ -19,17 +19,17 @@ import lombok.Setter;
 public class Building {
 	
 	@Id
-	@Column(name = "BID")
-	private int BID;
+	@Column(name = "bid")
+	private int bid;
 	
 	@Id
-	@Column(name = "RID")
-	private int RID;
-
-	@Column(name = "BNM")
-	private String BNM;
+	@Column(name = "rid")
+	private int rid;
 	
-	@Column(name = "RNM")
-	private String RNM;
-
+	@Column(name = "bnm")
+	private String bnm;
+	
+	@Column(name = "rnm")
+	private String rnm;
+	
 }

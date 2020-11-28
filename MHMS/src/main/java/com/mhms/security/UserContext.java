@@ -9,10 +9,14 @@ import com.mhms.sqlite.entities.Account;
 
 public class UserContext extends User {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Account user;
 	
 	public UserContext(Account account, Collection<? extends GrantedAuthority> authorities) {
-        super(account.getUSERNM(), account.getUSERPW(), authorities);
+        super(account.getUsernm(), account.getUserpw(), authorities);
         this.user = account;
     }
 	

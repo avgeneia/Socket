@@ -8,8 +8,8 @@ import com.mhms.sqlite.entities.Account;
 @Repository
 public interface UserRepository extends JpaRepository<Account, Long> {
 
-	Account findByUSERNMAndUSERPW(String name, String pw);
+	//Account findByUSERNMAndUSERPW(String name, String pw);
 	
-	Account findByUSERNM(String name);
+	Account findByusernm(String name);
 	
 }

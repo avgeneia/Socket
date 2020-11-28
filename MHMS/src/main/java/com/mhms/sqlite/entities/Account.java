@@ -1,12 +1,15 @@
 package com.mhms.sqlite.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,21 +21,25 @@ import lombok.Setter;
 public class Account {
 	
 	@Id
-	@Column(name = "UID")  
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int UID ;
+	@Column(name = "uid")  	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int uid;
 	
-
-	@Column(name = "USER_NM")
-	private String USERNM;
+	@OneToMany(mappedBy="account")
+	private List<UserRole> userRole;
 	
-	@Column(name = "USER_PW")
-	private String USERPW;
+	@Column(name = "usernm")
+	private String usernm;
 	
-	@Column(name = "USEYN")
-	private int USEYN;
+	@Column(name = "userpw")
+	private String userpw;
 	
-	@Column(name = "ROLE")
-	private String ROLE;
+	@Column(name = "useyn")
+	private int useyn;
+	
+	@Column(name = "role")
+	private String role;
+	
+	@Transient
+	private int isupdate;
 }

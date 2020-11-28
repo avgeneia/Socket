@@ -23,27 +23,28 @@ public class UserRole {
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name="UID")
-	private Account user;
+	@JoinColumn(name = "uid")
+	private Account account;
 	
 	@Id
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name="BID", referencedColumnName="BID"),
-		@JoinColumn(name="RID", referencedColumnName="RID")
+		@JoinColumn(name = "bid",
+				referencedColumnName = "bid"),
+		@JoinColumn(name = "rid",
+	    	referencedColumnName = "rid")
 	})
 	private Building building;
 	
-	@Column(name="LEVEL")
-	private int level;
+	@Column(name="role")
+	private String role;
 	
-	@Column(name="COMMENT")
+	@Column(name="comment")
 	private String comment;
 	
-	@Column(name="WRITER")
-	private String Writer;
+	@Column(name="writer")
+	private String writer;
 	
-	@Column(name="WRITEDATE")
-	private String WriteDate;
-	
+	@Column(name="writerdate")
+	private String writerdate;
 }

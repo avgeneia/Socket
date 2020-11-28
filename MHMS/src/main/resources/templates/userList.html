@@ -40,7 +40,6 @@
 												<table class="table" id="table">
 												
 													<thead class=" text-primary">
-													<!-- <th>ID</th> -->
 														<th>계정명</th>
 														<th>사용여부</th>
 														<th>권한</th>
@@ -51,12 +50,11 @@
 													
 													<tbody>
 														<tr th:each="user : ${userVO}">
-														<!-- <td th:text="${user.UID}">ID</td> -->
-															<td th:text="${user.USERNM}">NAME</td>
+															<td th:text="${user.usernm}">NAME</td>
 															<td>
 																<div class="form-check">
 																	<label class="form-check-label">
-																	<input class="form-check-input" type="checkbox" th:checked="${user.USEYN}" value="" checked>
+																	<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
 																	<span class="form-check-sign">
 																	<span class="check"></span>
 																	</span>
@@ -64,12 +62,13 @@
 																</div>
 															</td>
 														<!-- <td th:text="${user.ISDEL}">isDel</td> -->
-														<td th:text="${user.ROLE}">rold</td>
-														<td></td>
-														<td></td>
+														<td th:text="${user.role}">rold</td>
+														<td th:text="${user.bnm}">bnm</td>
+														<td th:text="${user.rnm}">rnm</td>
 														<td class="td-actions text-right">
 														
-															<button type="button" rel="tooltip" title="Edit Task" th:data-uid="${user.UID}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
+															<button type="button" rel="tooltip" title="Edit Task" 
+																	th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
 															<i class="material-icons">edit</i>
 															</button>
 															
@@ -137,10 +136,11 @@
 	            },
 				url : "/userModify",
 				success : function(data) {
-					console.log("success :: " + data);
-                },
-                done : function(data) {
-					console.log("done :: " + data);
+					$("#exampleModalLongTitle").text("사용자 수정");
+					for (const [key, value] of Object.entries(data)) {
+						$('#' + `${key}`).val(`${value}`);
+						$('#' + `${key}`).blur();
+					}
                 }
 			});
 		});
