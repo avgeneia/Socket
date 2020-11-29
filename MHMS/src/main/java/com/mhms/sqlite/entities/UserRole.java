@@ -23,14 +23,21 @@ public class UserRole {
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name = "uid")
+	@JoinColumns({
+		@JoinColumn(name = "uid",
+			referencedColumnName = "uid",
+			insertable = false, updatable = false),
+		@JoinColumn(name = "role",
+    		referencedColumnName = "role",
+    		insertable = false, updatable = false)
+	})
 	private Account account;
 	
 	@Id
 	@ManyToOne
 	@JoinColumns({
 		@JoinColumn(name = "bid",
-				referencedColumnName = "bid"),
+			referencedColumnName = "bid"),
 		@JoinColumn(name = "rid",
 	    	referencedColumnName = "rid")
 	})

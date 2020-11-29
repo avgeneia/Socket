@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mhms.dto.CodeDto;
 import com.mhms.dto.UserListDto;
-import com.mhms.service.CodeService;
+import com.mhms.security.UserContext;
 import com.mhms.service.UserService;
 
 @Controller
@@ -25,27 +25,18 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private CodeService codeService;
-	
 	@RequestMapping("/userList")
-	public String userprofile(Model model) {
+	public String userprofile(Model model, @AuthenticationPrincipal UserContext user) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("title", "사용자 관리");
 		
-		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UserDetails userDetails = (UserDetails)principal;
-		//현재 사용자의 정보를 가져옴
-		String UserRole = userDetails.getAuthorities().toArray()[0].toString();
-		
-		//코드 그룹
-		List<CodeDto> codeList = codeService.getCode("ROLE");
 		
 		//사용자 목록
-		List<UserListDto> userList = userService.getUser();
+		List<UserListDto> userList = userService.getUser(user);
 		
 		for(int i = 0; i < userList.size(); i++) {
 			

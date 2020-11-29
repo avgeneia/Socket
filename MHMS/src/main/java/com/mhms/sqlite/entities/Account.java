@@ -7,9 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.mhms.sqlite.pk.AccountPK;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +20,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@IdClass(AccountPK.class)
 @Table(name = "TB_USER")
 public class Account {
 	
@@ -24,6 +28,10 @@ public class Account {
 	@Column(name = "uid")  	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int uid;
+	
+	@Id
+	@Column(name = "role")
+	private String role;
 	
 	@OneToMany(mappedBy="account")
 	private List<UserRole> userRole;
@@ -36,9 +44,6 @@ public class Account {
 	
 	@Column(name = "useyn")
 	private int useyn;
-	
-	@Column(name = "role")
-	private String role;
 	
 	@Transient
 	private int isupdate;

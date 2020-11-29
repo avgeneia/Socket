@@ -16,7 +16,7 @@ public class MhmsApplication{
 	
 	public static void main(String[] args) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(encoder.encode("manager"));
+		System.out.println(encoder.encode("user01"));
 		
 		SpringApplication.run(MhmsApplication.class, args);
 		

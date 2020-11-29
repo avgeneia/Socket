@@ -66,7 +66,8 @@
 														<td th:text="${user.bnm}">bnm</td>
 														<td th:text="${user.rnm}">rnm</td>
 														<td class="td-actions text-right">
-														
+															
+															<input type="hidden" th:value="${user.uid}" id="uid"/>
 															<button type="button" rel="tooltip" title="Edit Task" 
 																	th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
 															<i class="material-icons">edit</i>
@@ -87,7 +88,7 @@
 												</button>
 												
 												<!-- Modal -->
-												<article id="modal" th:replace="fragments/popup/userPopup :: userPopup(${userVO})"></article>
+												<article id="modal" th:replace="fragments/popup/userPopup :: userPopup()"></article>
 												<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
 												
 											</div>
@@ -126,23 +127,31 @@
 		$('#userPopup').on('show.bs.modal', function(e) {
 			
 			var uid = $(e.relatedTarget).data('uid');
-			console.log(uid);
-			$.ajax({
-				type : "POST",
-				data : {"uid" : uid},
-				beforeSend : function(xhr)
-	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-					xhr.setRequestHeader(header, token);
-	            },
-				url : "/userModify",
-				success : function(data) {
-					$("#exampleModalLongTitle").text("사용자 수정");
-					for (const [key, value] of Object.entries(data)) {
-						$('#' + `${key}`).val(`${value}`);
-						$('#' + `${key}`).blur();
-					}
-                }
-			});
+			
+			if(uid == undefined) {
+
+				return;
+				
+			} else {
+				
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/userModify",
+					success : function(data) {
+						$("#exampleModalLongTitle").text("사용자 수정");
+						for (const [key, value] of Object.entries(data)) {
+							$('#' + `${key}`).val(`${value}`);
+							$('#' + `${key}`).blur();
+						}
+	                }
+				});
+			}
+			
 		});
 		</script>
 				

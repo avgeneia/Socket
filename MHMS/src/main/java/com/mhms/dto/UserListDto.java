@@ -18,7 +18,8 @@ public class UserListDto {
 	int isUpdate;
 	
 	@QueryProjection
-	public UserListDto(String usernm, int useyn, String role, String bnm, String rnm, Building building) {
+	public UserListDto(int uid, String usernm, int useyn, String role, String bnm, String rnm, Building building) {
+		this.uid = uid;
 		this.usernm = usernm;
 		this.useyn = useyn;
 		this.role = role;

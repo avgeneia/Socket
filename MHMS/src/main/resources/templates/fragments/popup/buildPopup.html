@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<article th:fragment="userPopup()" xmlns:th="http://www.thymeleaf.org">
+<article th:fragment="buildPopup()" xmlns:th="http://www.thymeleaf.org">
 
 	<th:block>
 	
 		<body>
 		
 			<!-- Modal -->
-			<div class="modal fade" id="userPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal fade" id="buildPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			
 				<div class="modal-dialog modal-dialog-centered" role="document">
 				
 					<div class="modal-content">
 					
 						<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">신규 사용자 등록</h5>
+						<h5 class="modal-title" id="exampleModalLongTitle">신규 건물 추가</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 						</button>
@@ -28,14 +28,14 @@
 									<div class="row">
 										<div class="col-md-8">
 											<div class="form-group">
-												<label class="bmd-label-floating">계정명</label>
+												<label class="bmd-label-floating">건물 명</label>
 												<input id="usernm" type="text" class="form-control">
 											</div>
 										</div>
 										
 										<div class="col-md-4">
 											<div class="form-group">
-												<label class="bmd-label-floating">권한</label>
+												<label class="bmd-label-floating">호수</label>
 												<input id="role" type="text" class="form-control" disabled>
 											</div>
 										</div>
