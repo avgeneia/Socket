@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<article th:fragment="noticPopup()" xmlns:th="http://www.thymeleaf.org">
+
+	<th:block>
+	
+		<body>
+		
+			<!-- Modal -->
+			<div class="modal fade" id="noticPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			
+				<div class="modal-dialog modal-dialog-centered" role="document">
+				
+					<div class="modal-content">
+					
+						<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">게시물 등록</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+						</div>
+						
+						<div class="modal-body">
+							<div class="card-body">
+								<form>
+								
+									<div class="row">
+										<div class="col-md-8">
+											<div class="form-group">
+												<label id="codeTitle" class="bmd-label-floating">제목</label>
+												<input id="usernm" type="text" class="form-control">
+											</div>
+										</div>
+										
+										<div class="col-md-4">
+											<div class="form-group">
+												<label id="codeTitle" class="bmd-label-floating">등급</label>
+												<input id="usernm" type="text" class="form-control">
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="bmd-label-floating">내용</label>
+												<textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="bmd-label-floating">링크</label>
+												<input id="bnm" type="text" class="form-control">
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="bmd-label-floating">첨부</label>
+												<input id="bnm" type="text" class="form-control">
+											</div>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary">저장</button>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		
+		</body>
+		
+	</th:block>
+
+</article>
+
+</html>
