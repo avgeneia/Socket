@@ -31,4 +31,12 @@ public class buildingController {
 		
 		return "buildingList";
 	}
+	
+	@RequestMapping("/addbuild")
+	public String addBuild(Model model, @AuthenticationPrincipal UserContext user) {
+		
+		
+		
+		return "";
+	}
 }

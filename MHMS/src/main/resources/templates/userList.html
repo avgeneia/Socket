@@ -129,7 +129,12 @@
 			var uid = $(e.relatedTarget).data('uid');
 			
 			if(uid == undefined) {
-
+				
+				$("#usernm").val("");
+				$("#role").val("");
+				$("#role").removeAttr("disabled");
+				$("#bnm").val("");
+				$("#rnm").val("");
 				return;
 				
 			} else {

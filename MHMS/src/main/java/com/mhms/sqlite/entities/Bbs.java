@@ -41,7 +41,10 @@ public class Bbs {
 	
 	@Column(name="VIEWCNT")
 	private int viewcnt;
-
+	
+	@Column(name="NOTICE")
+	private int notice;
+	
 	@Column(name="WRITER")
 	private String Writer;
 	

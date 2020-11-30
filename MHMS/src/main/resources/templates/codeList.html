@@ -20,270 +20,132 @@
 				            <div class="col-lg-6 col-md-12">
 				              <div class="card">
 				                <div class="card-header card-header-primary">
-				                  <h4 class="card-title ">상위 코드 목록</h4>
-				                  <p class="card-category"> Here is a subtitle for this table</p>
+				                  <h2 class="card-title ">상위 코드 목록</h2>
 				                </div>
 				                <div class="card-body">
 				                  <div class="table-responsive">
-				                    <table class="table">
-				                      <thead class=" text-primary">
-				                        <th>
-				                          ID
-				                        </th>
-				                        <th>
-				                          Name
-				                        </th>
-				                        <th>
-				                          Country
-				                        </th>
-				                        <th>
-				                          City
-				                        </th>
-				                        <th>
-				                          Salary
-				                        </th>
-				                      </thead>
-				                      <tbody>
-				                        <tr>
-				                          <td>
-				                            1
-				                          </td>
-				                          <td>
-				                            Dakota Rice
-				                          </td>
-				                          <td>
-				                            Niger
-				                          </td>
-				                          <td>
-				                            Oud-Turnhout
-				                          </td>
-				                          <td class="text-primary">
-				                            $36,738
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            2
-				                          </td>
-				                          <td>
-				                            Minerva Hooper
-				                          </td>
-				                          <td>
-				                            Curaçao
-				                          </td>
-				                          <td>
-				                            Sinaai-Waas
-				                          </td>
-				                          <td class="text-primary">
-				                            $23,789
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            3
-				                          </td>
-				                          <td>
-				                            Sage Rodriguez
-				                          </td>
-				                          <td>
-				                            Netherlands
-				                          </td>
-				                          <td>
-				                            Baileux
-				                          </td>
-				                          <td class="text-primary">
-				                            $56,142
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            4
-				                          </td>
-				                          <td>
-				                            Philip Chaney
-				                          </td>
-				                          <td>
-				                            Korea, South
-				                          </td>
-				                          <td>
-				                            Overland Park
-				                          </td>
-				                          <td class="text-primary">
-				                            $38,735
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            5
-				                          </td>
-				                          <td>
-				                            Doris Greene
-				                          </td>
-				                          <td>
-				                            Malawi
-				                          </td>
-				                          <td>
-				                            Feldkirchen in Kärnten
-				                          </td>
-				                          <td class="text-primary">
-				                            $63,542
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            6
-				                          </td>
-				                          <td>
-				                            Mason Porter
-				                          </td>
-				                          <td>
-				                            Chile
-				                          </td>
-				                          <td>
-				                            Gloucester
-				                          </td>
-				                          <td class="text-primary">
-				                            $78,615
-				                          </td>
-				                        </tr>
-				                      </tbody>
-				                    </table>
-				                  </div>
+											
+										<table class="table" id="table">
+										
+											<thead class=" text-primary">
+												<th>코드그룹</th>
+												<th>코드명</th>
+												<th>정렬</th>
+												<th>사용여부</th>
+												<th>비고</th>
+												<th></th>
+											</thead>
+											
+											<tbody>
+												<tr th:each="user : ${userVO}">
+													<td th:text="${user.usernm}">NAME</td>
+													<td>
+														<div class="form-check">
+															<label class="form-check-label">
+															<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
+															<span class="form-check-sign">
+															<span class="check"></span>
+															</span>
+															</label>
+														</div>
+													</td>
+												<!-- <td th:text="${user.ISDEL}">isDel</td> -->
+												<td th:text="${user.role}">rold</td>
+												<td th:text="${user.bnm}">bnm</td>
+												<td th:text="${user.rnm}">rnm</td>
+												<td class="td-actions text-right">
+													
+													<input type="hidden" th:value="${user.uid}" id="uid"/>
+													<button type="button" rel="tooltip" title="Edit Task" 
+															th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+													<i class="material-icons">edit</i>
+													</button>
+													
+													<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+													<i class="material-icons">close</i>
+													</button>
+												
+												</td>
+												</tr>
+											</tbody>
+											
+										</table>
+										
+										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
+										상위코드 추가
+										</button>
+										
+										<!-- Modal -->
+										<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
+										<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
+										
+									</div>
 				                </div>
 				              </div>
 				            </div>
 				            <div class="col-lg-6 col-md-12">
 				              <div class="card">
 				                <div class="card-header card-header-primary">
-				                  <h4 class="card-title ">하위 코드 목록</h4>
-				                  <p class="card-category"> Here is a subtitle for this table</p>
+				                  <h2 class="card-title ">하위 코드 목록</h2>
 				                </div>
 				                <div class="card-body">
 				                  <div class="table-responsive">
-				                    <table class="table">
-				                      <thead class=" text-primary">
-				                        <th>
-				                          ID
-				                        </th>
-				                        <th>
-				                          Name
-				                        </th>
-				                        <th>
-				                          Country
-				                        </th>
-				                        <th>
-				                          City
-				                        </th>
-				                        <th>
-				                          Salary
-				                        </th>
-				                      </thead>
-				                      <tbody>
-				                        <tr>
-				                          <td>
-				                            1
-				                          </td>
-				                          <td>
-				                            Dakota Rice
-				                          </td>
-				                          <td>
-				                            Niger
-				                          </td>
-				                          <td>
-				                            Oud-Turnhout
-				                          </td>
-				                          <td class="text-primary">
-				                            $36,738
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            2
-				                          </td>
-				                          <td>
-				                            Minerva Hooper
-				                          </td>
-				                          <td>
-				                            Curaçao
-				                          </td>
-				                          <td>
-				                            Sinaai-Waas
-				                          </td>
-				                          <td class="text-primary">
-				                            $23,789
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            3
-				                          </td>
-				                          <td>
-				                            Sage Rodriguez
-				                          </td>
-				                          <td>
-				                            Netherlands
-				                          </td>
-				                          <td>
-				                            Baileux
-				                          </td>
-				                          <td class="text-primary">
-				                            $56,142
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            4
-				                          </td>
-				                          <td>
-				                            Philip Chaney
-				                          </td>
-				                          <td>
-				                            Korea, South
-				                          </td>
-				                          <td>
-				                            Overland Park
-				                          </td>
-				                          <td class="text-primary">
-				                            $38,735
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            5
-				                          </td>
-				                          <td>
-				                            Doris Greene
-				                          </td>
-				                          <td>
-				                            Malawi
-				                          </td>
-				                          <td>
-				                            Feldkirchen in Kärnten
-				                          </td>
-				                          <td class="text-primary">
-				                            $63,542
-				                          </td>
-				                        </tr>
-				                        <tr>
-				                          <td>
-				                            6
-				                          </td>
-				                          <td>
-				                            Mason Porter
-				                          </td>
-				                          <td>
-				                            Chile
-				                          </td>
-				                          <td>
-				                            Gloucester
-				                          </td>
-				                          <td class="text-primary">
-				                            $78,615
-				                          </td>
-				                        </tr>
-				                      </tbody>
-				                    </table>
-				                  </div>
+											
+										<table class="table" id="table">
+										
+											<thead class=" text-primary">
+												<th>코드</th>
+												<th>코드명</th>
+												<th>정렬</th>
+												<th>사용여부</th>
+												<th>비고</th>
+												<th></th>
+											</thead>
+											
+											<tbody>
+												<tr th:each="user : ${userVO}">
+													<td th:text="${user.usernm}">NAME</td>
+													<td>
+														<div class="form-check">
+															<label class="form-check-label">
+															<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
+															<span class="form-check-sign">
+															<span class="check"></span>
+															</span>
+															</label>
+														</div>
+													</td>
+												<!-- <td th:text="${user.ISDEL}">isDel</td> -->
+												<td th:text="${user.role}">rold</td>
+												<td th:text="${user.bnm}">bnm</td>
+												<td th:text="${user.rnm}">rnm</td>
+												<td class="td-actions text-right">
+													
+													<input type="hidden" th:value="${user.uid}" id="uid"/>
+													<button type="button" rel="tooltip" title="Edit Task" 
+															th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+													<i class="material-icons">edit</i>
+													</button>
+													
+													<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+													<i class="material-icons">close</i>
+													</button>
+												
+												</td>
+												</tr>
+											</tbody>
+											
+										</table>
+										
+										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
+										코드 추가
+										</button>
+										
+										<!-- Modal -->
+										<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
+										<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
+										
+									</div>
 				                </div>
 				              </div>
 				            </div>
