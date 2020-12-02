@@ -40,13 +40,16 @@
 				                          <td th:text="${build.rnm}">Niger</td>
 				                          <td class="td-actions text-right">
 				                          
-				                            <button type="button" rel="tooltip" title="Edit Task" 
+				                            <button type="button" 
 				                                    th:data-bid="${build.bid}" 
 				                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#buildPopup">
 				                              <i class="material-icons">edit</i>
 				                            </button>
 				                            
-				                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+				                            <button id="btn_deleteBuild" 
+				                                    type="button"
+				                                    th:data-dbid="${build.bid}" 
+				                                    th:data-drid="${build.rid}" class="btn btn-danger btn-link btn-sm">
 				                              <i class="material-icons">close</i>
 				                            </button>
 				                            
@@ -78,16 +81,17 @@
         <th:block th:replace="fragments/script :: scriptFragment"></th:block>
         
         <script th:inline="javascript">
-        var token = $("meta[name='_csrf']").attr("content");
+		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-		$('#userPopup').on('show.bs.modal', function(e) {
-			
+		$('#buildPopup').on('show.bs.modal', function(e) {
+		
 			var bid = $(e.relatedTarget).data('bid');
 			var rid = $(e.relatedTarget).data('rid');
 			
 			if(bid == undefined && rid == undefined) {
 				
+				console.log(initbuildVO);
 				return;
 				
 			} else {
@@ -110,6 +114,14 @@
 				});
 			}
 			
+		});
+		
+		$('#buildPopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		$("#btn_deleteBuild").click(function(e){
+			console.log(e);
 		});
         </script>
         

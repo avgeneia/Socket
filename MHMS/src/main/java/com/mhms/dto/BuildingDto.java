@@ -19,4 +19,10 @@ public class BuildingDto {
 		this.bnm = bnm;
 		this.rnm = rnm;
 	}
+	
+	@QueryProjection
+	public BuildingDto(int bid, String bnm) {
+		this.bid = bid;
+		this.bnm = bnm;
+	}
 }

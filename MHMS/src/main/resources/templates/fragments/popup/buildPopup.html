@@ -26,45 +26,51 @@
 								<form id="buildVO">
 								
 									<div class="row">
-										<div class="col-md-8">
+										<div class="col-md-12">
 											<div class="form-group">
-												<label class="bmd-label-floating">건축물 관리코드</label>
-												<input id="usernm" type="number" class="form-control">
-											</div>
-										</div>
-										
-										<div class="col-md-4">
-											<div class="form-group">
-												<label class="bmd-label-floating">호수 관리번호</label>
-												<input id="role" type="number" class="form-control">
+												<!-- <label class="bmd-label-floating">건축물 관리코드</label> -->
+												<!-- <input id="usernm" type="number" class="form-control"> -->
+												<div class="form-group">
+												  <select class="form-control" id="cmb_bid">
+												    <option th:each="bidList: ${initbuildVO}" 
+												            th:value="${bidList.bid}"
+												            th:text="${bidList.bnm}"/>
+												  </select>
+												</div>
 											</div>
 										</div>
 										
 									</div>
 									
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
-												<label class="bmd-label-floating">건축물 명칭</label>
-												<input id="bnm" type="text" class="form-control">
+												<label class="bmd-label-floating">호수 관리번호</label>
+												<input id="edt_rid" type="number" class="form-control">
 											</div>
 										</div>
 										
-										<div class="col-md-6">
+										<div class="col-md-8">
 											<div class="form-group">
 												<label class="bmd-label-floating">호수</label>
-												<input id="rnm" type="text" class="form-control">
+												<input id="edt_rnm" type="text" class="form-control">
 											</div>
 										</div>
 										
+									</div>
+									
+									<div class="row">
+										<div class="text-right p-t-13 p-b-23 col-md-12">
+								            <p id="error" style="font-size: 20; color: #FF1C19; visibility: hidden;">사용자ID 또는 비밀번호를 확인바랍니다.</p>
+										</div>
 									</div>
 									
 								</form>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal" >취소</button>
-							<button type="button" class="btn btn-primary" onclick="addbuild()">저장</button>
+							<button id="btn_cansel" type="button" class="btn btn-secondary" data-dismiss="modal" >취소</button>
+							<button id="btn_save" type="button" class="btn btn-primary" onclick="addbuild()">저장</button>
 						</div>
 					</div>
 					
@@ -78,9 +84,29 @@
 	
 	<script th:inline="javascript">
 	function addbuild() {
-	  var usernm = $("#usernm").val();
-	  console.log(usernm);
-	  
+	
+		var bid = $("#cmb_bid").val();
+		var rid = $("#edt_rid").val();
+		var rnm = $("#edt_rnm").val();
+	  	
+	  	$.ajax({
+			type : "POST",
+			data : {"bid" : bid, "rid" : rid, "rnm" : rnm},
+			beforeSend : function(xhr)
+		          {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+		          },
+			url : "/addbuild",
+			success : function(data) {
+				if(data.CODE == "0") {
+					$("#error").css('visibility', 'hidden');
+					$("#buildPopup").modal("hide");
+				} else if(data.CODE == "-1") {
+					$("#error").text(data.MSG);
+					$("#error").css('visibility', 'visible');
+				}
+			}
+		});
 	}
 	</script>
 	
