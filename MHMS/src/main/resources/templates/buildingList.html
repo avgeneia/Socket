@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <!-- 공통 헤더-->
     <th:block th:replace="fragments/head :: headFragment"></th:block>
@@ -41,9 +41,10 @@
 				                          <td class="td-actions text-right">
 				                          
 				                            <button type="button" 
-				                            		th:if="${build.isUpdate}"
 				                                    th:data-bid="${build.bid}" 
-				                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#buildPopup">
+				                                    th:data-rid="${build.rid}" 
+				                                    sec:authorize="!hasRole('ROLE_ADMIN')"
+				                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#buildPopup">
 				                              <i class="material-icons">edit</i>
 				                            </button>
 				                            

@@ -83,7 +83,7 @@ public class BuildingServiceImpl implements BuildingService {
 			query.where(building.bid.in(user.getBid()));
 		}
 		
-		//dto = query.list(new QBuildingDto(building.bid, building.rid, building.bnm, building.rnm, 0));
+		dto = query.list(new QBuildingDto(building.bid, building.rid, building.bnm, building.rnm));
 		
 		return dto;
 	}

@@ -95,6 +95,19 @@
 		  <version>${querydsl.version}</version>
 		</dependency>
 		
+		<!-- Spring boot + thymeleaf 권한제어 -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-taglibs</artifactId>
+		    <version>5.0.7.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.thymeleaf.extras</groupId>
+		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		    <version>3.0.4.RELEASE</version>
+		</dependency>
+		<!-- Spring boot + thymeleaf 권한제어 -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
