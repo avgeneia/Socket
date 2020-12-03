@@ -11,13 +11,15 @@ public class BuildingDto {
 	int rid;
 	String bnm;
 	String rnm;
+	int isUpdate;
 	
 	@QueryProjection
-	public BuildingDto(int bid,	int rid, String bnm, String rnm) {
+	public BuildingDto(int bid,	int rid, String bnm, String rnm, int isUpdate) {
 		this.bid = bid;
 		this.rid = rid;
 		this.bnm = bnm;
 		this.rnm = rnm;
+		this.isUpdate = isUpdate;
 	}
 	
 	@QueryProjection

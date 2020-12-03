@@ -1,7 +1,6 @@
 package com.mhms.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public interface BuildingService {
 	
     public List<BuildingDto> buildingList(UserContext user);
     
-    public List<BuildingDto> initBuild(ArrayList<Integer> bid);
+    public List<BuildingDto> initBuild(UserContext user);
     
     public int insertBuild(Map<String, String[]> map) throws SQLException;
     

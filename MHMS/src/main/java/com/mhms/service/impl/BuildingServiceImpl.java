@@ -3,7 +3,6 @@ package com.mhms.service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -79,26 +78,41 @@ public class BuildingServiceImpl implements BuildingService {
 		
 		query.from(building);
 		if(auth) {
-			query.where(building.bid.ne(0));
+			query.where(building.bid.ne(0).and(building.rid.eq(0)));
 		} else {
 			query.where(building.bid.in(user.getBid()));
 		}
 		
-		dto = query.list(new QBuildingDto(building.bid, building.rid, building.bnm, building.rnm));
+		//dto = query.list(new QBuildingDto(building.bid, building.rid, building.bnm, building.rnm, 0));
 		
 		return dto;
 	}
 	
 	//화면에 필요한 정보들을 넘겨주기위한 메소드
 	@Override
-	public List<BuildingDto> initBuild(ArrayList<Integer> bid) {
+	public List<BuildingDto> initBuild(UserContext user) {
 		// TODO Auto-generated method stub
 
 		JPAQuery query = new JPAQuery(entityManager);
 		QBuilding building = QBuilding.building;
 		
+		//관리자 권한을 확인해서 전체를 조회하게
+		boolean auth = false;
+		Iterator<GrantedAuthority> itertor = user.getAuthorities().iterator();
+		while(itertor.hasNext()) {
+			GrantedAuthority arg = itertor.next();
+			if(arg.getAuthority().equals("ROLE_ADMIN")) {
+				auth = true;
+				break;
+			}
+		}
+		
 		query.from(building);
-		query.where(building.bid.in(bid));
+		if(auth) {
+			query.where(building.bid.ne(0));
+		} else {
+			query.where(building.bid.in(user.getBid()));
+		}
 		query.groupBy(building.bid);
 		List<BuildingDto> result = query.list(new QBuildingDto(building.bid, building.bnm));
 		     

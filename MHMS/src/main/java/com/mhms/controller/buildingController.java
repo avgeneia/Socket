@@ -58,7 +58,7 @@ public class buildingController {
 		
 		model.addAttribute("infoVO", map);
 		model.addAttribute("buildingList", buildingService.buildingList(user));
-		model.addAttribute("initbuildVO", buildingService.initBuild(user.getBid()));
+		model.addAttribute("initbuildVO", buildingService.initBuild(user));
 		model.addAttribute("pageInfo", "buildingList");
 		
 		return "buildingList";
