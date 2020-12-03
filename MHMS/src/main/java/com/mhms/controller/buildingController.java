@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mhms.security.UserContext;
 import com.mhms.service.BuildingService;
+import com.mhms.sqlite.entities.Building;
 
 @Controller
 public class buildingController {
@@ -22,6 +23,32 @@ public class buildingController {
 	@Autowired
 	private BuildingService buildingService;
 	
+	/*
+	 * 조회 1건
+	 */
+	@RequestMapping("/selectBuild")
+	@ResponseBody
+	public Map<String, Object> updateBuild(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+		    Building dto = buildingService.selectBuild(request.getParameterMap());
+		    map.put("CODE", "0");
+			map.put("DATA", dto);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			map.put("CODE", e.getErrorCode());
+			map.put("MSG", e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	/*
+	 * 조회 목록(MAIN)
+	 */
 	@RequestMapping("/buildingList")
 	public String buildingList(Model model, @AuthenticationPrincipal UserContext user) {
 		
@@ -30,23 +57,19 @@ public class buildingController {
 		map.put("title", "건축물 관리");
 		
 		model.addAttribute("infoVO", map);
-		model.addAttribute("buildingList", buildingService.getBuildingList(user.getBid()));
+		model.addAttribute("buildingList", buildingService.buildingList(user));
 		model.addAttribute("initbuildVO", buildingService.initBuild(user.getBid()));
 		model.addAttribute("pageInfo", "buildingList");
 		
 		return "buildingList";
 	}
-	
-	@RequestMapping("/buildModify")
+
+	/*
+	 * 추가
+	 */
+	@RequestMapping("/insertBuild")
 	@ResponseBody
-	public String buildModify(Model model, @AuthenticationPrincipal UserContext user) {
-				
-		return "buildingList";
-	}
-	
-	@RequestMapping("/addbuild")
-	@ResponseBody
-	public Map<String, String> addBuild(HttpServletRequest request) {
+	public Map<String, String> insertBuild(HttpServletRequest request) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
@@ -61,12 +84,66 @@ public class buildingController {
 			e.printStackTrace();
 			System.out.println("SQLException :: " + e.getErrorCode());
 			
-			if(e.getErrorCode() == 19) {
-				map.put("CODE", "-1");
-				map.put("MSG", "중복된 데이터가 존재합니다.");
-			}
+			//if(e.getErrorCode() == 19) {
+			map.put("CODE", String.valueOf(e.getErrorCode()));
+			map.put("MSG", e.getMessage());
+			//}
 		}
 		
 		return map;
 	}
+	
+	/*
+	 * 수정
+	 */
+	@RequestMapping("/updateBuild")
+	@ResponseBody
+	public Map<String, String> updateBuild(HttpServletRequest request) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		
+		try {
+			long result = buildingService.updateBuild(request.getParameterMap());
+			
+			if(result == 1) {
+				map.put("CODE", "0");
+				map.put("MSG", "완료되었습니다.");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			System.out.println("updateBuild SQLException :: " + e.getErrorCode());
+			map.put("CODE", String.valueOf(e.getErrorCode()));
+			map.put("MSG", e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	/*
+	 * 삭제
+	 */
+	@RequestMapping("/deleteBuild")
+	@ResponseBody
+	public Map<String, String> deleteBuild(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			long result = buildingService.deleteBuild(request.getParameterMap());
+			
+			if(result == 1) {
+				map.put("CODE", "0");
+				map.put("MSG", "완료되었습니다.");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("deleteBuild SQLException :: " + e.getErrorCode());
+			map.put("CODE", String.valueOf(e.getErrorCode()));
+			map.put("MSG", e.getMessage());
+		}
+		return map;
+	}
+	
 }

@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 		UserDetails userDetails = (UserDetails) principal;
+		
 		//현재 사용자의 정보를 가져옴
 		String UserRole = userDetails.getAuthorities().toArray()[0].toString();
 		

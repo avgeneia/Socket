@@ -20,7 +20,7 @@
 				            <div class="col-md-12">
 				              <div class="card">
 				                <div class="card-header card-header-primary">
-				                  <h2 class="card-title ">건축물 관리</h2>
+				                  <h3 class="card-title ">건축물 관리</h3>
 				                </div>
 				                <div class="card-body">
 				                  <div class="table-responsive">
@@ -48,8 +48,8 @@
 				                            
 				                            <button id="btn_deleteBuild" 
 				                                    type="button"
-				                                    th:data-dbid="${build.bid}" 
-				                                    th:data-drid="${build.rid}" class="btn btn-danger btn-link btn-sm">
+				                                    class="btn btn-danger btn-link btn-sm"
+				                                    th:onclick="deleteBuild([[${build.bid}]],[[${build.rid}]])" >
 				                              <i class="material-icons">close</i>
 				                            </button>
 				                            
@@ -83,18 +83,31 @@
         <script th:inline="javascript">
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
+		/*<![CDATA[*/
+		var buildVO = {
+				vo:[[${buildingList}]]
+		};
+		/*]]*/
 		
 		$('#buildPopup').on('show.bs.modal', function(e) {
 		
 			var bid = $(e.relatedTarget).data('bid');
 			var rid = $(e.relatedTarget).data('rid');
 			
+			console.log(bid + " // " + rid);
+			
 			if(bid == undefined && rid == undefined) {
 				
-				console.log(initbuildVO);
+				//신규 추가
+				$("#edt_type").val("insert");
+				$("#edt_rid").removeAttr("disabled");
 				return;
 				
 			} else {
+				
+				//수정
+				$("#edt_type").val("update");
+				$("#edt_rid").attr("disabled",true);
 				
 				$.ajax({
 					type : "POST",
@@ -103,12 +116,14 @@
 		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 						xhr.setRequestHeader(header, token);
 		            },
-					url : "/buildModify",
+					url : "/selectBuild",
 					success : function(data) {
 						$("#exampleModalLongTitle").text("건축물 정보 수정");
-						for (const [key, value] of Object.entries(data)) {
-							$('#' + `${key}`).val(`${value}`);
-							$('#' + `${key}`).blur();
+						console.log(data.DATA);
+						if(data.CODE == "0") {
+							$("#cmb_bid").val(data.DATA.bid);
+							$("#edt_rid").val(data.DATA.rid);
+							$("#edt_rnm").val(data.DATA.rnm);	
 						}
 	                }
 				});
@@ -116,13 +131,47 @@
 			
 		});
 		
+		//화면 재조회를 위한 이벤트
 		$('#buildPopup').on('hide.bs.modal', function(e) {
 			location.reload();
 		});
 		
-		$("#btn_deleteBuild").click(function(e){
-			console.log(e);
-		});
+		function deleteBuild(bid, rid) {
+			
+			var arg;
+			
+			console.log(bid + " // " + rid);
+			console.log(buildVO.vo);
+			for(var i = 0; i < buildVO.vo.length; i++) {
+				if(buildVO.vo[i].bid == bid 
+				&& buildVO.vo[i].rid == rid) {
+					arg = buildVO.vo[i];
+					break;
+				}
+			}
+			var rtn = confirm("\'" + arg.bnm + "\'의 \'" + arg.rnm + "\' 항목을 삭제하시겠습니까?");
+			console.log("result :: " + rtn);
+			
+			if(rtn) {
+				$.ajax({
+					type : "POST",
+					data : {"bid" : arg.bid, "rid" : arg.rid},
+					beforeSend : function(xhr)
+		            {   
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/deleteBuild",
+					success : function(data) {
+						console.log(data);
+						if(data.CODE == "0") {
+							location.reload();
+						} else {
+							alert("[" + data.CODE + "]" + data.MSG);
+						}
+	                }
+				});	
+			}
+		}
         </script>
         
     </body>

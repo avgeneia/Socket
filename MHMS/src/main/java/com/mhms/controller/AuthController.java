@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class AuthListController {
+public class AuthController {
 	
 	@RequestMapping("/authList")
 	public String authList(Model model) {
