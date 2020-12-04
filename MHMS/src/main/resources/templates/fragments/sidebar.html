@@ -27,25 +27,33 @@
               <p>사용자 정보</p>
             </a>
           </li> -->
-          <li class="nav-item " th:classappend="${pageInfo} == userList ? active">
+          <li class="nav-item "
+              sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')" 
+              th:classappend="${pageInfo} == userList ? active">
             <a class="nav-link" href="/userList">
               <i class="material-icons">content_paste</i>
               <p>사용자 관리</p>
             </a>
           </li>
-          <li class="nav-item " th:classappend="${pageInfo} == buildingList ? active">
+          <li class="nav-item "
+          	  sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')" 
+              th:classappend="${pageInfo} == buildingList ? active">
             <a class="nav-link" href="/buildingList">
               <i class="material-icons">apartment</i>
               <p>건축물 관리</p>
             </a>
           </li>
-          <li class="nav-item " th:classappend="${pageInfo} == codeList ? active">
+          <li class="nav-item "
+              sec:authorize="hasRole('ROLE_ADMIN')" 
+              th:classappend="${pageInfo} == codeList ? active">
             <a class="nav-link" href="/codeList">
               <i class="material-icons">source</i>
               <p>코드 관리</p>
             </a>
           </li>
-          <li class="nav-item " th:classappend="${pageInfo} == authList ? active">
+          <li class="nav-item "
+              sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')"
+              th:classappend="${pageInfo} == authList ? active">
             <a class="nav-link" href="/authList">
               <i class="material-icons">library_books</i>
               <p>권한 관리</p>

@@ -46,7 +46,7 @@ public class UserController {
 			}
 		}
 		
-		model.addAttribute("infoVO", map);
+		//model.addAttribute("infoVO", map);
 		model.addAttribute("userVO", userList);
 		model.addAttribute("pageInfo", "userList");
 		

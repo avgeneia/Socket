@@ -17,7 +17,7 @@ public class NoticBoardController {
 		
 		map.put("title", "게시판");
 		
-		model.addAttribute("infoVO", map);
+		//model.addAttribute("infoVO", map);
 		model.addAttribute("pageInfo", "noticBoard");
 		
 		return "noticBoard";

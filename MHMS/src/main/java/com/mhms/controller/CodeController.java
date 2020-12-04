@@ -17,7 +17,7 @@ public class CodeController {
 		
 		map.put("title", "코드 관리");
 		
-		model.addAttribute("infoVO", map);
+		//model.addAttribute("infoVO", map);
 		model.addAttribute("pageInfo", "codeList");
 		
 		return "codeList";

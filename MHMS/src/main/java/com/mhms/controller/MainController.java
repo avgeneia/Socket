@@ -24,7 +24,7 @@ public class MainController {
 		
 		map.put("title", "메인");
 		
-		model.addAttribute("infoVO", map);
+		model.addAttribute("infoVO", user);
 		model.addAttribute("user", user);
 		model.addAttribute("pageInfo", "dashboard");
 		

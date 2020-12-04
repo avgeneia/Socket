@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mhms.security.UserContext;
 import com.mhms.service.BuildingService;
 import com.mhms.sqlite.entities.Building;
+import com.mhms.util.CommUtil;
 
 @Controller
 public class buildingController {
@@ -56,9 +57,22 @@ public class buildingController {
 		
 		map.put("title", "건축물 관리");
 		
-		model.addAttribute("infoVO", map);
+		
+		//관리자 권한을 확인해서 전체를 조회하게
+		boolean auth = CommUtil.getAuth(user);
+		
+		//관리자 권한일 때 건물관리만 가능 호수는 매니저에서 관리
+		if(auth) {
+			Building dto = new Building();
+			dto.setBid(0);
+			dto.setBnm("신규");
+			model.addAttribute("initbuildVO", dto);
+		} else {
+			model.addAttribute("initbuildVO", buildingService.initBuild(user));
+		}
+		
+		//model.addAttribute("infoVO", map);
 		model.addAttribute("buildingList", buildingService.buildingList(user));
-		model.addAttribute("initbuildVO", buildingService.initBuild(user));
 		model.addAttribute("pageInfo", "buildingList");
 		
 		return "buildingList";
@@ -69,12 +83,15 @@ public class buildingController {
 	 */
 	@RequestMapping("/insertBuild")
 	@ResponseBody
-	public Map<String, String> insertBuild(HttpServletRequest request) {
+	public Map<String, String> insertBuild(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
+		boolean auth = CommUtil.getAuth(user);
+		
 		try {
-			buildingService.insertBuild(request.getParameterMap());
+			
+			buildingService.insertBuild(request.getParameterMap(), auth);
 			
 			map.put("CODE", "0");
 			map.put("MSG", "완료되었습니다.");

@@ -34,17 +34,16 @@
 				                        <th></th>
 				                      </thead>
 				                      <tbody>
-				                        <tr th:each="build : ${buildingList}">
-				                          <td th:text="${build.bid}">1</td>
-				                          <td th:text="${build.bnm}">Dakota Rice</td>
-				                          <td th:text="${build.rid}">Niger</td>
-				                          <td th:text="${build.rnm}">Niger</td>
-				                          <td th:text="${build.bnm}">Dakota Rice</td>
+				                        <tr th:each="auth : ${authList}">
+				                          <td th:text="${auth.usernm}">1</td>
+				                          <td th:text="${auth.bnm}">Dakota Rice</td>
+				                          <td th:text="${auth.role}">Niger</td>
+				                          <td th:text="${auth.rnm}">Niger</td>
+				                          <td th:text="${auth.comment}">Dakota Rice</td>
 				                          <td class="td-actions text-right">
 				                          
 				                            <button type="button" rel="tooltip" title="Edit Task" 
-				                                    th:data-bid="${build.bid}" 
-				                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#authPopup">
+				                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#authPopup">
 				                              <i class="material-icons">edit</i>
 				                            </button>
 				                            

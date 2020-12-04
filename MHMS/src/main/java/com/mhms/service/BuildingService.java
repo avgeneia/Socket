@@ -17,7 +17,7 @@ public interface BuildingService {
     
     public List<BuildingDto> initBuild(UserContext user);
     
-    public int insertBuild(Map<String, String[]> map) throws SQLException;
+    public int insertBuild(Map<String, String[]> map, boolean authType) throws SQLException;
     
     public long updateBuild(Map<String, String[]> map) throws SQLException;
     

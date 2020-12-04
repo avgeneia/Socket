@@ -120,17 +120,29 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public int insertBuild(Map<String, String[]> map) throws SQLException {
+	public int insertBuild(Map<String, String[]> map, boolean authType) throws SQLException {
 		// TODO Auto-generated method stub
 		
-		String insertSQL = "insert into tb_building (bid, rid, bnm, rnm) select bid, ?, bnm, ? from tb_building where bid = ? group by bid";
-		
 		Connection conn = dataSource.getConnection();
-		PreparedStatement pstmt = conn.prepareStatement(insertSQL);
-		pstmt.setInt(1, Integer.parseInt(map.get("rid")[0]));
-		pstmt.setString(2, map.get("rnm")[0]);
-		pstmt.setInt(3, Integer.parseInt(map.get("bid")[0]));
-		int result = pstmt.executeUpdate();
+		String insertSQL = "";
+		PreparedStatement pstmt = null;
+		int result = 0; 
+		
+		//관리자 권한의 경우 건축물만 추가한다 매니저로.
+		if(authType) {
+			insertSQL = "INSERT INTO tb_building (bid, rid, bnm, rnm) VALUES(?, 0, ?, '매니저')";
+			pstmt = conn.prepareStatement(insertSQL);
+			pstmt.setInt(1, Integer.parseInt(map.get("rid")[0]));
+			pstmt.setString(2, map.get("rnm")[0]);
+			result = pstmt.executeUpdate();
+		} else {
+			insertSQL = "insert into tb_building (bid, rid, bnm, rnm) select bid, ?, bnm, ? from tb_building where bid = ? group by bid";
+			pstmt = conn.prepareStatement(insertSQL);
+			pstmt.setInt(1, Integer.parseInt(map.get("rid")[0]));
+			pstmt.setString(2, map.get("rnm")[0]);
+			pstmt.setInt(3, Integer.parseInt(map.get("bid")[0]));
+			result = pstmt.executeUpdate();
+		}
 		
 		return result;
 	}
