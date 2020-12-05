@@ -16,6 +16,8 @@
 					
 						<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLongTitle">신규 코드 추가</h5>
+						<input id="edt_type" hidden="true" value="">
+						<input id="edt_gbn" hidden="true" value="">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 						</button>
@@ -29,7 +31,7 @@
 										<div class="col-md-6">
 											<div class="form-group">
 												<label id="codeTitle" class="bmd-label-floating">코드 그룹</label>
-												<input id="cd" type="text" class="form-control">
+												<input id="edt_cd" type="text" class="form-control">
 											</div>
 										</div>
 										
@@ -79,7 +81,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary" onclick="modifyAuth()">저장</button>
+							<button type="button" class="btn btn-primary" onclick="modifyCode()">저장</button>
 						</div>
 					</div>
 					
@@ -95,18 +97,20 @@
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
-	function modifyAuth() {
+	function modifyCode() {
 	
-		var cd = $("#cd").val();
+		var cd = $("#edt_cd").val();
 		var cd_nm = $("#cd_nm").val();
 		var sort = $("#sort").val();
 	  	var comment = $("#comment").val();
+	  	var type = $("#edt_type").val();
+		var gbn = $("#edt_gbn").val();
 		
-		var fv_url = type + "Auth";
+		var fv_url = type + "Code";
 		
 	  	$.ajax({
 			type : "POST",
-			data : {"cd" : cd, "cd_nm" : cd_nm, "sort" : sort, "comment" : comment},
+			data : {"cd" : cd, "cd_nm" : cd_nm, "sort" : sort, "comment" : comment, "gbn" : gbn},
 			beforeSend : function(xhr)
           	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 				xhr.setRequestHeader(header, token);

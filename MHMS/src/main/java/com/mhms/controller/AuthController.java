@@ -43,9 +43,9 @@ public class AuthController {
 	/*
 	 * 추가
 	 */
-	@RequestMapping("/insertBuild")
+	@RequestMapping("/insertAuth")
 	@ResponseBody
-	public Map<String, String> insertBuild(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+	public Map<String, String> insertAuth(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		

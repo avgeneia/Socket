@@ -17,17 +17,34 @@
                     <div class="content">
 				        <div class="container-fluid">
 				          <div class="row">
-				            <div class="col-lg-6 col-md-12">
+				            <div class="col-md-12">
 				              <div class="card">
-				                <div class="card-header card-header-primary">
-				                  <h3 class="card-title ">상위 코드 목록</h3>
+				                <div class="card-header card-header-tabs card-header-primary">
+				                  <div class="nav-tabs-navigation">
+				                    <div class="nav-tabs-wrapper">
+				                      <ul class="nav nav-tabs" data-tabs="tabs">
+				                        <li class="nav-item">
+				                          <a class="nav-link active show" href="#grd_uprCode" data-toggle="tab" id="btn_upr">
+				                            <h3 class="card-title ">상위코드</h3>
+				                            <div class="ripple-container"></div>
+				                          </a>
+				                        </li>
+				                        <li class="nav-item">
+				                          <a class="nav-link" href="#grd_code" data-toggle="tab" id="btn_code">
+				                            <h3 class="card-title ">하위코드</h3>
+				                            <div class="ripple-container"></div>
+				                          </a>
+				                        </li>
+				                      </ul>
+				                    </div>
+				                  </div>
 				                </div>
 				                <div class="card-body">
-				                  <div class="table-responsive">
-											
-										<table class="table" id="table">
-										
-											<thead class=" text-primary">
+				                	<div class="tab-content">
+					                    <div class="tab-pane " th:classappend="${gbn} ? '' : active" id="grd_uprCode">
+					                      <table class="table table-hover" id="grd_uprCode">
+					                      	
+					                      	<thead class=" text-primary">
 												<th>코드그룹</th>
 												<th>코드명</th>
 												<th>정렬</th>
@@ -35,117 +52,88 @@
 												<th>비고</th>
 												<th></th>
 											</thead>
-											
-											<tbody>
-												<tr th:each="user : ${userVO}">
-													<td th:text="${user.usernm}">NAME</td>
-													<td>
-														<div class="form-check">
-															<label class="form-check-label">
-															<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
-															<span class="form-check-sign">
-															<span class="check"></span>
-															</span>
-															</label>
-														</div>
+					                      	
+					                        <tbody>
+												<tr th:each="uprVO : ${uprVO}" style="cursor: pointer;">
+													<td th:data-cd="${uprVO.cd}" th:text="${uprVO.cd}">코드그룹</td>
+													<td th:text="${uprVO.cd_nm}">코드명</td>
+													<td th:text="${uprVO.sort}">정렬</td>
+													<td th:text="${uprVO.useyn}">사용여부</td>
+													<td th:text="${uprVO.comment}">비고</td>
+													<td class="td-actions text-right">
+														
+														<input type="hidden" th:value="${uprVO.cd}" id="cd"/>
+														<button type="button" rel="tooltip" title="Edit Task" 
+																th:data-uid="${uprVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+														<i class="material-icons">edit</i>
+														</button>
+														
+														<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+														<i class="material-icons">close</i>
+														</button>
+													
 													</td>
-												<!-- <td th:text="${user.ISDEL}">isDel</td> -->
-												<td th:text="${user.role}">rold</td>
-												<td th:text="${user.bnm}">bnm</td>
-												<td th:text="${user.rnm}">rnm</td>
-												<td class="td-actions text-right">
-													
-													<input type="hidden" th:value="${user.uid}" id="uid"/>
-													<button type="button" rel="tooltip" title="Edit Task" 
-															th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
-													<i class="material-icons">edit</i>
-													</button>
-													
-													<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
-													<i class="material-icons">close</i>
-													</button>
-												
-												</td>
 												</tr>
 											</tbody>
 											
-										</table>
-										
-										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
-										상위코드 추가
-										</button>
-										
-										<!-- Modal -->
-										<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
-										<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
-										
-									</div>
-				                </div>
-				              </div>
-				            </div>
-				            <div class="col-lg-6 col-md-12">
-				              <div class="card">
-				                <div class="card-header card-header-primary">
-				                  <h3 class="card-title ">하위 코드 목록</h3>
-				                </div>
-				                <div class="card-body">
-				                  <div class="table-responsive">
+					                      </table>
+					                      
+					                      	<button type="button"
+											        data-gbn="upr" 
+											        class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
+											상위코드 추가
+											</button>
 											
-										<table class="table" id="table">
-										
-											<thead class=" text-primary">
-												<th>코드</th>
+											<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
+											
+					                    </div>
+					                    <div class="tab-pane " th:classappend="${gbn} ? active : '' "  id="grd_code">
+					                      <table class="table">
+					                      	
+					                      	<thead class=" text-primary">
+												<th>코드그룹</th>
 												<th>코드명</th>
 												<th>정렬</th>
 												<th>사용여부</th>
 												<th>비고</th>
 												<th></th>
 											</thead>
-											
-											<tbody>
-												<tr th:each="user : ${userVO}">
-													<td th:text="${user.usernm}">NAME</td>
-													<td>
-														<div class="form-check">
-															<label class="form-check-label">
-															<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
-															<span class="form-check-sign">
-															<span class="check"></span>
-															</span>
-															</label>
-														</div>
+					                      	
+					                        <tbody>
+												<tr th:each="cdVO : ${cdVO}" style="cursor: pointer;">
+													<td th:data-cd="${cdVO.cd}" th:text="${cdVO.cd}">코드그룹</td>
+													<td th:text="${cdVO.cd_nm}">코드명</td>
+													<td th:text="${cdVO.sort}">정렬</td>
+													<td th:text="${cdVO.useyn}">사용여부</td>
+													<td th:text="${cdVO.comment}">비고</td>
+													<td class="td-actions text-right">
+														
+														<input type="hidden" th:value="${cdVO.cd}" id="cd"/>
+														<button type="button" rel="tooltip" title="Edit Task" 
+																th:data-uid="${cdVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+														<i class="material-icons">edit</i>
+														</button>
+														
+														<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+														<i class="material-icons">close</i>
+														</button>
+													
 													</td>
-												<!-- <td th:text="${user.ISDEL}">isDel</td> -->
-												<td th:text="${user.role}">rold</td>
-												<td th:text="${user.bnm}">bnm</td>
-												<td th:text="${user.rnm}">rnm</td>
-												<td class="td-actions text-right">
-													
-													<input type="hidden" th:value="${user.uid}" id="uid"/>
-													<button type="button" rel="tooltip" title="Edit Task" 
-															th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
-													<i class="material-icons">edit</i>
-													</button>
-													
-													<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
-													<i class="material-icons">close</i>
-													</button>
-												
-												</td>
 												</tr>
 											</tbody>
 											
-										</table>
-										
-										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
-										코드 추가
-										</button>
-										
-										<!-- Modal -->
-										<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
-										<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
-										
-									</div>
+					                      </table>
+					                      
+					                      	<button type="button"
+											        data-gbn="code" 
+											        class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
+											하위코드 추가
+											</button>
+											
+											<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
+											
+					                    </div>
+					                  </div>
 				                </div>
 				              </div>
 				            </div>
@@ -154,9 +142,79 @@
 				      </div>
                 </div>
             </div>
-        </div>
+        </div> 
 
-        <!-- 怨듯넻 �뒪�겕由쏀듃-->
+        <!-- 공통 스크립트 -->
         <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+        
+        <script th:inline="javascript">
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		/*<![CDATA[*/
+		var codeVO = {
+				vo:[[${cdVO}]]
+		};
+		/*]]*/ 
+		window.onload = function() { //실행될 코드 
+			
+			if(codeVO.vo != null) {
+				
+			}
+		}
+		
+		$('#codePopup').on('show.bs.modal', function(e) {
+		
+			var gbn = $(e.relatedTarget).data('gbn');
+			
+			//신규 추가
+			$("#exampleModalLongTitle").text("상위 코드 추가");
+			$("#edt_type").val("insert");
+			$("#edt_gbn").val(gbn);
+			$("#cd").removeAttr("disabled");
+			
+		});
+		
+		$("#grd_uprCode tr").click(function(e) {
+		
+			var str = ""
+			var tdArr = new Array();	// 배열 선언
+			
+			// 현재 클릭된 Row(<tr>)
+			var tr = $(this);
+			var td = tr.children();
+			
+			var cd = td.eq(0).text();
+			
+			console.log(cd);
+			
+			$.ajax({
+				type : "POST",
+				data : {"cd" : cd},
+				beforeSend : function(xhr)
+	            {   
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/codeList",
+				success : function(data) {
+					console.log(data);
+                }
+			});	
+			
+		});
+		
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			console.log("event");
+			console.log(e);		
+		});
+		
+		$("#btn_upr").click(function(e) {
+			console.log("asdasdasdasdasd");
+		});
+		
+		$("#btn_code").click(function(e) {
+			console.log("asdasdasdasdasd");
+		});
+        </script>
+        
     </body>
 </html>

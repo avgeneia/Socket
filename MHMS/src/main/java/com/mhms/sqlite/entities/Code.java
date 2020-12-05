@@ -35,7 +35,7 @@ public class Code {
 	@Column(name="SORT")
 	private int sort;
 	
-	@Column(name="ISDEL")
-	private int isdel;
+	@Column(name="USEYN")
+	private int useyn;
 
 }

@@ -25,9 +25,6 @@ import com.mhms.sqlite.entities.QBuilding;
 import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPAUpdateClause;
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.H2Templates;
-import com.querydsl.sql.SQLTemplates;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
@@ -37,9 +34,6 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
 	private DataSource dataSource;
-	
-	SQLTemplates templates = new H2Templates();
-	Configuration configuration = new Configuration(templates);
 	
 	@Override
 	public Building selectBuild(Map<String, String[]> map) throws SQLException {
