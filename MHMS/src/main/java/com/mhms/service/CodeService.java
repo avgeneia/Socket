@@ -6,8 +6,11 @@ import java.util.Map;
 
 import com.mhms.dto.CodeDto;
 import com.mhms.security.UserContext;
+import com.mhms.sqlite.entities.Code;
 
 public interface CodeService {
+	
+	public Code selectCode(Map<String, String[]> map) throws SQLException;
 	
 	public List<CodeDto> getCode(String upcd);
 	
@@ -18,6 +21,8 @@ public interface CodeService {
 	public int insertCode(Map<String, String[]> map) throws SQLException;
 	
 	public long updateCode(Map<String, String[]> map) throws SQLException;
+	
+	public long updateCodeUseyn(Map<String, String[]> map) throws SQLException;
 	
 	public long deleteCode(Map<String, String[]> map) throws SQLException;
 }

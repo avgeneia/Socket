@@ -14,6 +14,7 @@
                     <!-- 상단바-->
                     <th:block th:replace="fragments/topbar :: topbarFragment"></th:block>
                     <!-- 본문-->
+                    <input id="session_status" th:data-session="${session.status_code}" hidden="true"/>
                     <div class="content">
 				        <div class="container-fluid">
 				          <div class="row">
@@ -23,15 +24,15 @@
 				                  <div class="nav-tabs-navigation">
 				                    <div class="nav-tabs-wrapper">
 				                      <ul class="nav nav-tabs" data-tabs="tabs">
-				                        <li class="nav-item">
+				                        <li id="tab_uprcode" class="nav-item">
 				                          <a class="nav-link active show" href="#grd_uprCode" data-toggle="tab" id="btn_upr">
 				                            <h3 class="card-title ">상위코드</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
-				                        <li class="nav-item">
+				                        <li id="tab_code" class="nav-item">
 				                          <a class="nav-link" href="#grd_code" data-toggle="tab" id="btn_code">
-				                            <h3 class="card-title ">하위코드</h3>
+				                            <h3 class="card-title">하위코드 []</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
@@ -41,7 +42,7 @@
 				                </div>
 				                <div class="card-body">
 				                	<div class="tab-content">
-					                    <div class="tab-pane " th:classappend="${gbn} ? '' : active" id="grd_uprCode">
+					                    <div class="tab-pane active" id="grd_uprCode">
 					                      <table class="table table-hover" id="grd_uprCode">
 					                      	
 					                      	<thead class=" text-primary">
@@ -54,21 +55,37 @@
 											</thead>
 					                      	
 					                        <tbody>
-												<tr th:each="uprVO : ${uprVO}" style="cursor: pointer;">
-													<td th:data-cd="${uprVO.cd}" th:text="${uprVO.cd}">코드그룹</td>
+												<tr id="grd_uprCode_tr" th:each="uprVO : ${uprVO}" style="cursor: pointer;">
+													<td class="keyCd" th:data-cd="${uprVO.cd}" th:text="${uprVO.cd}">코드그룹</td>
 													<td th:text="${uprVO.cd_nm}">코드명</td>
 													<td th:text="${uprVO.sort}">정렬</td>
-													<td th:text="${uprVO.useyn}">사용여부</td>
+													<td>
+														<div class="form-check">
+															<label class="form-check-label">
+																<input id="chk_uprUseyn"
+																       th:data-cd="${uprVO.cd}" 
+																       class="form-check-input" type="checkbox" th:checked="${uprVO.useyn}" value="" checked>
+																<span class="form-check-sign">
+																	<span class="check"></span>
+																</span>
+															</label>
+														</div>
+													</td>
 													<td th:text="${uprVO.comment}">비고</td>
 													<td class="td-actions text-right">
 														
-														<input type="hidden" th:value="${uprVO.cd}" id="cd"/>
+														<input type="hidden" th:value="${uprVO.cd}"/>
 														<button type="button" rel="tooltip" title="Edit Task" 
-																th:data-uid="${uprVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+											        			data-gbn="upr" 
+																th:data-cd="${uprVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#uprCodePopup">
 														<i class="material-icons">edit</i>
 														</button>
 														
-														<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+														<button id="btn_deleteUprCd" 
+							                                    type="button"
+							                                    rel="tooltip" title="Delete" 
+							                                    class="btn btn-danger btn-link btn-sm"
+							                                    th:onclick="deleteCd([[${uprVO.cd}]],'upr')" >
 														<i class="material-icons">close</i>
 														</button>
 													
@@ -80,16 +97,16 @@
 					                      
 					                      	<button type="button"
 											        data-gbn="upr" 
-											        class="btn btn-primary pull-right" data-toggle="modal" data-target="#codePopup">
+											        class="btn btn-primary pull-right" data-toggle="modal" data-target="#uprCodePopup">
 											상위코드 추가
 											</button>
 											
-											<article id="modal" th:replace="fragments/popup/codePopup :: codePopup()"></article>
+											<article id="modal" th:replace="fragments/popup/uprCodePopup :: uprCodePopup()"></article>
 											
 					                    </div>
-					                    <div class="tab-pane " th:classappend="${gbn} ? active : '' "  id="grd_code">
-					                      <table class="table">
-					                      	
+					                    <div class="tab-pane" id="grd_code">
+					                      <table class="table" id="table_code">
+					                      	<input id="uprCd" th:value="${uprCd}" type="hidden"/>
 					                      	<thead class=" text-primary">
 												<th>코드그룹</th>
 												<th>코드명</th>
@@ -100,23 +117,37 @@
 											</thead>
 					                      	
 					                        <tbody>
-												<tr th:each="cdVO : ${cdVO}" style="cursor: pointer;">
+												<tr class="grd_code_tr" th:each="cdVO : ${cdVO}">
 													<td th:data-cd="${cdVO.cd}" th:text="${cdVO.cd}">코드그룹</td>
 													<td th:text="${cdVO.cd_nm}">코드명</td>
 													<td th:text="${cdVO.sort}">정렬</td>
-													<td th:text="${cdVO.useyn}">사용여부</td>
+													<td>
+														<div class="form-check">
+															<label class="form-check-label">
+																<input th:data-cd="${cdVO.cd}" 
+																       class="form-check-input" type="checkbox" th:checked="${cdVO.useyn}" value="" checked>
+																<span class="form-check-sign">
+																	<span class="check"></span>
+																</span>
+															</label>
+														</div>
+													</td>
 													<td th:text="${cdVO.comment}">비고</td>
 													<td class="td-actions text-right">
 														
-														<input type="hidden" th:value="${cdVO.cd}" id="cd"/>
-														<button type="button" rel="tooltip" title="Edit Task" 
+														<input type="hidden" th:value="${cdVO.cd}"/>
+														<button type="button" rel="tooltip" title="Edit Task"
+											        			data-gbn="code" 
 																th:data-uid="${cdVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
 														<i class="material-icons">edit</i>
 														</button>
 														
-														<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
-														<i class="material-icons">close</i>
-														</button>
+														<button type="button"
+							                                    rel="tooltip" title="Delete" 
+							                                    class="btn btn-danger btn-link btn-sm"
+							                                    th:onclick="deleteCd([[${cdVO.cd}]],'code')" >
+							                            <i class="material-icons">close</i>
+							                            </button>
 													
 													</td>
 												</tr>
@@ -148,34 +179,115 @@
         <th:block th:replace="fragments/script :: scriptFragment"></th:block>
         
         <script th:inline="javascript">
+		/*<![CDATA[*/
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
-		/*<![CDATA[*/
-		var codeVO = {
-				vo:[[${cdVO}]]
-		};
-		/*]]*/ 
+		var gv_uprCd = "";
+		
 		window.onload = function() { //실행될 코드 
 			
-			if(codeVO.vo != null) {
-				
-			}
+			$("#tab_code").hide();
 		}
 		
-		$('#codePopup').on('show.bs.modal', function(e) {
-		
-			var gbn = $(e.relatedTarget).data('gbn');
+		//코드 수정을 위한 단건조회
+		$('#uprCodePopup').on('show.bs.modal', function(e) {
 			
-			//신규 추가
-			$("#exampleModalLongTitle").text("상위 코드 추가");
-			$("#edt_type").val("insert");
-			$("#edt_gbn").val(gbn);
-			$("#cd").removeAttr("disabled");
+			var fv_gbn = $(e.relatedTarget).data('gbn');
+			var fv_cd = $(e.relatedTarget).data('cd');
 			
+			if(fv_cd == undefined) {
+				
+				//신규 추가
+				$("#sta_uprCodeTitle").text("상위 코드 추가");
+				$("#edt_uprType").val("insert");
+				$("#edt_uprGbn").val(fv_gbn);
+				$("#upr_cd").removeAttr("disabled");
+				
+			} else {
+			
+				$("#edt_uprType").val("update");
+				$("#edt_uprGbn").val(fv_gbn);
+				
+				$.ajax({
+					type : "POST",
+					data : {"cd" : fv_cd, "gbn" : fv_gbn},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectCode",
+					success : function(data) {
+						$("#sta_title").text("상위 코드 수정");
+						$("#upr_cd").attr("disabled",true);
+						$("#upr_cd").val(data.DATA.cd);
+						$("#upr_cd_nm").val(data.DATA.cd_nm);
+						$("#upr_sort").val(data.DATA.sort);
+						$("#upr_comment").val(data.DATA.comment);
+	                }
+				});
+			}
 		});
 		
-		$("#grd_uprCode tr").click(function(e) {
+		//화면 재조회를 위한 이벤트
+		$('#uprCodePopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
 		
+		//하위코드 수정 및 추가를 위한 함수
+		$('#codePopup').on('show.bs.modal', function(e) {
+			
+			var fv_gbn = $(e.relatedTarget).data('gbn');
+			var fv_cd = $(e.relatedTarget).data('cd');
+			
+			if(fv_cd == undefined) {
+				
+				//신규 추가
+				$("#sta_codeTitle").text("신규 코드 추가");
+				$("#edt_type").val("insert");
+				$("#edt_gbn").val(fv_gbn);
+				$("#upr_cd").removeAttr("disabled");
+			}
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#codePopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		//row click event 하위코드를 조회하기 위한 탭 이동
+		$("#grd_uprCode tr").click(function(e) {
+			
+			//사용유무 갱신
+			if($(e.target).attr("class") == "check") {
+				
+				var fv_useyn = $("#chk_uprUseyn").is(":checked") ? 0 : 1;
+				var fv_cd = $("#chk_uprUseyn").data("cd");
+				
+				$.ajax({
+					type : "POST",
+					data : {"cd" : fv_cd, "useyn" : fv_useyn, "gbn" : "upr"},
+					beforeSend : function(xhr)
+		            {   
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/updateCodeUseYn",
+					success : function(data) {
+						location.reload();
+	                }
+				});	
+				
+				return;
+			}
+			
+			//삭제 버튼에서 이벤트를 발생하지 않기 위해서 추가
+			if($(e.target).attr("class") == "material-icons"
+			|| $(e.target).attr("class") == "form-check"
+			|| $(e.target).attr("class") == "form-check-label"
+			|| $(e.target).attr("class") == "form-check-input"
+			|| $(e.target).attr("class") == "form-check-sign") {
+				return;
+			}
+			
 			var str = ""
 			var tdArr = new Array();	// 배열 선언
 			
@@ -184,8 +296,7 @@
 			var td = tr.children();
 			
 			var cd = td.eq(0).text();
-			
-			console.log(cd);
+			gv_uprCd = cd;
 			
 			$.ajax({
 				type : "POST",
@@ -194,26 +305,51 @@
 	            {   
 					xhr.setRequestHeader(header, token);
 	            },
-				url : "/codeList",
+				url : "/code",
 				success : function(data) {
-					console.log(data);
+					if(data != null) {
+						$("#tab_code").show();
+						$("#btn_upr").removeClass("active show");
+						$("#btn_code").addClass("active show");
+						$("#grd_uprCode").removeClass("active");
+						$("#grd_code").addClass("active");
+						$("#table_code").replaceWith(data);
+						
+						var fv_upcd = $("#uprCd").val();
+						$("#tab_code > a > h3").text("하위코드 " + fv_upcd);
+						$("#edt_uprCd").val(cd);
+					}
+					
                 }
 			});	
 			
 		});
 		
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-			console.log("event");
-			console.log(e);		
-		});
+		//코드 사용유무 수정
 		
-		$("#btn_upr").click(function(e) {
-			console.log("asdasdasdasdasd");
-		});
-		
-		$("#btn_code").click(function(e) {
-			console.log("asdasdasdasdasd");
-		});
+		//코드 삭제 이벤트
+		function deleteCd(cd, gbn) {
+			
+			var rtn = confirm("\'" + cd + "\' 항목을 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"cd" : cd, "gbn" : gbn, "upr_cd" : gv_uprCd},
+					beforeSend : function(xhr)
+		          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+			    	},
+					url : "/deleteCode",
+					success : function(data) {
+						location.reload();
+					}
+				});
+			}
+			
+		}
+		/*]]*/ 
         </script>
         
     </body>
