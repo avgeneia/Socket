@@ -12,7 +12,7 @@ public interface CodeService {
 	
 	public Code selectCode(Map<String, String[]> map) throws SQLException;
 	
-	public List<CodeDto> getCode(String upcd);
+	public List<CodeDto> getCode(String upcd, boolean isAsc, int type);
 	
 	public List<CodeDto> uprCodeList(UserContext user);
 	

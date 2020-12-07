@@ -16,6 +16,8 @@
 					
 						<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLongTitle">신규 사용자 등록</h5>
+						<input id="edt_type" hidden="true" value="">
+						<input id="uid" hidden="true" value="">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 						</button>
@@ -27,7 +29,7 @@
 								
 									<div class="row">
 										<div class="col-md-8">
-											<div class="form-group">
+											<div id="grp_usernm" class="form-group">
 												<label class="bmd-label-floating">계정명</label>
 												<input id="usernm" type="text" class="form-control">
 											</div>
@@ -35,28 +37,22 @@
 										
 										<div class="col-md-4">
 											<div class="form-group">
-												<label class="bmd-label-floating">권한</label>
-												<input id="role" type="text" class="form-control" disabled>
+												<div class="form-group">
+												  <select class="form-control" id="cmb_role">
+												    <option th:each="initRoleVO: ${initRoleVO}" 
+												            th:value="${initRoleVO.cd}"
+												            th:text="${initRoleVO.cd_nm}"/>
+												  </select>
+												</div>
 											</div>
 										</div>
 										
 									</div>
 									
 									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="bmd-label-floating">건물</label>
-												<input id="bnm" type="text" class="form-control">
-											</div>
+										<div class="text-right p-t-13 p-b-23 col-md-12">
+								            <p id="error" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
 										</div>
-										
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="bmd-label-floating">호수</label>
-												<input id="rnm" type="text" class="form-control">
-											</div>
-										</div>
-										
 									</div>
 									
 								</form>
@@ -64,7 +60,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary">저장</button>
+							<button type="button" class="btn btn-primary" onclick="modifyUser()">저장</button>
 						</div>
 					</div>
 					
@@ -75,7 +71,42 @@
 		</body>
 		
 	</th:block>
-
+	
+	<script th:inline="javascript">
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	function modifyUser() {
+	
+		var fv_usernm = $("#usernm").val();
+		var fv_role = $("#cmb_role").val();
+	  	var fv_type = $("#edt_type").val();
+	  	var fv_uid = $("#uid").val();
+		
+		var fv_url = fv_type + "User";
+		
+	  	$.ajax({
+			type : "POST",
+			data : { "uid" : fv_uid, "usernm" : fv_usernm, "role" : fv_role},
+			beforeSend : function(xhr)
+          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+	    	},
+			url : fv_url,
+			success : function(data) {
+				
+				if(data.CODE == "0") {
+					$("#error").css('visibility', 'hidden');
+					$("#userPopup").modal("hide");
+				} else {
+					$("#error").text(data.MSG);
+					$("#error").css('visibility', 'visible');
+				}
+			}
+		});
+	}
+	</script>
+	
 </article>
 
 </html>

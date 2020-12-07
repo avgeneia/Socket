@@ -15,7 +15,8 @@
 					<div class="modal-content">
 					
 						<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">신규 권한 추가</h5>
+						<h5 class="modal-title" id="sta_title">신규 권한 추가</h5>
+						<input id="edt_type" hidden="true" value="">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 						</button>
@@ -28,15 +29,27 @@
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
-												<label id="codeTitle" class="bmd-label-floating">사용자</label>
-												<input id="usernm" type="text" class="form-control">
+												<div class="form-group">
+												  <label class="bmd-label-floating">사용자</label>
+												  <select class="form-control" id="cmb_user">
+												    <option th:each="initUserVO: ${initUserVO}" 
+												            th:value="${initUserVO.uid}"
+												            th:text="${initUserVO.usernm}"/>
+												  </select>
+												</div>
 											</div>
 										</div>
 										
 										<div class="col-md-6">
 											<div class="form-group">
 												<label class="bmd-label-floating">건물</label>
-												<input id="role" type="text" class="form-control">
+												<select class="form-control"
+												        th:onchange="setChangBuild()"
+												        id="cmb_build">
+												    <option th:each="initBuildVO: ${initBuildVO}" 
+												            th:value="${initBuildVO.bid}"
+												            th:text="${initBuildVO.bnm}"/>
+												</select>
 											</div>
 										</div>
 										
@@ -46,7 +59,11 @@
 										<div class="col-md-4">
 											<div class="form-group">
 												<label class="bmd-label-floating">권한</label>
-												<input id="bnm" type="text" class="form-control">
+												<select class="form-control" id="cmb_role">
+												    <option th:each="initRoleVO: ${initRoleVO}" 
+												            th:value="${initRoleVO.cd}"
+												            th:text="${initRoleVO.cd_nm}"/>
+												</select>
 											</div>
 										</div>
 										
@@ -57,7 +74,11 @@
 										<div class="col-md-6">
 											<div class="form-group">
 												<label class="bmd-label-floating">호수</label>
-												<input id="rnm" type="text" class="form-control">
+												<select class="form-control" id="cmb_room">
+												    <option th:each="initRoomVO: ${initRoomVO}" 
+												            th:value="${initRoomVO.rid}"
+												            th:text="${initRoomVO.rnm}"/>
+												</select>
 											</div>
 										</div>
 										
@@ -65,12 +86,18 @@
 									
 									<div class="row">
 										<div class="col-md-12">
-											<div class="form-group">
+											<div class="form-group" id="grp_comment">
 												<label class="bmd-label-floating">비고</label>
 												<input id="comment" type="text" class="form-control">
 											</div>
 										</div>
 										
+									</div>
+									
+									<div class="row">
+										<div class="text-right p-t-13 p-b-23 col-md-12">
+								            <p id="error" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
+										</div>
 									</div>
 									
 								</form>
@@ -96,16 +123,18 @@
 	
 	function modifyAuth() {
 	
-		var bid = $("#cmb_bid").val();
-		var rid = $("#edt_rid").val();
-		var rnm = $("#edt_rnm").val();
-	  	var type = $("#edt_type").val();
+		var fv_uid = $("#cmb_user").val();
+		var fv_bid = $("#cmb_build").val();
+		var fv_rid = $("#cmb_room").val();
+		var fv_role = $("#cmb_role").val();
+	  	var fv_type = $("#edt_type").val();
+	  	var fv_comment = $("#comment").val();
 		
-		var fv_url = type + "Auth";
+		var fv_url = fv_type + "Auth";
 		
 	  	$.ajax({
 			type : "POST",
-			data : {"bid" : bid, "rid" : rid, "rnm" : rnm},
+			data : {"uid" : fv_uid, "bid" : fv_bid, "rid" : fv_rid, "role" : fv_role, "comment" : fv_comment},
 			beforeSend : function(xhr)
           	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 				xhr.setRequestHeader(header, token);
@@ -114,13 +143,26 @@
 			success : function(data) {
 				if(data.CODE == "0") {
 					$("#error").css('visibility', 'hidden');
-					$("#buildPopup").modal("hide");
-				} else if(data.CODE == 19) {
+					$("#authPopup").modal("hide");
+				} else {
 					$("#error").text(data.MSG);
 					$("#error").css('visibility', 'visible');
 				}
 			}
 		});
+	}
+	
+	function setChangBuild() {
+		var fv_bid = $("#cmb_build").val();
+		console.log(room);
+		$('#cmb_room').empty();
+		$('#cmb_room').prop('disabled', false);
+		for(var i = 0; i < room.length ; i++){                
+			if(fv_bid == room[i].bid) {
+				var option = $("<option value='" + room[i].rid + "'>"+room[i].rnm+"</option>");
+	            $('#cmb_room').append(option);
+			}        	
+        }
 	}
 	</script>
 	

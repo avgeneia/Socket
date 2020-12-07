@@ -45,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		//로그인 사용자 인증
 		Account user = query.from(account)
-						    .where(account.usernm.eq(username))
+						    .where(account.usernm.eq(username).and(account.useyn.eq(1)))
 						    .singleResult(account);
 
 		query = new JPAQuery(entityManager);

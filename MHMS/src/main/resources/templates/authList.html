@@ -43,11 +43,16 @@
 				                          <td class="td-actions text-right">
 				                          
 				                            <button type="button" rel="tooltip" title="Edit Task" 
+				                                    th:data-uid="${auth.uid}"
+				                                    th:data-bid="${auth.bid}"
+				                                    th:data-rid="${auth.rid}"
 				                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#authPopup">
 				                              <i class="material-icons">edit</i>
 				                            </button>
 				                            
-				                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+				                            <button type="button" rel="tooltip" title="Remove" 
+				                                    class="btn btn-danger btn-link btn-sm"
+				                                    th:onclick="deleteAuth([[${auth.uid}]], [[${auth.usernm}]], [[${auth.bid}]], [[${auth.rid}]])">
 				                              <i class="material-icons">close</i>
 				                            </button>
 				                            
@@ -81,37 +86,81 @@
         <script th:inline="javascript">
         var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
+		/*<![CDATA[*/
+		var room = [[${initRoomVO}]];
+		/*]]*/
 		
-		$('#userPopup').on('show.bs.modal', function(e) {
+		$('#authPopup').on('show.bs.modal', function(e) {
 			
-			var bid = $(e.relatedTarget).data('bid');
-			var rid = $(e.relatedTarget).data('rid');
+			var fv_uid = $(e.relatedTarget).data('uid');
+			var fv_bid = $(e.relatedTarget).data('bid');
+			var fv_rid = $(e.relatedTarget).data('rid');
 			
-			if(bid == undefined && rid == undefined) {
-
-				return;
+			if(fv_uid == undefined 
+			&& fv_bid == undefined
+			&& fv_rid == undefined) {
+				
+				$("#sta_title").text("신규 권한 추가");
+				$("#edt_type").val("insert");
+				$('#cmb_room').prop('disabled', 'disabled');
 				
 			} else {
 				
+				$("#sta_title").text("권한 수정");
+				$("#edt_type").val("update");
+				
 				$.ajax({
 					type : "POST",
-					data : {"bid" : bid, "rid" : rid},
+					async: false,
+					data : {"uid" : fv_uid, "bid" : fv_bid, "rid" : fv_rid},
 					beforeSend : function(xhr)
 		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 						xhr.setRequestHeader(header, token);
 		            },
-					url : "/buildModify",
+					url : "/selectAuth",
 					success : function(data) {
-						$("#exampleModalLongTitle").text("건물정보 수정");
-						for (const [key, value] of Object.entries(data)) {
-							$('#' + `${key}`).val(`${value}`);
-							$('#' + `${key}`).blur();
-						}
+						console.log(data.DATA);
+						$("#cmb_user").val(data.DATA.uid);
+						$('#cmb_user').prop('disabled', 'disabled');
+						$("#cmb_build").val(data.DATA.bid);
+						$('#cmb_build').prop('disabled', 'disabled');
+						$("#cmb_role").val(data.DATA.role);
+						$("#cmb_room").val(data.DATA.rid);
+						//$('#cmb_room').prop('disabled', false);
+						$('#cmb_room').prop('disabled', 'disabled');
+						$("#comment").val(data.DATA.comment);
+						$('#grp_comment').addClass("is-filled");
 	                }
 				});
 			}
 			
 		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#authPopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		function deleteAuth(uid, usernm, bid, rid) {
+			
+			var rtn = confirm("\'" + usernm + "\' 사용자의 권한을 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid, "bid" : bid, "rid" : rid},
+					beforeSend : function(xhr)
+		          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+			    	},
+					url : "/deleteAuth",
+					success : function(data) {
+						location.reload();
+					}
+				});
+			}
+		}
         </script>
         
     </body>

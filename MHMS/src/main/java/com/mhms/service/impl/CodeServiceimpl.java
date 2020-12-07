@@ -40,25 +40,55 @@ public class CodeServiceimpl implements CodeService{
 		JPAQuery query = new JPAQuery(entityManager);
 
 		QCode code = QCode.code;
-		
-		Code codeList = query.from(code)
-				             .where(code.upr_cd.eq("*").and(code.cd.eq(map.get("cd")[0])))
-				             .singleResult(code);
+		Code codeList = null;
+		if(map.get("gbn")[0].equals("upr")) {
+			codeList = query.from(code)
+			                .where(code.upr_cd.eq("*").and(code.cd.eq(map.get("cd")[0])))
+			                .singleResult(code);
+		} else {
+			codeList = query.from(code)
+			                .where(code.upr_cd.eq(map.get("upr_cd")[0]).and(code.cd.eq(map.get("cd")[0])))
+			                .singleResult(code);
+		}
 		
 		return codeList;
 	}
 	
 	@Override
-	public List<CodeDto> getCode(String upcd) {
+	public List<CodeDto> getCode(String upcd, boolean isAsc, int type) {
 		// TODO Auto-generated method stub
-
+		
+		/*
+		 * int type 
+		 * 		0 : 기본
+		 * 		1 : "신규" 값 추가
+		 * 		2 : "선택" 값 추가
+		 */
+		
 		JPAQuery query = new JPAQuery(entityManager);
 
 		QCode code = QCode.code;
 		
-		List<CodeDto> codeList = query.from(code)
-				                      .where(code.upr_cd.eq(upcd))
-				                      .list(new QCodeDto(code.upr_cd, code.cd, code.cd_nm, code.comment, code.useyn, code.sort));
+		List<CodeDto> codeList = null;
+		
+		query.from(code);
+		query.where(code.upr_cd.eq(upcd).and(code.useyn.eq(1)));
+		
+		if(isAsc) {
+			query.orderBy(code.sort.asc());
+		} else {
+			query.orderBy(code.sort.desc());
+		}
+		
+		codeList = query.list(new QCodeDto(code.upr_cd, code.cd, code.cd_nm, code.comment, code.useyn, code.sort));
+		
+		if(type == 1) {
+			CodeDto newLine = new CodeDto("", "", "신규", "", 0, 0);
+			codeList.add(0, newLine);
+		} else if(type == 2) {
+			CodeDto newLine = new CodeDto("", "", "선택", "", 0, 0);
+			codeList.add(0, newLine);
+		}
 		
 		return codeList;
 	}
@@ -155,7 +185,7 @@ public class CodeServiceimpl implements CodeService{
 			reuslt = updateClause.set(code.cd_nm, map.get("cd_nm")[0])
 								 .set(code.sort, Integer.parseInt(map.get("sort")[0]))
 								 .set(code.comment, map.get("comment")[0])
-								 .where(code.upr_cd.eq("*").and(code.cd.eq(map.get("cd")[0])))
+								 .where(code.upr_cd.eq(map.get("upr_cd")[0]).and(code.cd.eq(map.get("cd")[0])))
 								 .execute();
 		}
 		
@@ -179,7 +209,7 @@ public class CodeServiceimpl implements CodeService{
 								 .execute(); 
 		} else {
 			reuslt = updateClause.set(code.useyn, Integer.parseInt(map.get("useyn")[0]))
-								 .where(code.upr_cd.eq("*").and(code.cd.eq(map.get("cd")[0])))
+								 .where(code.upr_cd.eq(map.get("upr_cd")[0]).and(code.cd.eq(map.get("cd")[0])))
 								 .execute();
 		}
 		

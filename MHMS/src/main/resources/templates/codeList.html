@@ -62,8 +62,7 @@
 													<td>
 														<div class="form-check">
 															<label class="form-check-label">
-																<input id="chk_uprUseyn"
-																       th:data-cd="${uprVO.cd}" 
+																<input th:attr="onclick=|fn_chk_useyn('${uprVO.cd}', this.checked, 'upr')|" 
 																       class="form-check-input" type="checkbox" th:checked="${uprVO.useyn}" value="" checked>
 																<span class="form-check-sign">
 																	<span class="check"></span>
@@ -124,7 +123,8 @@
 													<td>
 														<div class="form-check">
 															<label class="form-check-label">
-																<input th:data-cd="${cdVO.cd}" 
+																<input name="chk_useyn"
+																       th:attr="onclick=|fn_chk_useyn('${cdVO.cd}', this.checked, 'code')|"
 																       class="form-check-input" type="checkbox" th:checked="${cdVO.useyn}" value="" checked>
 																<span class="form-check-sign">
 																	<span class="check"></span>
@@ -138,7 +138,7 @@
 														<input type="hidden" th:value="${cdVO.cd}"/>
 														<button type="button" rel="tooltip" title="Edit Task"
 											        			data-gbn="code" 
-																th:data-uid="${cdVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
+																th:data-cd="${cdVO.cd}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#codePopup">
 														<i class="material-icons">edit</i>
 														</button>
 														
@@ -203,6 +203,11 @@
 				$("#edt_uprGbn").val(fv_gbn);
 				$("#upr_cd").removeAttr("disabled");
 				
+				$("#grp_upr_cd").removeClass("is-filled");
+				$("#grp_upr_cd_nm").removeClass("is-filled");
+				$("#grp_upr_sort").removeClass("is-filled");
+				$("#grp_upr_comment").removeClass("is-filled");
+				
 			} else {
 			
 				$("#edt_uprType").val("update");
@@ -223,6 +228,11 @@
 						$("#upr_cd_nm").val(data.DATA.cd_nm);
 						$("#upr_sort").val(data.DATA.sort);
 						$("#upr_comment").val(data.DATA.comment);
+						
+						$("#grp_upr_cd").addClass("is-filled");
+						$("#grp_upr_cd_nm").addClass("is-filled");
+						$("#grp_upr_sort").addClass("is-filled");
+						$("#grp_upr_comment").addClass("is-filled");
 	                }
 				});
 			}
@@ -245,8 +255,43 @@
 				$("#sta_codeTitle").text("신규 코드 추가");
 				$("#edt_type").val("insert");
 				$("#edt_gbn").val(fv_gbn);
-				$("#upr_cd").removeAttr("disabled");
+				$("#cd").removeAttr("disabled");
+				
+				$("#grp_cd").removeClass("is-filled");
+				$("#grp_cd_nm").removeClass("is-filled");
+				$("#grp_sort").removeClass("is-filled");
+				$("#grp_comment").removeClass("is-filled");
+				
+			} else {
+				
+				$("#edt_type").val("update");
+				$("#edt_gbn").val(fv_gbn);
+				
+				$.ajax({
+					type : "POST",
+					data : {"cd" : fv_cd, "gbn" : fv_gbn, "upr_cd" : gv_uprCd},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectCode",
+					success : function(data) {
+						$("#sta_codeTitle").text("코드 수정");
+						$("#cd").attr("disabled",true);
+						$("#cd").val(data.DATA.cd);
+						$("#cd_nm").val(data.DATA.cd_nm);
+						$("#sort").val(data.DATA.sort);
+						$("#comment").val(data.DATA.comment);
+						
+						$("#grp_cd").addClass("is-filled");
+						$("#grp_cd_nm").addClass("is-filled");
+						$("#grp_sort").addClass("is-filled");
+						$("#grp_comment").addClass("is-filled");
+	                }
+				});
+				
 			}
+			
 		});
 		
 		//화면 재조회를 위한 이벤트
@@ -257,34 +302,13 @@
 		//row click event 하위코드를 조회하기 위한 탭 이동
 		$("#grd_uprCode tr").click(function(e) {
 			
-			//사용유무 갱신
-			if($(e.target).attr("class") == "check") {
-				
-				var fv_useyn = $("#chk_uprUseyn").is(":checked") ? 0 : 1;
-				var fv_cd = $("#chk_uprUseyn").data("cd");
-				
-				$.ajax({
-					type : "POST",
-					data : {"cd" : fv_cd, "useyn" : fv_useyn, "gbn" : "upr"},
-					beforeSend : function(xhr)
-		            {   
-						xhr.setRequestHeader(header, token);
-		            },
-					url : "/updateCodeUseYn",
-					success : function(data) {
-						location.reload();
-	                }
-				});	
-				
-				return;
-			}
-			
 			//삭제 버튼에서 이벤트를 발생하지 않기 위해서 추가
 			if($(e.target).attr("class") == "material-icons"
 			|| $(e.target).attr("class") == "form-check"
 			|| $(e.target).attr("class") == "form-check-label"
 			|| $(e.target).attr("class") == "form-check-input"
-			|| $(e.target).attr("class") == "form-check-sign") {
+			|| $(e.target).attr("class") == "form-check-sign"
+			|| $(e.target).attr("class") == "check") {
 				return;
 			}
 			
@@ -326,6 +350,21 @@
 		});
 		
 		//코드 사용유무 수정
+		function fn_chk_useyn(code, e, gbn) {
+			
+			$.ajax({
+				type : "POST",
+				data : {"cd" : code, "useyn" : e ? 1 : 0, "gbn" : gbn, "upr_cd" : gv_uprCd},
+				beforeSend : function(xhr)
+	            {   
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/updateCodeUseYn",
+				success : function(data) {
+					location.reload();
+                }
+			});	
+		}
 		
 		//코드 삭제 이벤트
 		function deleteCd(cd, gbn) {

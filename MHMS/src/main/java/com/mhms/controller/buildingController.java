@@ -56,8 +56,7 @@ public class buildingController {
 		Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("title", "건축물 관리");
-		
-		
+
 		//관리자 권한을 확인해서 전체를 조회하게
 		boolean auth = CommUtil.getAuth(user);
 		

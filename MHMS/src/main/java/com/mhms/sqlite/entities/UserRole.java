@@ -22,15 +22,8 @@ import lombok.Setter;
 public class UserRole {
 	
 	@Id
-	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "uid",
-			referencedColumnName = "uid",
-			insertable = false, updatable = false),
-		@JoinColumn(name = "role",
-    		referencedColumnName = "role",
-    		insertable = false, updatable = false)
-	})
+	@ManyToOne	
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
 	private Account account;
 	
 	@Id

@@ -10,7 +10,13 @@ import com.mhms.security.UserContext;
 
 public interface AuthService {
 
+	public AuthDto selectAuth(Map<String, String[]> map) throws SQLException;
+	
     public List<AuthDto> authList(UserContext user);
     
-    public int insertAuth(Map<String, String[]> map, int type) throws SQLException;
+    public int insertAuth(Map<String, String[]> map, UserContext user) throws SQLException;
+    
+    public long updateAuth(Map<String, String[]> map) throws SQLException;
+    
+    public long deleteAuth(Map<String, String[]> map) throws SQLException;
 }

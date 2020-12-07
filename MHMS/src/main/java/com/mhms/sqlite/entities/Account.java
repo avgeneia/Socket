@@ -29,7 +29,6 @@ public class Account {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int uid;
 	
-	@Id
 	@Column(name = "role")
 	private String role;
 	

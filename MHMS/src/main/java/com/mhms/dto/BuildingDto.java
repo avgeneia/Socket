@@ -1,5 +1,7 @@
 package com.mhms.dto;
 
+import java.util.List;
+
 import com.mysema.query.annotations.QueryProjection;
 
 import lombok.Data;
@@ -15,6 +17,7 @@ public class BuildingDto {
 	int rid;
 	String bnm;
 	String rnm;
+	List<RoomDto> listDto;
 	
 	@QueryProjection
 	public BuildingDto(int bid,	int rid, String bnm, String rnm) {
@@ -28,5 +31,12 @@ public class BuildingDto {
 	public BuildingDto(int bid, String bnm) {
 		this.bid = bid;
 		this.bnm = bnm;
+	}
+	
+	@QueryProjection
+	public BuildingDto(int bid, String bnm, List<RoomDto> listDto) {
+		this.bid = bid;
+		this.bnm = bnm;
+		this.listDto = listDto;
 	}
 }

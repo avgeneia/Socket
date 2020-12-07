@@ -22,5 +22,4 @@ public class CommUtil {
 		
 		return auth;
 	}
-	
 }

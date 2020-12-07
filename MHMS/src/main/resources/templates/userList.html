@@ -54,7 +54,9 @@
 															<td>
 																<div class="form-check">
 																	<label class="form-check-label">
-																		<input class="form-check-input" type="checkbox" th:checked="${user.useyn}" value="" checked>
+																		<input class="form-check-input" type="checkbox"
+																		       th:attr="onclick=|fn_chk_useyn('${user.uid}', this.checked)|" 
+																		       th:checked="${user.useyn}" value="" checked>
 																		<span class="form-check-sign">
 																			<span class="check"></span>
 																		</span>
@@ -67,13 +69,15 @@
 														<td th:text="${user.rnm}">rnm</td>
 														<td class="td-actions text-right">
 															
-															<input type="hidden" th:value="${user.uid}" id="uid"/>
+															<input type="hidden" th:value="${user.uid}"/>
 															<button type="button" rel="tooltip" title="Edit Task" 
 																	th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
 															<i class="material-icons">edit</i>
 															</button>
 															
-															<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm" onclick="chkArg()">
+															<button type="button" rel="tooltip" title="Remove"
+															        th:onclick="deleteUser([[${user.uid}]], [[${user.usernm}]])"
+															        class="btn btn-danger btn-link btn-sm">
 															<i class="material-icons">close</i>
 															</button>
 														
@@ -130,14 +134,15 @@
 			
 			if(uid == undefined) {
 				
+				//신규 추가
+				$("#edt_type").val("insert");
 				$("#usernm").val("");
-				$("#role").val("");
-				$("#role").removeAttr("disabled");
-				$("#bnm").val("");
-				$("#rnm").val("");
-				return;
+				$("#grp_usernm").removeClass("is-filled");
 				
 			} else {
+				
+				$("#edt_type").val("update");
+				$("#uid").val(uid);
 				
 				$.ajax({
 					type : "POST",
@@ -146,18 +151,61 @@
 		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 						xhr.setRequestHeader(header, token);
 		            },
-					url : "/userModify",
+					url : "/selectUser",
 					success : function(data) {
 						$("#exampleModalLongTitle").text("사용자 수정");
+						$("#grp_usernm").addClass("is-filled");
 						for (const [key, value] of Object.entries(data)) {
 							$('#' + `${key}`).val(`${value}`);
-							$('#' + `${key}`).blur();
+							$('#' + `${key}`).addClass("is-filled");
 						}
 	                }
 				});
 			}
 			
 		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#userPopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		function deleteUser(uid, usernm) {
+			
+			var rtn = confirm("\'" + usernm + "\' 사용자를 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/deleteUser",
+					success : function(data) {
+						location.reload();
+	                }
+				});
+			}
+		}
+		
+		function fn_chk_useyn(uid, isChk) {
+			
+			$.ajax({
+				type : "POST",
+				data : {"uid" : uid, "useyn" : isChk?1:0},
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/updateUserUseYn",
+				success : function(data) {
+					location.reload();
+                }
+			});
+		}
 		</script>
 				
 	</body>

@@ -16,5 +16,4 @@ public class AccountPK implements Serializable {
 	
 	int uid;
 	
-	String role;
 }

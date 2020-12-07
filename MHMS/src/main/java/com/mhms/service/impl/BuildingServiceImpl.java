@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import com.mhms.dto.BuildingDto;
 import com.mhms.dto.QBuildingDto;
+import com.mhms.dto.QRoomDto;
+import com.mhms.dto.RoomDto;
 import com.mhms.security.UserContext;
 import com.mhms.service.BuildingService;
 import com.mhms.sqlite.entities.Building;
@@ -82,7 +84,7 @@ public class BuildingServiceImpl implements BuildingService {
 		return dto;
 	}
 	
-	//화면에 필요한 정보들을 넘겨주기위한 메소드
+	//화면에 필요한 정보들을 넘겨주기위한 메소드 건물 목록
 	@Override
 	public List<BuildingDto> initBuild(UserContext user) {
 		// TODO Auto-generated method stub
@@ -112,7 +114,36 @@ public class BuildingServiceImpl implements BuildingService {
 		     
 		return result;
 	}
-
+	
+	//화면에 필요한 정보들을 넘겨주기위한 메소드 호수 목록
+	@Override
+	public List<RoomDto> initRoom(UserContext user) {
+		// TODO Auto-generated method stub
+		JPAQuery query = new JPAQuery(entityManager);
+		QBuilding building = QBuilding.building;
+		
+		//관리자 권한을 확인해서 전체를 조회하게
+		boolean auth = false;
+		Iterator<GrantedAuthority> itertor = user.getAuthorities().iterator();
+		while(itertor.hasNext()) {
+			GrantedAuthority arg = itertor.next();
+			if(arg.getAuthority().equals("ROLE_ADMIN")) {
+				auth = true;
+				break;
+			}
+		}
+		
+		query.from(building);
+		if(auth) {
+			query.where(building.bid.ne(0));
+		} else {
+			query.where(building.bid.in(user.getBid()));
+		}
+		List<RoomDto> result = query.list(new QRoomDto(building.bid, building.rid, building.bnm, building.rnm));
+		     
+		return result;
+	}
+	
 	@Override
 	public int insertBuild(Map<String, String[]> map, boolean authType) throws SQLException {
 		// TODO Auto-generated method stub
