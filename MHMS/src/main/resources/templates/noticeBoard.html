@@ -44,7 +44,7 @@
 				                          
 				                            <button type="button" rel="tooltip" title="Edit Task" 
 				                                    th:data-bid="${build.bid}" 
-				                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#noticPopup">
+				                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#noticePopup">
 				                              <i class="material-icons">edit</i>
 				                            </button>
 				                            
@@ -57,12 +57,12 @@
 				                      </tbody>
 				                    </table>
 				                    
-				                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#noticPopup">
+				                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#noticePopup">
 									  게시물 등록
 									</button>
 									
 									<!-- Modal -->
-									<article id="modal" th:replace="fragments/popup/noticPopup :: noticPopup()"></article>
+									<article id="modal" th:replace="fragments/popup/noticePopup :: noticePopup()"></article>
 									<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
 									
 				                  </div>
@@ -83,7 +83,7 @@
         var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-		$('#userPopup').on('show.bs.modal', function(e) {
+		$('#noticePopup').on('show.bs.modal', function(e) {
 			
 			var bid = $(e.relatedTarget).data('bid');
 			var rid = $(e.relatedTarget).data('rid');

@@ -18,8 +18,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @IdClass(UserRolePK.class)
-@Table(name = "TB_USERROLE")
+@Table(name = "tb_userrole")
 public class UserRole {
+	
+	@Id
+	private int sid;
 	
 	@Id
 	@ManyToOne	
