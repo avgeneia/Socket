@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<article th:fragment="bbsPopup()" xmlns:th="http://www.thymeleaf.org">
+
+	<th:block>
+	
+		<body>
+		
+			<!-- Modal -->
+			<div class="modal fade" id="bbsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				
+					<div class="modal-content">
+					
+						<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">게시물 등록</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+						</div>
+						
+						<div class="modal-body">
+							<div class="card-body">
+								<form id="noticeForm" name="noticeBody" method="post">
+								
+									<div class="row">
+										<div class="col-md-8">
+											<div class="form-group" id="grp_title">
+												<label id="codeTitle" class="bmd-label-floating">제목</label>
+												<input id="edt_title" type="text" class="form-control" required>
+											</div>
+										</div>
+										
+									</div>
+									
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label class="bmd-label-floating">내용</label>
+												<textarea class="form-control" id="ta_content" rows="5" required></textarea>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-md-8">
+											<div class="form-group" id="grp_link">
+												<label class="bmd-label-floating">링크</label>
+												<input id="edt_link" type="text" class="form-control">
+											</div>
+										</div>
+										
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="bmd-label-floating">대상건물</label>
+												<select class="form-control custom-select"
+												        id="cmb_build" required>
+												    <option th:each="initBuildVO: ${initBuildVO}" 
+												            th:value="${initBuildVO.bid}"
+												            th:text="${initBuildVO.bnm}"/>
+												</select>
+											</div>
+										</div>
+										
+									</div>
+									
+									<div class="row">
+										<div class="col-md-12">
+											<label class="bmd-label-floating">첨부</label>
+											<input id="inputFile" type="file" class="form-control">
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="text-right p-t-13 p-b-23 col-md-12">
+								            <p id="error" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary" onclick="saveNotice()">저장</button>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		
+		</body>
+		
+	</th:block>
+	
+	<script th:inline="javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
+	function saveNotice() {
+
+		var formData = new FormData(); 
+		formData.append("title", $("#edt_title").val()); 
+		formData.append("content", $("#ta_content").val()); 
+		formData.append("file", $("#inputFile")[0].files[0]);
+		formData.append("link", $("#edt_link").val()); 
+		formData.append("bid", $("#cmb_build").val());
+		formData.append("notice", 0); 
+		
+		if($("#edt_title").val() == "") {
+			$("#error").text("제목은 필수 입력항목 입니다.");
+			$("#edt_title").focus();
+			$("#error").css('visibility', 'visible');
+			return;
+		}
+		
+		if($("#ta_content").val() == "") {
+			$("#error").text("내용은 필수 입력항목 입니다.");
+			$("#ta_content").focus();
+			$("#error").css('visibility', 'visible');
+			return;
+		}
+		
+		if($("#cmb_build").val() == "-1") {
+			$("#error").text("대상건물은 필수 입력항목 입니다.");
+			$("#cmb_build").focus();
+			$("#error").css('visibility', 'visible');
+			return;
+		}
+		
+		$.ajax({
+			type : "POST",
+			data : formData,
+		    processData: false,    // 반드시 작성
+		    contentType: false,    // 반드시 작성
+			beforeSend : function(xhr)
+          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader(header, token);
+	    	},
+			url : "/insertNotice",
+			success : function(data) {
+				if(data.CODE == "0") {
+					$("#error").css('visibility', 'hidden');
+					$("#bbsPopup").modal("hide");
+				} else {
+					$("#error").text(data.MSG);
+					$("#error").css('visibility', 'visible');
+				}
+			}
+		});
+		
+	}
+	</script>
+	
+</article>
+
+</html>

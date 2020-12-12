@@ -96,7 +96,13 @@ public class AuthServiceImpl implements AuthService {
 		PreparedStatement pstmt = null;
 		int result = 0; 
 		
-		insertSQL = "INSERT INTO tb_userrole (comment, \"role\", writer, writerdate, bid, rid, uid) VALUES(?, ?, ?, strftime(\"%Y%m%d\",'now','localtime'), ?, ?, ?)";
+		JPAQuery query = new JPAQuery(entityManager);
+		QUserRole userRole = QUserRole.userRole;
+		query.from(userRole);
+		query.orderBy(userRole.sid.desc());
+		int maxSid = query.singleResult(userRole).getSid();
+		
+		insertSQL = "INSERT INTO tb_userrole (comment, \"role\", writer, writerdate, bid, rid, uid, sid) VALUES(?, ?, ?, strftime(\"%Y%m%d\",'now','localtime'), ?, ?, ?, ?)";
 		pstmt = conn.prepareStatement(insertSQL);
 		pstmt.setString(1, map.get("comment")[0]);
 		pstmt.setString(2, map.get("role")[0]);
@@ -104,6 +110,7 @@ public class AuthServiceImpl implements AuthService {
 		pstmt.setInt(4, Integer.parseInt(map.get("bid")[0]));
 		pstmt.setInt(5, Integer.parseInt(map.get("rid")[0]));
 		pstmt.setInt(6, Integer.parseInt(map.get("uid")[0]));
+		pstmt.setInt(7, maxSid > 0 ? maxSid + 1 : 1);
 		result = pstmt.executeUpdate();
 		
 		return result;

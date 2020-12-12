@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+	<!-- 공통 헤더-->
+	<th:block th:replace="fragments/head :: headFragment"></th:block>
+	
+	<body id="page-top">
+	
+		<div id="wrapper">
+		
+			<!-- 사이드바-->
+			<th:block th:replace="fragments/sidebar :: sidebarFragment"></th:block>
+			
+			<div id="content-wrapper" class="d-flex flex-column main-panel">
+			
+				<div id="content" class="content">
+				
+					<!-- 상단바-->
+					<th:block th:replace="fragments/topbar :: topbarFragment"></th:block>
+					
+					<!-- 본문-->
+					<div class="content">
+					
+						<div class="container-fluid">
+						
+							<div class="row">
+							
+								<div class="col-md-12">
+								
+									<div class="card">
+									
+										<div class="card-header card-header-primary">
+											<h3 class="card-title ">사용자 목록</h3>
+										</div>
+										
+										<div class="card-body">
+										
+											<div class="table-responsive">
+											
+												<table class="table" id="table">
+												
+													<thead class=" text-primary">
+														<th>계정명</th>
+														<th>사용여부</th>
+														<th>권한</th>
+														<th>건물</th>
+														<th>호수</th>
+														<th></th>
+													</thead>
+													
+													<tbody>
+														<tr th:each="user : ${userVO}">
+															<td th:text="${user.usernm}">NAME</td>
+															<td>
+																<div class="form-check">
+																	<label class="form-check-label">
+																		<input class="form-check-input" type="checkbox"
+																		       th:attr="onclick=|fn_chk_useyn('${user.uid}', this.checked)|" 
+																		       th:checked="${user.useyn}" value="" checked>
+																		<span class="form-check-sign">
+																			<span class="check"></span>
+																		</span>
+																	</label>
+																</div>
+															</td>
+														<!-- <td th:text="${user.ISDEL}">isDel</td> -->
+														<td th:text="${user.role}">rold</td>
+														<td th:text="${user.bnm}">bnm</td>
+														<td th:text="${user.rnm}">rnm</td>
+														<td class="td-actions text-right">
+															
+															<input type="hidden" th:value="${user.uid}"/>
+															<button type="button" rel="tooltip" title="Edit Task" 
+																	th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
+															<i class="material-icons">edit</i>
+															</button>
+															
+															<button type="button" rel="tooltip" title="Remove"
+															        th:onclick="deleteUser([[${user.uid}]], [[${user.usernm}]])"
+															        class="btn btn-danger btn-link btn-sm">
+															<i class="material-icons">close</i>
+															</button>
+														
+														</td>
+														</tr>
+													</tbody>
+													
+												</table>
+												
+												<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#userPopup">
+												사용자 추가
+												</button>
+												
+												<!-- Modal -->
+												<article id="modal" th:replace="fragments/popup/userPopup :: userPopup()"></article>
+												<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
+												
+											</div>
+											
+										</div>
+										
+									</div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		<!-- 공통 스크립트 -->
+		<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+		 
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var userVO = {
+			userVO:[[${userVO}]]
+		};
+		/*]]*/
+		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
+		$('#userPopup').on('show.bs.modal', function(e) {
+			
+			var uid = $(e.relatedTarget).data('uid');
+			
+			if(uid == undefined) {
+				
+				//신규 추가
+				$("#edt_type").val("insert");
+				$("#usernm").val("");
+				$("#grp_usernm").removeClass("is-filled");
+				
+			} else {
+				
+				$("#edt_type").val("update");
+				$("#uid").val(uid);
+				
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectUser",
+					success : function(data) {
+						$("#exampleModalLongTitle").text("사용자 수정");
+						$("#grp_usernm").addClass("is-filled");
+						for (const [key, value] of Object.entries(data)) {
+							$('#' + `${key}`).val(`${value}`);
+							$('#' + `${key}`).addClass("is-filled");
+						}
+	                }
+				});
+			}
+			
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#userPopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		function deleteUser(uid, usernm) {
+			
+			var rtn = confirm("\'" + usernm + "\' 사용자를 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/deleteUser",
+					success : function(data) {
+						location.reload();
+	                }
+				});
+			}
+		}
+		
+		function fn_chk_useyn(uid, isChk) {
+			
+			$.ajax({
+				type : "POST",
+				data : {"uid" : uid, "useyn" : isChk?1:0},
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/updateUserUseYn",
+				success : function(data) {
+					location.reload();
+                }
+			});
+		}
+		</script>
+				
+	</body>
+	
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <!-- 공통 헤더-->
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+
+    <body id="page-top">
+        <div id="wrapper">
+            <!-- 사이드바-->
+            <th:block th:replace="fragments/sidebar :: sidebarFragment"></th:block>
+
+            <div id="content-wrapper" class="d-flex flex-column main-panel">
+                <div id="content" class="content">
+                    <!-- 상단바-->
+                    <th:block th:replace="fragments/topbar :: topbarFragment"></th:block>
+                    <!-- 본문-->
+                    <div class="content">
+				        <div class="container-fluid">
+				          <div class="row">
+				            <div class="col-md-12">
+				              <div class="card">
+				                <div class="card-header card-header-primary">
+				                  <h3 class="card-title ">권한 관리</h3>
+				                </div>
+				                <div class="card-body">
+				                  <div class="table-responsive">
+				                    <table class="table">
+				                      <thead class=" text-primary">
+				                        <th>사용자</th>
+				                        <th>건물명</th>
+				                        <th>권한</th>
+				                        <th>호수</th>
+				                        <th>비고</th>
+				                        <th></th>
+				                      </thead>
+				                      <tbody>
+				                        <tr th:each="auth : ${authList}">
+				                          <td th:text="${auth.usernm}">1</td>
+				                          <td th:text="${auth.bnm}">Dakota Rice</td>
+				                          <td th:text="${auth.role}">Niger</td>
+				                          <td th:text="${auth.rnm}">Niger</td>
+				                          <td th:text="${auth.comment}">Dakota Rice</td>
+				                          <td class="td-actions text-right">
+				                          
+				                            <button type="button" rel="tooltip" title="Edit Task" 
+				                                    th:data-uid="${auth.uid}"
+				                                    th:data-bid="${auth.bid}"
+				                                    th:data-rid="${auth.rid}"
+				                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#authPopup">
+				                              <i class="material-icons">edit</i>
+				                            </button>
+				                            
+				                            <button type="button" rel="tooltip" title="Remove" 
+				                                    class="btn btn-danger btn-link btn-sm"
+				                                    th:onclick="deleteAuth([[${auth.uid}]], [[${auth.usernm}]], [[${auth.bid}]], [[${auth.rid}]])">
+				                              <i class="material-icons">close</i>
+				                            </button>
+				                            
+				                          </td>
+				                        </tr>
+				                      </tbody>
+				                    </table>
+				                    
+				                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#authPopup">
+									  권한 추가
+									</button>
+									
+									<!-- Modal -->
+									<article id="modal" th:replace="fragments/popup/authPopup :: authPopup()"></article>
+									<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
+									
+				                  </div>
+				                </div>
+				              </div>
+				            </div>
+				          </div>
+				        </div>
+				      </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 공통 스크립트 -->
+        <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+        
+        <script th:inline="javascript">
+        var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		/*<![CDATA[*/
+		var room = [[${initRoomVO}]];
+		/*]]*/
+		
+		$('#authPopup').on('show.bs.modal', function(e) {
+			
+			var fv_uid = $(e.relatedTarget).data('uid');
+			var fv_bid = $(e.relatedTarget).data('bid');
+			var fv_rid = $(e.relatedTarget).data('rid');
+			
+			if(fv_uid == undefined 
+			&& fv_bid == undefined
+			&& fv_rid == undefined) {
+				
+				$("#sta_title").text("신규 권한 추가");
+				$("#edt_type").val("insert");
+				$('#cmb_room').prop('disabled', 'disabled');
+				
+			} else {
+				
+				$("#sta_title").text("권한 수정");
+				$("#edt_type").val("update");
+				
+				$.ajax({
+					type : "POST",
+					async: false,
+					data : {"uid" : fv_uid, "bid" : fv_bid, "rid" : fv_rid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectAuth",
+					success : function(data) {
+						console.log(data.DATA);
+						$("#cmb_user").val(data.DATA.uid);
+						$('#cmb_user').prop('disabled', 'disabled');
+						$("#cmb_build").val(data.DATA.bid);
+						$('#cmb_build').prop('disabled', 'disabled');
+						$("#cmb_role").val(data.DATA.role);
+						$("#cmb_room").val(data.DATA.rid);
+						//$('#cmb_room').prop('disabled', false);
+						$('#cmb_room').prop('disabled', 'disabled');
+						$("#comment").val(data.DATA.comment);
+						$('#grp_comment').addClass("is-filled");
+	                }
+				});
+			}
+			
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#authPopup').on('hide.bs.modal', function(e) {
+			location.reload();
+		});
+		
+		function deleteAuth(uid, usernm, bid, rid) {
+			
+			var rtn = confirm("\'" + usernm + "\' 사용자의 권한을 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid, "bid" : bid, "rid" : rid},
+					beforeSend : function(xhr)
+		          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+			    	},
+					url : "/deleteAuth",
+					success : function(data) {
+						location.reload();
+					}
+				});
+			}
+		}
+        </script>
+        
+    </body>
+</html>

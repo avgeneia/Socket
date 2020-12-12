@@ -50,7 +50,7 @@
 
 					<div class="text-right p-t-13 p-b-23">
 						<div align="center" th:if="${param.error}">
-			                <p style="font-size: 20; color: #FF1C19;">사용자ID 또는 비밀번호를 확인바랍니다.</p>
+			                <p style="font-size: 20; color: #FF1C19;" th:text="${errorMsg}">사용자ID 또는 비밀번호를 확인바랍니다.</p>
 			            </div>
 					</div>
 

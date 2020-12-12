@@ -3,7 +3,11 @@ package com.mhms.dto;
 import com.mysema.query.annotations.QueryProjection;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Data
 public class CodeDto {
 	

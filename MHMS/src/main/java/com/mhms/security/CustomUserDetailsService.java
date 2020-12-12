@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
     @SuppressWarnings("unused")
 	@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws AuthenticationException /*UsernameNotFoundException, AccountExpiredException*/ {
 
 		JPAQuery query = new JPAQuery(entityManager);
 		
@@ -62,9 +64,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 		}
 		
         if(user == null){
-            throw new UsernameNotFoundException("UsernameNotFoundException");
+            throw new UsernameNotFoundException("사용자ID 또는 비밀번호를 확인바랍니다.");
+        } else if(bidList.isEmpty()) {
+        	throw new AccountExpiredException("사용자 권한이 없습니다.");
         }
-
+        
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(user.getRole()));
 

@@ -1,5 +1,6 @@
 package com.mhms.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,8 +22,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final UserDetailsService userDetailsService;
 	
-//	@Autowired
-//	private DataSource dataSource;
+	@Autowired
+	CustomAuthenticationFailHandler customAuthenticationFailHandler;
+	
+	@Autowired
+	CustomSuccessHandler customSuccessHandler;
 	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             	.formLogin()
 	                .loginPage("/login")
 	                .permitAll()
-	                .defaultSuccessUrl("/index")
+	                .failureHandler(customAuthenticationFailHandler)
+	                .successHandler(customSuccessHandler)
+	                //.defaultSuccessUrl("/index")
             .and()
             	.logout()	
             		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

@@ -13,9 +13,11 @@ public interface NoticeService {
 
 	public Notice selectNotice(Map<String, String[]> map) throws SQLException;
 	
-    public List<NoticeDto> NoticeList(UserContext user);
+    public List<NoticeDto> BBSList(UserContext user);
     
-    public int insertNotice(Map<String, String[]> map, boolean authType) throws SQLException;
+    public int insertNotice(Map<String, String[]> map, UserContext user) throws SQLException;
+    
+    public void updateFile(Map<String, String[]> map, String filename, int sid) throws SQLException;
     
     public long updateNotice(Map<String, String[]> map) throws SQLException;
     
