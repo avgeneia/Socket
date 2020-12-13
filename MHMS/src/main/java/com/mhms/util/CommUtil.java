@@ -2,16 +2,17 @@ package com.mhms.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mhms.security.UserContext;
 
 public class CommUtil {
 	
+	//관리자 권한여부를 가져오는 함수
 	public static boolean getAuth(UserContext user) {
 		//관리자 권한을 확인해서 전체를 조회하게
 		boolean auth = false;
@@ -27,6 +28,7 @@ public class CommUtil {
 		return auth;
 	}
 	
+	//파일 업로드 함수
 	public static boolean fileUpload(MultipartFile uploadFile, String filename)  {
 		
 	    if (uploadFile != null) {
@@ -52,9 +54,29 @@ public class CommUtil {
 	    
 		return false;
 	}
-
-	public static String getTransFileName(int sid) {
+	
+	//게시글 등록 시 파일 명칭 변경시 사용하는 함수
+	public static String getTransFileName(int sid, int cid, int bid) {
 		
-		return String.valueOf(sid + (int) (new Date().getTime()/1000));
+		//비밀번호 출력 테스트
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		return encoder.encode(sid + "_" + cid + "_" + bid);
+	}
+	
+	//사용자 객체에서 건물 소속여부를 가져오는 함수
+	public static boolean getBuildUnion(UserContext user, int bid) {
+		
+		boolean result = false;
+		
+		for(int i = 0; i < user.getBid().size(); i++) {
+			
+			if(user.getBid().get(i) == bid) {
+				result = true;
+				break;
+			}
+		}
+		
+		return result;
 	}
 }

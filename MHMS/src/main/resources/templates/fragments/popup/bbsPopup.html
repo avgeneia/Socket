@@ -37,7 +37,7 @@
 									
 									<div class="row">
 										<div class="col-md-12">
-											<div class="form-group">
+											<div class="form-group" id="grp_content">
 												<label class="bmd-label-floating">내용</label>
 												<textarea class="form-control" id="ta_content" rows="5" required></textarea>
 											</div>
@@ -68,9 +68,26 @@
 									
 									<div class="row">
 										<div class="col-md-12">
+											
 											<label class="bmd-label-floating">첨부</label>
-											<input id="inputFile" type="file" class="form-control">
+											<div class="input-group">
+												<input id="inputFile" type="file" class="form-control">
+												<input id="edt_file" type="type" class="form-control" style="display: none; background-color: white;display: block;" disabled="disabled" readonly="readonly" >
+												
+					                            <button type="button" id="btn_download"
+					                                    rel="tooltip" title="download" 
+					                                    class="btn btn-primary btn-link btn-sm">
+					                            <i class="material-icons">save_alt</i>
+					                            </button>
+					                            
+					                            <button type="button" id="btn_delete"
+					                                    rel="tooltip" title="Delete" 
+					                                    class="btn btn-danger btn-link btn-sm">
+					                            <i class="material-icons">close</i>
+					                            </button>
+											</div>
 										</div>
+										
 									</div>
 									
 									<div class="row">

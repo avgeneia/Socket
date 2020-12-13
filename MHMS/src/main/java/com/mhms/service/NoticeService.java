@@ -11,7 +11,7 @@ import com.mhms.sqlite.entities.Notice;
 
 public interface NoticeService {
 
-	public Notice selectNotice(Map<String, String[]> map) throws SQLException;
+	public Notice selectNotice(Map<String, String[]> map, UserContext user) throws SQLException;
 	
     public List<NoticeDto> BBSList(UserContext user);
     

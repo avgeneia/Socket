@@ -52,20 +52,29 @@
 						                        <th></th>
 						                      </thead>
 						                      <tbody>
-						                        <tr th:each="bbsList : ${bbsList}">
+						                        <tr th:each="bbsList : ${bbsList}" style="cursor: pointer;">
 						                          <td th:text="${bbsList.sid}">1</td>
-						                          <td th:text="${bbsList.title}">Dakota Rice</td>
-						                          <td th:text="${bbsList.viewcnt}">Niger</td>
-						                          <td th:text="${bbsList.writer}">Niger</td>
-						                          <td th:text="${bbsList.writedate}">Niger</td>
-						                          <td class="td-actions text-right">
+						                          <td th:text="${bbsList.title}"
+						                              th:onclick="rowClickEvent([[${bbsList}]])">title</td>
+						                          <td th:text="${bbsList.viewcnt}"
+						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
+						                          <td th:text="${bbsList.writer}"
+						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
+						                          <td th:text="${bbsList.writedate}"
+						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
+						                          <td class="td-actions text-right" style="text-align: right !important;">
 						                          
 						                            <button type="button" rel="tooltip" title="Edit Task" 
-						                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#noticePopup">
+						                                    th:if="${bbsList.isupdate}"
+						                                    th:onclick="modalNotice([[${bbsList.sid}]], [[${bbsList.cid}]],[[${bbsList.bid}]])"  
+						                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#bbsPopup">
 						                              <i class="material-icons">edit</i>
 						                            </button>
 						                            
-						                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+						                            <button type="button" rel="tooltip" title="Remove" 
+						                                    th:if="${bbsList.isupdate}"
+						                                    th:onclick="deleteNotice([[${bbsList.title}]], [[${bbsList.sid}]],[[${bbsList.cid}]], [[${bbsList.bid}]])"  
+						                                    class="btn btn-danger btn-link btn-sm">
 						                              <i class="material-icons">close</i>
 						                            </button>
 						                            
@@ -108,7 +117,8 @@
 						                              <i class="material-icons">edit</i>
 						                            </button>
 						                            
-						                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+						                            <button type="button" rel="tooltip" title="Remove"
+						                                    class="btn btn-danger btn-link btn-sm">
 						                              <i class="material-icons">close</i>
 						                            </button>
 						                            
@@ -144,14 +154,93 @@
         var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-		$('#bbsPopup').on('show.bs.modal', function(e) {
+		function modalNotice(sid, cid, bid) {
 			
 			$("#grp_title").removeClass("bmd-form-group");
 			$("#grp_link").removeClass("bmd-form-group");
 			
-			return;
+			console.log("sid :: " + sid + " // cid :: " + cid);
 			
+			if(sid == undefined && cid == undefined && bid == undefined) {
+				//신규 등록
+				$("#edt_title").val();
+				$("#ta_content").val();
+				$("#edt_link").val();
+				$("#cmb_build").val();
+				$("#inputFile").val();
+				
+			} else {
+				//단건 조회
+				
+				$.ajax({
+					type : "POST",
+					data : {"sid" : sid, "cid" : cid, "bid" : bid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectNotice",
+					success : function(data) {
+						$("#exampleModalLongTitle").text("게시물 수정");
+						
+						if(data.CODE == "0") {
+							$("#edt_title").val(data.DATA.title);
+							$("#ta_content").val(data.DATA.content);
+							$("#grp_content").addClass("is-filled");
+							$("#edt_link").val(data.DATA.link);
+							$("#cmb_build").val(data.DATA.bid);
+							
+							//첨부관련 객체 제어
+							$("#inputFile").css("display","none");
+							$("#edt_file").css("display","block");
+							$("#edt_file").val(data.DATA.filename);
+							$("#edt_file").removeAttr("disabled");
+							
+							if(data.DATA.isupdate == 1) {
+								$("#btn_delete").css("display","block");
+							} else {
+								$("#btn_delete").css("display","none");
+							}
+						}
+	                }
+				});
+			}
+		}
+		
+		//화면 재조회를 위한 이벤트
+		$('#bbsPopup').on('hide.bs.modal', function(e) {
+			location.reload();
 		});
+		
+		function deleteNotice(title, sid, cid, bid) {
+			
+			var rtn = confirm("\'" + title + "\' 항목을 삭제하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+						type : "POST",
+						data : {"sid" : sid, "cid" : cid, "bid" : bid},
+						beforeSend : function(xhr)
+			            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+							xhr.setRequestHeader(header, token);
+			            },
+						url : "/deleteNotice",
+						success : function(data) {
+							location.reload();
+		                }
+				});
+			}
+			
+		}
+		
+		function rowClickEvent(row) {
+			
+			$("#grp_title").removeClass("bmd-form-group");
+			$("#grp_link").removeClass("bmd-form-group");
+			
+			$("#bbsPopup").modal();
+		}
         </script>
         
     </body>

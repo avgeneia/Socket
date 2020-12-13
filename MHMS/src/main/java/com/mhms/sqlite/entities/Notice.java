@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.mhms.sqlite.pk.NoticePK;
 
@@ -61,5 +62,8 @@ public class Notice {
 	
 	@Column(name="WriteDate")
 	private String writedate;
+
+	@Transient
+	private int isupdate;
 
 }

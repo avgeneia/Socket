@@ -22,6 +22,7 @@ import com.mhms.sqlite.entities.Notice;
 import com.mhms.sqlite.entities.QNotice;
 import com.mhms.sqlite.entities.QUserRole;
 import com.mhms.util.CommUtil;
+import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPAUpdateClause;
 
@@ -35,10 +36,28 @@ public class NoticeServiceImpl implements NoticeService {
 	private DataSource dataSource;
 
 	@Override
-	public Notice selectNotice(Map<String, String[]> map) throws SQLException {
+	public Notice selectNotice(Map<String, String[]> map, UserContext user) throws SQLException {
 		// TODO Auto-generated method stub
+		JPAQuery query = new JPAQuery(entityManager);
+		QNotice notice = QNotice.notice;
+
+		boolean auth = CommUtil.getAuth(user);
 		
-		return null;
+		query.from(notice);
+		query.where(notice.sid.eq(Integer.parseInt(map.get("sid")[0])).and(notice.cid.eq(Integer.parseInt(map.get("cid")[0]))));
+		Notice result = query.singleResult(notice);
+		
+		/* L1 : 작성자가 로그인사용자일 때 수정권한을 부여한다.
+		 * L2 : 현재 로그인 사용자가 시스탬 관리자일 경우 수정권한을 부여한다.
+		 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
+		 * */
+		if(result.getWriter().equals(user.getUsername())
+		|| auth
+		|| CommUtil.getBuildUnion(user, result.getBid())) {
+			result.setIsupdate(1);;
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -58,7 +77,20 @@ public class NoticeServiceImpl implements NoticeService {
 			query.where(notice.notice_lv.eq(0));
 		}
 		
-		List<NoticeDto> dto = query.list(new QNoticeDto(notice.sid, notice.bid, notice.title, notice.notice_lv, notice.viewcnt, notice.content, notice.filename, notice.writer, notice.writedate));
+		List<NoticeDto> dto = query.list(new QNoticeDto(notice.sid, notice.cid, notice.bid, notice.title, notice.notice_lv, notice.viewcnt, notice.content, notice.filename, notice.writer, notice.writedate));
+		
+		for(int i = 0; i <  dto.size(); i++) {
+			
+			/* L1 : 작성자가 로그인사용자일 때 수정권한을 부여한다.
+			 * L2 : 현재 로그인 사용자가 시스탬 관리자일 경우 수정권한을 부여한다.
+			 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
+			 * */
+			if(dto.get(i).getWriter().equals(user.getUsername())
+			|| auth
+			|| CommUtil.getBuildUnion(user, dto.get(i).getBid())) {
+				dto.get(i).setIsupdate(1);
+			}
+		}
 		
 		return dto;
 	}
@@ -89,14 +121,14 @@ public class NoticeServiceImpl implements NoticeService {
 
 		pstmt = conn.prepareStatement(insertSQL);
 		pstmt.setInt(1, Integer.parseInt(map.get("bid")[0]));
-		pstmt.setInt(2, maxSid>0?maxSid + 1: 1);
+		pstmt.setInt(2, maxSid);
 		pstmt.setString(3, map.get("content")[0]);
 		pstmt.setString(4, map.get("link")[0]);
 		pstmt.setInt(5, Integer.parseInt(map.get("notice")[0]));
 		pstmt.setString(6, map.get("title")[0]);
 		pstmt.setString(7, user.getUsername());
 		pstmt.executeUpdate();
-		 
+		
 		return maxSid;
 	}
 	
@@ -108,9 +140,14 @@ public class NoticeServiceImpl implements NoticeService {
 		QNotice notice = QNotice.notice;
 		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, notice);
 		
-		updateClause.set(notice.filename, filename)
-		            .where(notice.sid.eq(sid).and(notice.cid.eq(0)))
-		            .execute();
+		JPAQuery query = new JPAQuery(entityManager);
+		Notice noticeDto = query.from(notice).where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0])))).singleResult(notice);
+		
+		long result = updateClause.set(notice.filename, filename)
+					              .where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0]))))
+					              .execute();
+		
+		System.out.println("result :: " + result);
 		            
 	}
 	
@@ -125,7 +162,12 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public long deleteNotice(Map<String, String[]> map) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		QNotice notice = QNotice.notice;
+		JPADeleteClause deleteClause = new JPADeleteClause(entityManager, notice);
+		long result = deleteClause.where(notice.sid.eq(Integer.parseInt(map.get("sid")[0])).and(notice.cid.eq(Integer.parseInt(map.get("cid")[0]))).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0])))).execute();
+		
+		return result;
 	}
 
 }

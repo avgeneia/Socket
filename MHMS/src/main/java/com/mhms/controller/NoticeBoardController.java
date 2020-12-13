@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import com.mhms.security.UserContext;
 import com.mhms.service.BuildingService;
 import com.mhms.service.CodeService;
 import com.mhms.service.NoticeService;
+import com.mhms.sqlite.entities.Notice;
 import com.mhms.util.CommUtil;
 
 @Controller
@@ -40,6 +43,32 @@ public class NoticeBoardController {
 	@Autowired
 	private NoticeService noticeService;
 	
+	/*
+	 * 조회 1건
+	 */
+	@RequestMapping("/selectNotice")
+	@ResponseBody
+	public Map<String, Object> selectNotice(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+		    Notice dto = noticeService.selectNotice(request.getParameterMap(), user);
+		    map.put("CODE", "0");
+			map.put("DATA", dto);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			map.put("CODE", e.getErrorCode());
+			map.put("MSG", e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	/*
+	 * 조회 목록(MAIN)
+	 */
 	@RequestMapping("/noticeBoard")
 	public String noticeBoard(Model model, @AuthenticationPrincipal UserContext user) {
 		
@@ -81,14 +110,14 @@ public class NoticeBoardController {
 			//게시글 정상 입력 후 해당글의 파일ID 리턴
 			sid = noticeService.insertNotice(request.getParameterMap(), user);
 			
-			if(isFile) {
+			if(!isFile) {
 				String filepath = request.getSession().getServletContext().getRealPath("/") + "upload" + File.separator;
-				String filename = CommUtil.getTransFileName(sid);
+				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
 				
 				boolean successFile = CommUtil.fileUpload(file, filepath + filename);
 				
 				if(successFile) {
-					noticeService.updateFile(request.getParameterMap(), filename, sid);
+					noticeService.updateFile(request.getParameterMap(), file.getOriginalFilename(), sid);
 				}
 			}
 			
@@ -106,6 +135,31 @@ public class NoticeBoardController {
 			//}
 		}
 		
+		return map;
+	}
+	
+	/*
+	 * 삭제
+	 */
+	@RequestMapping("/deleteNotice")
+	@ResponseBody
+	public Map<String, String> deleteNotice(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			long result = noticeService.deleteNotice(request.getParameterMap());
+			
+			if(result == 1) {
+				map.put("CODE", "0");
+				map.put("MSG", "완료되었습니다.");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("deleteBuild SQLException :: " + e.getErrorCode());
+			map.put("CODE", String.valueOf(e.getErrorCode()));
+			map.put("MSG", e.getMessage());
+		}
 		return map;
 	}
 	

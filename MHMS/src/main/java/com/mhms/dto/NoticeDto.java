@@ -12,7 +12,7 @@ import lombok.Setter;
 public class NoticeDto {
 	
 	int sid;
-//	int cid;
+	int cid;
 	int bid;
 	String title;
 	int notice_lv;
@@ -21,11 +21,12 @@ public class NoticeDto {
 	String content;
 	String writer;
 	String writedate;
+	int isupdate;
 	
 	@QueryProjection
-	public NoticeDto(int sid, int bid, String title, int notice_lv, int viewcnt, String content, String filename, String writer, String writedate) {
+	public NoticeDto(int sid, int cid, int bid, String title, int notice_lv, int viewcnt, String content, String filename, String writer, String writedate) {
 		this.sid = sid;
-//		this.cid = cid;
+		this.cid = cid;
 		this.bid = bid;
 		this.title = title;
 		this.notice_lv = notice_lv;
@@ -34,6 +35,7 @@ public class NoticeDto {
 		this.filename = filename;
 		this.writer = writer;
 		this.writedate = writedate;
+		//this.isupdate = isupdate;
 	}
 	
 }

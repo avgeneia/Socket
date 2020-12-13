@@ -29,7 +29,7 @@ public class buildingController {
 	 */
 	@RequestMapping("/selectBuild")
 	@ResponseBody
-	public Map<String, Object> selectBuild(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+	public Map<String, Object> selectBuild(HttpServletRequest request) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
