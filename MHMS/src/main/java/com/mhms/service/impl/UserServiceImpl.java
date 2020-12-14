@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
 		QAccount account = QAccount.account;
 		JPAQuery query = new JPAQuery(entityManager);
 		
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 		
 		List<UserDto> dto = null;
 		

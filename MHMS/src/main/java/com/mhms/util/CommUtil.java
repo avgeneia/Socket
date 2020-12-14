@@ -5,21 +5,20 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mhms.security.UserContext;
 
 public class CommUtil {
 	
-	//관리자 권한여부를 가져오는 함수
-	public static boolean getAuth(UserContext user) {
+	//권한여부를 가져오는 함수
+	public static boolean isRole(UserContext user, String role) {
 		//관리자 권한을 확인해서 전체를 조회하게
 		boolean auth = false;
 		Iterator<GrantedAuthority> itertor = user.getAuthorities().iterator();
 		while(itertor.hasNext()) {
 			GrantedAuthority arg = itertor.next();
-			if(arg.getAuthority().equals("ROLE_ADMIN")) {
+			if(arg.getAuthority().equals(role)) {
 				auth = true;
 				break;
 			}
@@ -59,9 +58,11 @@ public class CommUtil {
 	public static String getTransFileName(int sid, int cid, int bid) {
 		
 		//비밀번호 출력 테스트
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 		
-		return encoder.encode(sid + "_" + cid + "_" + bid);
+		//;
+		
+		return EncryptionUtils.encryptMD5(sid + "_" + cid + "_" + bid);
 	}
 	
 	//사용자 객체에서 건물 소속여부를 가져오는 함수

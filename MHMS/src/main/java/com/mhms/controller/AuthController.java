@@ -73,7 +73,7 @@ public class AuthController {
 		//model.addAttribute("infoVO", map);
 		List<CodeDto> codeList = codeService.getCode("ROLE", false, 0);
 		
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 		
 		//관리자권한 체크
 		for(int i = 0; i < codeList.size(); i++) {

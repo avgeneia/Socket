@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
 		QAccount account = QAccount.account;
 		QBuilding building = QBuilding.building;
 		
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 		
 		query.from(userRole);
 		query.leftJoin(userRole.account, account);

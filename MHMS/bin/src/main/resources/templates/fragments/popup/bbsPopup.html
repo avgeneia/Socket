@@ -15,30 +15,24 @@
 					<div class="modal-content">
 					
 						<div class="modal-header">
-							<h5 class="modal-title" id="sta_title">게시물 등록</h5>
-							<div class="ml-auto">
-								<button id="btn_save" type="button" class="btn btn-primary modal-header-button" onclick="modifyAuth()"><b>수정</b></button>
-								<button id="btn_delete" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
-								<button type="button" class="btn btn-secondary modal-header-button" data-dismiss="modal"><b>닫기</b></button>
-							</div>
+						<h5 class="modal-title" id="exampleModalLongTitle">게시물 등록</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
 						</div>
 						
 						<div class="modal-body">
 							<div class="card-body">
 								<form id="noticeForm" name="noticeBody" method="post">
-									
-									<input id="fv_gbn" type="hidden">
-									<input id="fv_sid" type="hidden">
-									<input id="fv_cid" type="hidden">
-									<input id="fv_bid" type="hidden">
-									
-									<div class="row" id="upr_title">
+								
+									<div class="row">
 										<div class="col-md-8">
 											<div class="form-group" id="grp_title">
 												<label id="codeTitle" class="bmd-label-floating">제목</label>
 												<input id="edt_title" type="text" class="form-control" required>
 											</div>
 										</div>
+										
 									</div>
 									
 									<div class="row">
@@ -82,14 +76,12 @@
 												
 					                            <button type="button" id="btn_download"
 					                                    rel="tooltip" title="download" 
-					                                    onclick="download()"
 					                                    class="btn btn-primary btn-link btn-sm">
 					                            <i class="material-icons">save_alt</i>
 					                            </button>
 					                            
-					                            <button type="button" id="btn_delFile"
+					                            <button type="button" id="btn_delete"
 					                                    rel="tooltip" title="Delete" 
-					                                    onclick="deleteFile()"
 					                                    class="btn btn-danger btn-link btn-sm">
 					                            <i class="material-icons">close</i>
 					                            </button>
@@ -98,7 +90,7 @@
 										
 									</div>
 									
-									<div class="row" id="grp_error">
+									<div class="row">
 										<div class="text-right p-t-13 p-b-23 col-md-12">
 								            <p id="error" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
 										</div>
@@ -108,6 +100,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary" onclick="saveNotice()">저장</button>
 						</div>
 					</div>
 					
@@ -118,15 +112,13 @@
 		</body>
 		
 	</th:block>
-	  
+	
 	<script th:inline="javascript">
     var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
 	function saveNotice() {
-		
-		var fv_gbn = $("#fv_sid").val();
-		
+
 		var formData = new FormData(); 
 		formData.append("title", $("#edt_title").val()); 
 		formData.append("content", $("#ta_content").val()); 
@@ -156,8 +148,6 @@
 			return;
 		}
 		
-		var fv_url = "/" + fv_gbn + "Notice"
-		
 		$.ajax({
 			type : "POST",
 			data : formData,
@@ -167,7 +157,7 @@
           	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 				xhr.setRequestHeader(header, token);
 	    	},
-			url : fv_url,
+			url : "/insertNotice",
 			success : function(data) {
 				if(data.CODE == "0") {
 					$("#error").css('visibility', 'hidden');
@@ -179,20 +169,6 @@
 			}
 		});
 		
-	}
-	
-	function download() {
-		
-		var fv_sid = $("#fv_sid").val();
-		var fv_cid = $("#fv_cid").val();
-		var fv_bid = $("#fv_bid").val();
-		
-		window.location.href = "/downloadNotice?sid=" + fv_sid + "&cid=" + fv_cid + "&bid=" + fv_bid;
-	}
-	
-	function deleteFile() {
-		$("#inputFile").css("display","initial");
-		$("#edt_file").css("display","none");
 	}
 	</script>
 	

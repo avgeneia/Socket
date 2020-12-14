@@ -55,7 +55,7 @@ public class UserController {
 		map.put("title", "사용자 관리");
 		
 		//관리자 권한을 확인해서 전체를 조회하게
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 				
 		//사용자 목록
 		List<UserListDto> userList = userService.userList(user);

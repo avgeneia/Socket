@@ -58,7 +58,7 @@ public class buildingController {
 		map.put("title", "건축물 관리");
 
 		//관리자 권한을 확인해서 전체를 조회하게
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 		
 		//관리자 권한일 때 건물관리만 가능 호수는 매니저에서 관리
 		if(auth) {
@@ -86,7 +86,7 @@ public class buildingController {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		boolean auth = CommUtil.getAuth(user);
+		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
 		
 		try {
 			

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <!-- 공통 헤더-->
     <th:block th:replace="fragments/head :: headFragment"></th:block>
@@ -49,41 +52,25 @@
 						                        <th>조회수</th>
 						                        <th>작성자</th>
 						                        <th>작성일자</th>
-						                        <th></th>
 						                      </thead>
 						                      <tbody>
 						                        <tr th:each="bbsList : ${bbsList}" style="cursor: pointer;">
-						                          <td th:text="${bbsList.sid}">1</td>
+						                          <td th:text="${bbsList.no}">1</td>
 						                          <td th:text="${bbsList.title}"
-						                              th:onclick="rowClickEvent([[${bbsList}]])">title</td>
+						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">title</td>
 						                          <td th:text="${bbsList.viewcnt}"
-						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
+						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writer}"
-						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
+						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writedate}"
-						                              th:onclick="rowClickEvent([[${bbsList}]])">Niger</td>
-						                          <td class="td-actions text-right" style="text-align: right !important;">
-						                          
-						                            <button type="button" rel="tooltip" title="Edit Task" 
-						                                    th:if="${bbsList.isupdate}"
-						                                    th:onclick="modalNotice([[${bbsList.sid}]], [[${bbsList.cid}]],[[${bbsList.bid}]])"  
-						                                    class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#bbsPopup">
-						                              <i class="material-icons">edit</i>
-						                            </button>
-						                            
-						                            <button type="button" rel="tooltip" title="Remove" 
-						                                    th:if="${bbsList.isupdate}"
-						                                    th:onclick="deleteNotice([[${bbsList.title}]], [[${bbsList.sid}]],[[${bbsList.cid}]], [[${bbsList.bid}]])"  
-						                                    class="btn btn-danger btn-link btn-sm">
-						                              <i class="material-icons">close</i>
-						                            </button>
-						                            
-						                          </td>
+						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
 						                        </tr>
 						                      </tbody>
 						                    </table>
 						                    
-						                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#bbsPopup">
+						                    <button type="button" class="btn btn-primary pull-right"
+						                            sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')"  
+						                            onclick="rowClickEvent('insert')">
 											  공지사항 등록
 											</button>
 											
@@ -100,7 +87,6 @@
 						                        <th>조회수</th>
 						                        <th>작성자</th>
 						                        <th>작성일자</th>
-						                        <th></th>
 						                      </thead>
 						                      <tbody>
 						                        <tr th:each="build : ${buildingList}">
@@ -109,20 +95,6 @@
 						                          <td th:text="${build.rid}">Niger</td>
 						                          <td th:text="${build.rnm}">Niger</td>
 						                          <td th:text="${build.rnm}">Niger</td>
-						                          <td class="td-actions text-right">
-						                          
-						                            <button type="button" rel="tooltip" title="Edit Task" 
-						                                    th:data-bid="${build.bid}" 
-						                                    th:data-rid="${build.rid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#noticePopup">
-						                              <i class="material-icons">edit</i>
-						                            </button>
-						                            
-						                            <button type="button" rel="tooltip" title="Remove"
-						                                    class="btn btn-danger btn-link btn-sm">
-						                              <i class="material-icons">close</i>
-						                            </button>
-						                            
-						                          </td>
 						                        </tr>
 						                      </tbody>
 						                    </table>
@@ -154,59 +126,6 @@
         var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-		function modalNotice(sid, cid, bid) {
-			
-			$("#grp_title").removeClass("bmd-form-group");
-			$("#grp_link").removeClass("bmd-form-group");
-			
-			console.log("sid :: " + sid + " // cid :: " + cid);
-			
-			if(sid == undefined && cid == undefined && bid == undefined) {
-				//신규 등록
-				$("#edt_title").val();
-				$("#ta_content").val();
-				$("#edt_link").val();
-				$("#cmb_build").val();
-				$("#inputFile").val();
-				
-			} else {
-				//단건 조회
-				
-				$.ajax({
-					type : "POST",
-					data : {"sid" : sid, "cid" : cid, "bid" : bid},
-					beforeSend : function(xhr)
-		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-						xhr.setRequestHeader(header, token);
-		            },
-					url : "/selectNotice",
-					success : function(data) {
-						$("#exampleModalLongTitle").text("게시물 수정");
-						
-						if(data.CODE == "0") {
-							$("#edt_title").val(data.DATA.title);
-							$("#ta_content").val(data.DATA.content);
-							$("#grp_content").addClass("is-filled");
-							$("#edt_link").val(data.DATA.link);
-							$("#cmb_build").val(data.DATA.bid);
-							
-							//첨부관련 객체 제어
-							$("#inputFile").css("display","none");
-							$("#edt_file").css("display","block");
-							$("#edt_file").val(data.DATA.filename);
-							$("#edt_file").removeAttr("disabled");
-							
-							if(data.DATA.isupdate == 1) {
-								$("#btn_delete").css("display","block");
-							} else {
-								$("#btn_delete").css("display","none");
-							}
-						}
-	                }
-				});
-			}
-		}
-		
 		//화면 재조회를 위한 이벤트
 		$('#bbsPopup').on('hide.bs.modal', function(e) {
 			location.reload();
@@ -234,12 +153,89 @@
 			
 		}
 		
-		function rowClickEvent(row) {
+		function rowClickEvent(gbn, row) {
 			
 			$("#grp_title").removeClass("bmd-form-group");
 			$("#grp_link").removeClass("bmd-form-group");
 			
-			$("#bbsPopup").modal();
+			if(gbn == "insert") {
+				
+				$("#fv_sid").val(gbn);
+				$("#sta_title").text("게시물 등록");
+				$("#btn_save").text("저장");
+				$("#btn_delete").css("display","none");
+				$("#bbsPopup").modal();
+				
+			} else {
+				
+				console.log("inputData :: ");
+				console.log(row);
+				$.ajax({
+					type : "POST",
+					data : {"sid" : row.sid, "cid" : row.cid, "bid" : row.bid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/selectNotice",
+					success : function(data) {
+						
+						console.log("outputData :: ");
+						console.log(data)
+						if(data.CODE == "0") {
+							
+							
+							//modal화면에 key값 입력
+							$("#fv_sid").val(gbn);
+							$("#fv_sid").val(data.DATA.sid);
+							$("#fv_cid").val(data.DATA.cid);
+							$("#fv_bid").val(data.DATA.bid);
+							
+							$("#ta_content").val(data.DATA.content);
+							$("#grp_content").addClass("is-filled");
+							$("#edt_link").val(data.DATA.link);
+							$("#cmb_build").val(data.DATA.bid);
+							$("#edt_title").val(data.DATA.title);
+							
+							//첨부관련 객체 제어
+							$("#inputFile").css("display","none");
+							$("#edt_file").css("display","block");
+							$("#edt_file").val(data.DATA.filename);
+							$("#edt_file").removeAttr("disabled");
+							
+							if(data.DATA.isupdate == 1) {
+								$("#sta_title").text("게시물 수정");
+								$("#upr_title").css("display","block");
+
+								$("#edt_title").removeAttr("readonly"); 
+								$("#ta_content").removeAttr("readonly"); 
+								$("#edt_link").removeAttr("readonly"); 
+								$("#cmb_build").removeAttr("disabled"); 
+								
+								$("#btn_delFile").css("display","initial");
+								$("#btn_save").css("display","initial");
+								$("#btn_delete").css("display","initial");
+								$("#grp_error").css("display","block");
+							} else {
+								$("#sta_title").text(data.DATA.title);
+								$("#upr_title").css("display","none");
+								
+								$("#edt_title").attr("readonly",true);
+								$("#ta_content").attr("readonly",true);
+								$("#edt_link").attr("readonly",true);
+								$("#cmb_build").attr("disabled",true); 
+								
+								$("#btn_delFile").css("display","none");
+								$("#btn_save").css("display","none");
+								$("#btn_delete").css("display","none");
+								$("#grp_error").css("display","none");
+							}
+							
+							$("#bbsPopup").modal();
+						}
+	                }
+				});	
+			}
 		}
         </script>
         

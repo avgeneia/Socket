@@ -41,8 +41,6 @@ public class NoticeServiceImpl implements NoticeService {
 		JPAQuery query = new JPAQuery(entityManager);
 		QNotice notice = QNotice.notice;
 
-		boolean auth = CommUtil.getAuth(user);
-		
 		query.from(notice);
 		query.where(notice.sid.eq(Integer.parseInt(map.get("sid")[0])).and(notice.cid.eq(Integer.parseInt(map.get("cid")[0]))));
 		Notice result = query.singleResult(notice);
@@ -51,10 +49,16 @@ public class NoticeServiceImpl implements NoticeService {
 		 * L2 : 현재 로그인 사용자가 시스탬 관리자일 경우 수정권한을 부여한다.
 		 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
 		 * */
+		/* L1 : 작성자가 로그인사용자일 때 수정권한을 부여한다.
+		 * L2 : 현재 로그인 사용자가 시스탬 관리자일 경우 수정권한을 부여한다.
+		 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
+		 * */
 		if(result.getWriter().equals(user.getUsername())
-		|| auth
-		|| CommUtil.getBuildUnion(user, result.getBid())) {
-			result.setIsupdate(1);;
+		|| CommUtil.isRole(user, "ROLE_ADMIN")
+		|| (CommUtil.isRole(user, "ROLE_MANAGER") && CommUtil.getBuildUnion(user, result.getBid()))) {
+			result.setIsupdate(1);
+		} else {
+			result.setIsupdate(0);
 		}
 		
 		return result;
@@ -67,12 +71,10 @@ public class NoticeServiceImpl implements NoticeService {
 		QNotice notice = QNotice.notice;
 		QUserRole userRole = QUserRole.userRole;
 		
-		boolean auth = CommUtil.getAuth(user);
-		
 		query.from(notice);
-		if(!auth) {
+		if(!CommUtil.isRole(user, "ROLE_ADMIN")) {
 			query.join(userRole).on(notice.bid.eq(userRole.building.bid));
-			query.where(userRole.building.bid.in(user.getBid()).and(notice.notice_lv.eq(0)));
+			query.where(userRole.building.bid.in(user.getBid()).and(notice.notice_lv.eq(0)).and(userRole.account.uid.eq(user.getUid())));
 		} else {
 			query.where(notice.notice_lv.eq(0));
 		}
@@ -86,10 +88,14 @@ public class NoticeServiceImpl implements NoticeService {
 			 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
 			 * */
 			if(dto.get(i).getWriter().equals(user.getUsername())
-			|| auth
-			|| CommUtil.getBuildUnion(user, dto.get(i).getBid())) {
+			|| CommUtil.isRole(user, "ROLE_ADMIN")
+			|| (CommUtil.isRole(user, "ROLE_MANAGER") && CommUtil.getBuildUnion(user, dto.get(i).getBid()))) {
 				dto.get(i).setIsupdate(1);
+			} else {
+				dto.get(i).setIsupdate(0);
 			}
+			
+			dto.get(i).setNo(i + 1);
 		}
 		
 		return dto;
@@ -140,15 +146,10 @@ public class NoticeServiceImpl implements NoticeService {
 		QNotice notice = QNotice.notice;
 		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, notice);
 		
-		JPAQuery query = new JPAQuery(entityManager);
-		Notice noticeDto = query.from(notice).where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0])))).singleResult(notice);
-		
 		long result = updateClause.set(notice.filename, filename)
 					              .where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0]))))
 					              .execute();
 		
-		System.out.println("result :: " + result);
-		            
 	}
 	
 	@Transactional

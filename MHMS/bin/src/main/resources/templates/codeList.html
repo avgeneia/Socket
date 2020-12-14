@@ -26,13 +26,13 @@
 				                      <ul class="nav nav-tabs" data-tabs="tabs">
 				                        <li id="tab_uprcode" class="nav-item">
 				                          <a class="nav-link active show" href="#grd_uprCode" data-toggle="tab" id="btn_upr">
-				                            <h3 class="card-title ">상위코드</h3>
+				                            <h3 class="card-title ">카테고리</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
 				                        <li id="tab_code" class="nav-item">
 				                          <a class="nav-link" href="#grd_code" data-toggle="tab" id="btn_code">
-				                            <h3 class="card-title">하위코드 []</h3>
+				                            <h3 class="card-title">역활 []</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
@@ -43,7 +43,7 @@
 				                <div class="card-body">
 				                	<div class="tab-content">
 					                    <div class="tab-pane active" id="grd_uprCode">
-					                      <table class="table table-hover" id="grd_uprCode">
+					                      <table class="table table-hover">
 					                      	
 					                      	<thead class=" text-primary">
 												<th>코드그룹</th>
@@ -340,7 +340,7 @@
 						$("#table_code").replaceWith(data);
 						
 						var fv_upcd = $("#uprCd").val();
-						$("#tab_code > a > h3").text("하위코드 " + fv_upcd);
+						$("#tab_code > a > h3").text("역활 " + fv_upcd);
 						$("#edt_uprCd").val(cd);
 					}
 					

@@ -66,4 +66,6 @@ public class Notice {
 	@Transient
 	private int isupdate;
 
+	@Transient
+	private int no;
 }

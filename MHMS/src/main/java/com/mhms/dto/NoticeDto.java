@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoticeDto {
-	
+
+	int no;
 	int sid;
 	int cid;
 	int bid;
