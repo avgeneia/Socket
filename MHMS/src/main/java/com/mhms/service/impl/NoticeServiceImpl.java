@@ -146,9 +146,9 @@ public class NoticeServiceImpl implements NoticeService {
 		QNotice notice = QNotice.notice;
 		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, notice);
 		
-		long result = updateClause.set(notice.filename, filename)
-					              .where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0]))))
-					              .execute();
+		updateClause.set(notice.filename, filename)
+		            .where(notice.sid.eq(sid).and(notice.cid.eq(0)).and(notice.bid.eq(Integer.parseInt(map.get("bid")[0]))))
+		            .execute();
 		
 	}
 	
@@ -156,7 +156,19 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public long updateNotice(Map<String, String[]> map) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		QNotice notice = QNotice.notice;
+		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, notice);
+		long result = 
+		updateClause.set(notice.title, map.get("title")[0])
+		            .set(notice.content, map.get("content")[0])
+		            .set(notice.link, map.get("link")[0])
+		            .where(notice.sid.eq(Integer.parseInt(map.get("sid")[0]))
+		            		.and(notice.cid.eq(Integer.parseInt(map.get("cid")[0]))
+		            				.and(notice.bid.eq(Integer.parseInt(map.get("bid")[0])))))
+		            .execute();
+		
+		return result;
 	}
 	
 	@Transactional

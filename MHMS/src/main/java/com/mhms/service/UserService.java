@@ -21,6 +21,10 @@ public interface UserService {
     
     public long updateUser(Map<String, String[]> map) throws SQLException;
     
+    public long changePassword(Map<String, String[]> map, UserContext user) throws SQLException;
+    
+    public long resetUser(Map<String, String[]> map, UserContext user) throws SQLException;
+    
     public long updateUserUseyn(Map<String, String[]> map) throws SQLException;
     
     public long deleteUser(Map<String, String[]> map) throws SQLException;

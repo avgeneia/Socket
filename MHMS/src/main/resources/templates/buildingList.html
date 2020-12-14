@@ -122,6 +122,8 @@
 						$("#exampleModalLongTitle").text("건축물 정보 수정");
 						console.log(data.DATA);
 						if(data.CODE == "0") {
+							$("#grp_upr_id").addClass("is-filled");
+							$("#grp_low_id").addClass("is-filled");
 							$("#cmb_bid").val(data.DATA.bid);
 							$("#edt_rid").val(data.DATA.rid);
 							$("#edt_rnm").val(data.DATA.rnm);	

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<!-- °øÅëÀ¸·Î ¾²ÀÌ´Â scriptÆÄÀÏÀ»³Ö´Â´Ù.-->
+<!-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ scriptï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´Â´ï¿½.-->
 <th:block th:fragment="scriptFragment">
 	
 	<!--   Core JS Files   -->
@@ -45,6 +45,27 @@
   	<script th:src="@{/bootstrap/js/material-dashboard.js?v=2.1.2}" type="text/javascript"></script>
   	<!-- Material Dashboard DEMO methods, don't include it in your project! -->
   	<script th:src="@{/bootstrap/demo/demo.js}"></script>
+  	
+	<script type="text/javascript">
+	function showNotification(icon, type, from, align, msg) {
+		    //type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+		    //from = ['top', 'bottom'];
+		    //align = ['left', 'center', 'right'];
+		
+		    $.notify({
+		      icon: icon,
+		      message: msg
+		
+		    }, {
+		      type: type,
+		      timer: 500,
+		      placement: {
+		        from: from,
+		        align: align
+		      }
+		    });
+		}
+	</script>
 	
 </th:block>
 </html>

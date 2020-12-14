@@ -17,7 +17,8 @@
 						<div class="modal-header">
 							<h5 class="modal-title" id="sta_title">게시물 등록</h5>
 							<div class="ml-auto">
-								<button id="btn_save" type="button" class="btn btn-primary modal-header-button" onclick="modifyAuth()"><b>수정</b></button>
+								<button id="btn_save" type="button" 
+								        class="btn btn-primary modal-header-button" onclick="saveNotice()"><b>수정</b></button>
 								<button id="btn_delete" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
 								<button type="button" class="btn btn-secondary modal-header-button" data-dismiss="modal"><b>닫기</b></button>
 							</div>
@@ -125,7 +126,7 @@
 	
 	function saveNotice() {
 		
-		var fv_gbn = $("#fv_sid").val();
+		var fv_gbn = $("#fv_gbn").val();
 		
 		var formData = new FormData(); 
 		formData.append("title", $("#edt_title").val()); 
@@ -135,49 +136,81 @@
 		formData.append("bid", $("#cmb_build").val());
 		formData.append("notice", 0); 
 		
+		var isChk = true;
+		
 		if($("#edt_title").val() == "") {
-			$("#error").text("제목은 필수 입력항목 입니다.");
+			showNotification('new_releases', 'warning', 'top', 'center', "제목은 필수 입력항목 입니다.");
 			$("#edt_title").focus();
-			$("#error").css('visibility', 'visible');
-			return;
+			isChk = false;
 		}
 		
 		if($("#ta_content").val() == "") {
-			$("#error").text("내용은 필수 입력항목 입니다.");
+			showNotification('new_releases', 'warning', 'top', 'center', "내용은 필수 입력항목 입니다.");
 			$("#ta_content").focus();
-			$("#error").css('visibility', 'visible');
-			return;
+			isChk = false;
 		}
 		
 		if($("#cmb_build").val() == "-1") {
-			$("#error").text("대상건물은 필수 입력항목 입니다.");
+			showNotification('new_releases', 'warning', 'top', 'center', "대상건물은 필수 입력항목 입니다.");
 			$("#cmb_build").focus();
-			$("#error").css('visibility', 'visible');
+			isChk = false;
+		}
+		
+		if(!isChk) {
 			return;
 		}
 		
 		var fv_url = "/" + fv_gbn + "Notice"
 		
-		$.ajax({
-			type : "POST",
-			data : formData,
-		    processData: false,    // 반드시 작성
-		    contentType: false,    // 반드시 작성
-			beforeSend : function(xhr)
-          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-				xhr.setRequestHeader(header, token);
-	    	},
-			url : fv_url,
-			success : function(data) {
-				if(data.CODE == "0") {
-					$("#error").css('visibility', 'hidden');
-					$("#bbsPopup").modal("hide");
-				} else {
-					$("#error").text(data.MSG);
-					$("#error").css('visibility', 'visible');
-				}
+		var rtn = false;
+		if(fv_gbn == "update") {
+			
+			formData.append("sid", $("#fv_sid").val());
+			formData.append("cid", $("#fv_cid").val());
+			
+			rtn = confirm("저장하시겠습니까?");
+			
+			if(rtn) {
+				$.ajax({
+					type : "POST",
+					data : formData,
+				    processData: false,    // 반드시 작성
+				    contentType: false,    // 반드시 작성
+					beforeSend : function(xhr)
+		          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+			    	},
+					url : fv_url,
+					success : function(data) {
+						if(data.CODE == "0") {
+							$("#bbsPopup").modal("hide");
+						} else {
+							showNotification('info', 'danger', 'top', 'center', data.MSG);
+						}
+					}
+				});
 			}
-		});
+			
+		} else {
+			$.ajax({
+				type : "POST",
+				data : formData,
+			    processData: false,    // 반드시 작성
+			    contentType: false,    // 반드시 작성
+				beforeSend : function(xhr)
+	          	{   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+		    	},
+				url : fv_url,
+				success : function(data) {
+					if(data.CODE == "0") {
+						$("#bbsPopup").modal("hide");
+					} else {
+						showNotification('info', 'danger', 'top', 'center', data.MSG);
+					}
+				}
+			});
+		}
 		
 	}
 	

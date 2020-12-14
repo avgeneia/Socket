@@ -159,6 +159,38 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
+	public long resetUser(Map<String, String[]> map, UserContext user) throws SQLException {
+		// TODO Auto-generated method stub
+		QAccount account = QAccount.account;
+		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, account);
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		long result = updateClause.set(account.userpw, encoder.encode(user.getUsername()))
+				                  .where(account.uid.eq(Integer.parseInt(map.get("uid")[0])))
+				                  .execute();
+		
+		return result;
+	}
+	
+	@Transactional
+	@Override
+	public long changePassword(Map<String, String[]> map, UserContext user) throws SQLException {
+		// TODO Auto-generated method stub
+		QAccount account = QAccount.account;
+		JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, account);
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		long result = updateClause.set(account.userpw, encoder.encode(map.get("userpw")[0]))
+				                  .where(account.uid.eq(user.getUid()))
+				                  .execute();
+		
+		return result;
+	}
+	
+	@Transactional
+	@Override
 	public long updateUserUseyn(Map<String, String[]> map) throws SQLException {
 		// TODO Auto-generated method stub
 		QAccount account = QAccount.account;

@@ -15,7 +15,7 @@
 					<div class="modal-content">
 					
 						<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">신규 사용자 등록</h5>
+						<h5 class="modal-title" id="sta_titleUser">신규 사용자 등록</h5>
 						<input id="edt_type" hidden="true" value="">
 						<input id="uid" hidden="true" value="">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -29,16 +29,16 @@
 								
 									<div class="row">
 										<div class="col-md-8">
-											<div id="grp_usernm" class="form-group">
+											<div class="form-group" id="grp_usernm">
 												<label class="bmd-label-floating">계정명</label>
 												<input id="usernm" type="text" class="form-control">
 											</div>
 										</div>
 										
 										<div class="col-md-4">
-											<div class="form-group">
+											<div class="form-group" id="grp_role">
 												<div class="form-group">
-												  <select class="form-control" id="cmb_role">
+												  <select class="form-control" id="cmb_roleUser">
 												    <option th:each="initRoleVO: ${initRoleVO}" 
 												            th:value="${initRoleVO.cd}"
 												            th:text="${initRoleVO.cd_nm}"/>
@@ -79,7 +79,7 @@
 	function modifyUser() {
 	
 		var fv_usernm = $("#usernm").val();
-		var fv_role = $("#cmb_role").val();
+		var fv_role = $("#cmb_roleUser").val();
 	  	var fv_type = $("#edt_type").val();
 	  	var fv_uid = $("#uid").val();
 		

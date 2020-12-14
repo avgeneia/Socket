@@ -152,17 +152,38 @@ public class NoticeBoardController {
 	 */
 	@RequestMapping("/updateNotice")
 	@ResponseBody
-	public Map<String, String> updateNotice(HttpServletRequest request) {
+	public Map<String, String> updateNotice(MultipartHttpServletRequest request) {
 		
 		Map<String, String> map = new HashMap<String, String>();
+
+		MultipartFile file = request.getFile("file");
+		
+		boolean isFile = false;
+		if (file == null) {
+			isFile = false;
+		}
 		
 		try {
-			long result = buildingService.updateBuild(request.getParameterMap());
+			long result = noticeService.updateNotice(request.getParameterMap());
 			
 			if(result == 1) {
 				map.put("CODE", "0");
 				map.put("MSG", "완료되었습니다.");
 			}
+			
+			int sid = Integer.parseInt(request.getParameter("sid"));
+			
+			if (!isFile) {
+				String filepath = request.getSession().getServletContext().getRealPath("/") + "upload" + File.separator;
+				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
+
+				boolean successFile = CommUtil.fileUpload(file, filepath + filename);
+
+				if (successFile) {
+					noticeService.updateFile(request.getParameterMap(), file.getOriginalFilename(), sid);
+				}
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -69,18 +69,22 @@
 														<td th:text="${user.rnm}">rnm</td>
 														<td class="td-actions text-right">
 															
-															<input type="hidden" th:value="${user.uid}"/>
 															<button type="button" rel="tooltip" title="Edit Task" 
-																	th:data-uid="${user.uid}" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#userPopup">
+																	th:if="${user.isUpdate}"
+																	th:onclick="modalUser([[${user.uid}]])"
+																	class="btn btn-primary btn-link btn-sm">
 															<i class="material-icons">edit</i>
 															</button>
 															
 															<button type="button" rel="tooltip" title="Reset"
+																	th:if="${user.isUpdate}"
+																	th:onclick="resetUser([[${user.uid}]], [[${user.usernm}]])"
 															        class="btn btn-primary btn-link btn-sm">
 															<i class="material-icons">replay</i>
 															</button>
 															
 															<button type="button" rel="tooltip" title="Remove"
+																	th:if="${user.isUpdate}"
 															        th:onclick="deleteUser([[${user.uid}]], [[${user.usernm}]])"
 															        class="btn btn-danger btn-link btn-sm">
 															<i class="material-icons">close</i>
@@ -92,7 +96,7 @@
 													
 												</table>
 												
-												<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#userPopup">
+												<button type="button" class="btn btn-primary pull-right" onclick="modalUser()">
 												사용자 추가
 												</button>
 												
@@ -124,18 +128,10 @@
 		<th:block th:replace="fragments/script :: scriptFragment"></th:block>
 		 
 		<script th:inline="javascript">
-		/*<![CDATA[*/
-		var userVO = {
-			userVO:[[${userVO}]]
-		};
-		/*]]*/
-		
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-		$('#userPopup').on('show.bs.modal', function(e) {
-			
-			var uid = $(e.relatedTarget).data('uid');
+		function modalUser(uid) {
 			
 			if(uid == undefined) {
 				
@@ -143,6 +139,8 @@
 				$("#edt_type").val("insert");
 				$("#usernm").val("");
 				$("#grp_usernm").removeClass("is-filled");
+				
+				$("#userPopup").modal();
 				
 			} else {
 				
@@ -158,17 +156,20 @@
 		            },
 					url : "/selectUser",
 					success : function(data) {
-						$("#exampleModalLongTitle").text("사용자 수정");
+						//console.log(data);
+						
+						$("#sta_titleUser").text("사용자 수정");
 						$("#grp_usernm").addClass("is-filled");
-						for (const [key, value] of Object.entries(data)) {
-							$('#' + `${key}`).val(`${value}`);
-							$('#' + `${key}`).addClass("is-filled");
-						}
+
+						$("#usernm").val(data.usernm);
+						$("#cmb_roleUser").val(data.role);
+						
+						$("#userPopup").modal();
 	                }
 				});
 			}
 			
-		});
+		}
 		
 		//화면 재조회를 위한 이벤트
 		$('#userPopup').on('hide.bs.modal', function(e) {
@@ -211,6 +212,29 @@
                 }
 			});
 		}
+		
+		function resetUser(uid, usernm) {
+			
+			var rtn = confirm("\'" + usernm + "\' 사용자의 비밀번호를 초기화 하시겠습니까?");
+			
+			if(rtn) {
+			
+				$.ajax({
+					type : "POST",
+					data : {"uid" : uid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/resetUser",
+					success : function(data) {
+						showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+	                }
+				});
+			}
+		}
+		
+		
 		</script>
 				
 	</body>

@@ -59,7 +59,7 @@
 										<div class="col-md-4">
 											<div class="form-group">
 												<label class="bmd-label-floating">권한</label>
-												<select class="form-control" id="cmb_role">
+												<select class="form-control" id="cmb_roleAuth">
 												    <option th:each="initRoleVO: ${initRoleVO}" 
 												            th:value="${initRoleVO.cd}"
 												            th:text="${initRoleVO.cd_nm}"/>
@@ -126,7 +126,7 @@
 		var fv_uid = $("#cmb_user").val();
 		var fv_bid = $("#cmb_build").val();
 		var fv_rid = $("#cmb_room").val();
-		var fv_role = $("#cmb_role").val();
+		var fv_role = $("#cmb_roleAuth").val();
 	  	var fv_type = $("#edt_type").val();
 	  	var fv_comment = $("#comment").val();
 		
