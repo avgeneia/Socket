@@ -18,7 +18,14 @@ public class CustomAuthenticationFailHandler implements AuthenticationFailureHan
 			AuthenticationException exception) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		
-		request.setAttribute("errorMsg", exception.getMessage());
+		if(exception.getMessage() == null) {
+			request.setAttribute("errorMsg", "사용자ID 또는 비밀번호를 확인바랍니다.");
+		} else if(exception.getLocalizedMessage().equals("Bad credentials")) {
+			request.setAttribute("errorMsg", "사용자ID 또는 비밀번호를 확인바랍니다.");
+		} else {
+			request.setAttribute("errorMsg", exception.getMessage());
+		}
 		request.getRequestDispatcher("/login?error=true").forward(request, response);
+		
 	}
 }

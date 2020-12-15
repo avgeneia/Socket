@@ -51,19 +51,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth
-//			.jdbcAuthentication()
-//				.dataSource(dataSource)
-//				.passwordEncoder(new BCryptPasswordEncoder());
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
     
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web
-			.ignoring()
-				.antMatchers("/bootstrap/**");
+		web.ignoring().antMatchers("/bootstrap/**");
 	}
+	
+	@Bean
+    public CustomAuthenticationProvider customAuthenticationProvider() {
+        return new CustomAuthenticationProvider();
+    }
 	
 	@Bean
     // BCryptPasswordEncoder는 Spring Security에서 제공하는 비밀번호 암호화 객체입니다.

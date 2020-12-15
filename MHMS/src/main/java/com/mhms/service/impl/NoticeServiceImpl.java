@@ -34,7 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Autowired
 	private DataSource dataSource;
-
+	
 	@Override
 	public Notice selectNotice(Map<String, String[]> map, UserContext user) throws SQLException {
 		// TODO Auto-generated method stub
@@ -63,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		return result;
 	}
-
+	
 	@Override
 	public List<NoticeDto> BBSList(UserContext user) {
 		// TODO Auto-generated method stub
@@ -101,6 +101,43 @@ public class NoticeServiceImpl implements NoticeService {
 		return dto;
 	}
 
+	@Override
+	public List<NoticeDto> noticeList(UserContext user) {
+		// TODO Auto-generated method stub
+		JPAQuery query = new JPAQuery(entityManager);
+		QNotice notice = QNotice.notice;
+		QUserRole userRole = QUserRole.userRole;
+		
+		query.from(notice);
+		if(!CommUtil.isRole(user, "ROLE_ADMIN")) {
+			query.join(userRole).on(notice.bid.eq(userRole.building.bid));
+			query.where(userRole.building.bid.in(user.getBid()).and(notice.notice_lv.eq(1)).and(userRole.account.uid.eq(user.getUid())));
+		} else {
+			query.where(notice.notice_lv.eq(1));
+		}
+		
+		List<NoticeDto> dto = query.list(new QNoticeDto(notice.sid, notice.cid, notice.bid, notice.title, notice.notice_lv, notice.viewcnt, notice.content, notice.filename, notice.writer, notice.writedate));
+		
+		for(int i = 0; i <  dto.size(); i++) {
+			
+			/* L1 : 작성자가 로그인사용자일 때 수정권한을 부여한다.
+			 * L2 : 현재 로그인 사용자가 시스탬 관리자일 경우 수정권한을 부여한다.
+			 * L3 : 현재 로그인 사용자가 해당 글의 매니저일 경우 수정권한을 부여한다.
+			 * */
+			if(dto.get(i).getWriter().equals(user.getUsername())
+			|| CommUtil.isRole(user, "ROLE_ADMIN")
+			|| (CommUtil.isRole(user, "ROLE_MANAGER") && CommUtil.getBuildUnion(user, dto.get(i).getBid()))) {
+				dto.get(i).setIsupdate(1);
+			} else {
+				dto.get(i).setIsupdate(0);
+			}
+			
+			dto.get(i).setNo(i + 1);
+		}
+		
+		return dto;
+	}
+	
 	@Override
 	public int insertNotice(Map<String, String[]> map, UserContext user) throws SQLException {
 		// TODO Auto-generated method stub

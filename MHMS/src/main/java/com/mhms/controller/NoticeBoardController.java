@@ -30,7 +30,6 @@ import com.google.common.io.ByteStreams;
 import com.mhms.dto.BuildingDto;
 import com.mhms.security.UserContext;
 import com.mhms.service.BuildingService;
-import com.mhms.service.CodeService;
 import com.mhms.service.NoticeService;
 import com.mhms.sqlite.entities.Notice;
 import com.mhms.util.CommUtil;
@@ -43,20 +42,17 @@ public class NoticeBoardController {
 	private BuildingService buildingService;
 
 	@Autowired
-	private CodeService codeService;
-
-	@Autowired
 	private NoticeService noticeService;
 
 	@Autowired
 	ResourceLoader resourceLoader;
 
 	/*
-	 * 조회 1건
+	 * 조회 1건 : bbs
 	 */
-	@RequestMapping("/selectNotice")
+	@RequestMapping("/selectBBS")
 	@ResponseBody
-	public Map<String, Object> selectNotice(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+	public Map<String, Object> selectBBS(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -73,7 +69,30 @@ public class NoticeBoardController {
 
 		return map;
 	}
+	
+	/*
+	 * 조회 1건 : notice
+	 */
+	@RequestMapping("/selectNotice")
+	@ResponseBody
+	public Map<String, Object> selectnotice(HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
 
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		try {
+			Notice dto = noticeService.selectNotice(request.getParameterMap(), user);
+			map.put("CODE", "0");
+			map.put("DATA", dto);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			map.put("CODE", e.getErrorCode());
+			map.put("MSG", e.getMessage());
+		}
+
+		return map;
+	}
+	
 	/*
 	 * 조회 목록(MAIN)
 	 */
@@ -95,7 +114,41 @@ public class NoticeBoardController {
 
 		return "noticeBoard";
 	}
+	
+	/*
+	 * 조회 목록(tab : bbs)
+	 */
+	@RequestMapping("/BBSList")
+	public String bbsList(Model model, @AuthenticationPrincipal UserContext user) {
 
+		List<BuildingDto> builList = buildingService.initBuild(user);
+		BuildingDto buildDto = new BuildingDto(-1, "선택");
+		builList.add(0, buildDto);
+
+		// model.addAttribute("infoVO", map);
+		model.addAttribute("bbsList", noticeService.BBSList(user));
+		model.addAttribute("initBuildVO", builList);
+
+		return "noticeBoard :: #table_bbs";
+	}
+	
+	/*
+	 * 조회 목록(tab : notice)
+	 */
+	@RequestMapping("/NoticeList")
+	public String noticeList(Model model, @AuthenticationPrincipal UserContext user) {
+
+		List<BuildingDto> builList = buildingService.initBuild(user);
+		BuildingDto buildDto = new BuildingDto(-1, "선택");
+		builList.add(0, buildDto);
+
+		// model.addAttribute("infoVO", map);
+		model.addAttribute("noticeList", noticeService.noticeList(user));
+		model.addAttribute("initBuildVO", builList);
+
+		return "noticeBoard :: #table_notice";
+	}
+	
 	/*
 	 * 추가
 	 */

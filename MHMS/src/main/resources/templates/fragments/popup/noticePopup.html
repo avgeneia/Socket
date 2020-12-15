@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<article th:fragment="bbsPopup()" xmlns:th="http://www.thymeleaf.org">
+<article th:fragment="noticePopup()" xmlns:th="http://www.thymeleaf.org">
 
 	<th:block>
 	
 		<body>
 		
 			<!-- Modal -->
-			<div class="modal fade" id="bbsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal fade" id="noticePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 				
 					<div class="modal-content">
 					
 						<div class="modal-header">
-							<h5 class="modal-title" id="sta_titleBBS">공지사항 등록</h5>
+							<h5 class="modal-title" id="sta_titleNotice">일반문의 등록</h5>
 							<div class="ml-auto">
-								<button id="btn_saveBBS" type="button" 
+								<button id="btn_saveNotice" type="button" 
 								        class="btn btn-primary modal-header-button" onclick="saveNotice()"><b>수정</b></button>
-								<button id="btn_deleteBBS" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
+								<button id="btn_deleteNotice" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
 								<button type="button" class="btn btn-secondary modal-header-button" data-dismiss="modal"><b>닫기</b></button>
 							</div>
 						</div>
 						
 						<div class="modal-body">
 							<div class="card-body">
-								<form id="bbsForm" name="noticeBody" method="post">
+								<form id="NoticeForm" name="noticeBody" method="post">
 									
-									<input id="fv_gbnBBS" type="hidden">
-									<input id="fv_sidBBS" type="hidden">
-									<input id="fv_cidBBS" type="hidden">
-									<input id="fv_bidBBS" type="hidden">
+									<input id="fv_gbnNotice" type="hidden">
+									<input id="fv_sidNotice" type="hidden">
+									<input id="fv_cidNotice" type="hidden">
+									<input id="fv_bidNotice" type="hidden">
 									
-									<div class="row" id="upr_title">
+									<div class="row" id="upr_titleNotice">
 										<div class="col-md-8">
-											<div class="form-group" id="grp_titleBBS">
-												<label id="codeTitleBBS" class="bmd-label-floating">제목</label>
-												<input id="edt_titleBBS" type="text" class="form-control" required>
+											<div class="form-group" id="grp_titleNotice">
+												<label id="codeTitleNotice" class="bmd-label-floating">제목</label>
+												<input id="edt_titleNotice" type="text" class="form-control" required>
 											</div>
 										</div>
 									</div>
 									
 									<div class="row">
 										<div class="col-md-12">
-											<div class="form-group" id="grp_contentBBS">
+											<div class="form-group" id="grp_contentNotice">
 												<label class="bmd-label-floating">내용</label>
-												<textarea class="form-control" id="ta_contentBBS" rows="5" required></textarea>
+												<textarea class="form-control" id="ta_contentNotice" rows="5" required></textarea>
 											</div>
 										</div>
 									</div>
 									
 									<div class="row">
 										<div class="col-md-8">
-											<div class="form-group" id="grp_linkBBS">
+											<div class="form-group" id="grp_linkNotice">
 												<label class="bmd-label-floating">링크</label>
-												<input id="edt_linkBBS" type="text" class="form-control">
+												<input id="edt_linkNotice" type="text" class="form-control">
 											</div>
 										</div>
 										
@@ -63,7 +63,7 @@
 											<div class="form-group">
 												<label class="bmd-label-floating">대상건물</label>
 												<select class="form-control custom-select"
-												        id="cmb_buildBBS" required>
+												        id="cmb_buildNotice" required>
 												    <option th:each="initBuildVO: ${initBuildVO}" 
 												            th:value="${initBuildVO.bid}"
 												            th:text="${initBuildVO.bnm}"/>
@@ -78,17 +78,17 @@
 											
 											<label class="bmd-label-floating">첨부</label>
 											<div class="input-group">
-												<input id="inputFileBBS" type="file" class="form-control">
-												<input id="edt_fileBBS" type="type" class="form-control" style="display: none; background-color: white;display: block;" disabled="disabled" readonly="readonly" >
+												<input id="inputFileNotice" type="file" class="form-control">
+												<input id="edt_fileNotice" type="type" class="form-control" style="display: none; background-color: white;display: block;" disabled="disabled" readonly="readonly" >
 												
-					                            <button type="button" id="btn_downloadBBS"
+					                            <button type="button" id="btn_downloadNotice"
 					                                    rel="tooltip" title="download" 
 					                                    onclick="download()"
 					                                    class="btn btn-primary btn-link btn-sm">
 					                            <i class="material-icons">save_alt</i>
 					                            </button>
 					                            
-					                            <button type="button" id="btn_delFileBBS"
+					                            <button type="button" id="btn_delFileNotice"
 					                                    rel="tooltip" title="Delete" 
 					                                    onclick="deleteFile()"
 					                                    class="btn btn-danger btn-link btn-sm">
@@ -99,9 +99,9 @@
 										
 									</div>
 									
-									<div class="row" id="grp_errorBBS">
+									<div class="row" id="grp_errorNotice">
 										<div class="text-right p-t-13 p-b-23 col-md-12">
-								            <p id="errorBBS" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
+								            <p id="errorNotice" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
 										</div>
 									</div>
 									
@@ -126,33 +126,33 @@
 	
 	function saveNotice() {
 		
-		var fv_gbn = $("#fv_gbnBBS").val();
+		var fv_gbn = $("#fv_gbn").val();
 		
 		var formData = new FormData(); 
-		formData.append("title", $("#edt_titleBBS").val()); 
-		formData.append("content", $("#ta_contentBBS").val()); 
-		formData.append("file", $("#inputFileBBS")[0].files[0]);
-		formData.append("link", $("#edt_linkBBS").val()); 
-		formData.append("bid", $("#cmb_buildBBS").val());
+		formData.append("title", $("#edt_title").val()); 
+		formData.append("content", $("#ta_content").val()); 
+		formData.append("file", $("#inputFile")[0].files[0]);
+		formData.append("link", $("#edt_link").val()); 
+		formData.append("bid", $("#cmb_build").val());
 		formData.append("notice", 0); 
 		
 		var isChk = true;
 		
-		if($("#edt_titleBBS").val() == "") {
+		if($("#edt_title").val() == "") {
 			showNotification('new_releases', 'warning', 'top', 'center', "제목은 필수 입력항목 입니다.");
-			$("#edt_titleBBS").focus();
+			$("#edt_title").focus();
 			isChk = false;
 		}
 		
-		if($("#ta_contentBBS").val() == "") {
+		if($("#ta_content").val() == "") {
 			showNotification('new_releases', 'warning', 'top', 'center', "내용은 필수 입력항목 입니다.");
-			$("#ta_contentBBS").focus();
+			$("#ta_content").focus();
 			isChk = false;
 		}
 		
-		if($("#cmb_buildBBS").val() == "-1") {
+		if($("#cmb_build").val() == "-1") {
 			showNotification('new_releases', 'warning', 'top', 'center', "대상건물은 필수 입력항목 입니다.");
-			$("#cmb_buildBBS").focus();
+			$("#cmb_build").focus();
 			isChk = false;
 		}
 		
@@ -165,8 +165,8 @@
 		var rtn = false;
 		if(fv_gbn == "update") {
 			
-			formData.append("sid", $("#fv_sidBBS").val());
-			formData.append("cid", $("#fv_cidBBS").val());
+			formData.append("sid", $("#fv_sid").val());
+			formData.append("cid", $("#fv_cid").val());
 			
 			rtn = confirm("저장하시겠습니까?");
 			
@@ -216,16 +216,16 @@
 	
 	function download() {
 		
-		var fv_sid = $("#fv_sidBBS").val();
-		var fv_cid = $("#fv_cidBBS").val();
-		var fv_bid = $("#fv_bidBBS").val();
+		var fv_sid = $("#fv_sid").val();
+		var fv_cid = $("#fv_cid").val();
+		var fv_bid = $("#fv_bid").val();
 		
 		window.location.href = "/downloadNotice?sid=" + fv_sid + "&cid=" + fv_cid + "&bid=" + fv_bid;
 	}
 	
 	function deleteFile() {
-		$("#inputFileBBS").css("display","initial");
-		$("#edt_fileBBS").css("display","none");
+		$("#inputFile").css("display","initial");
+		$("#edt_file").css("display","none");
 	}
 	</script>
 	

@@ -27,14 +27,14 @@
 				                    <div class="nav-tabs-wrapper">
 				                      <ul class="nav nav-tabs" data-tabs="tabs">
 				                        <li id="tab_uprcode" class="nav-item">
-				                          <a class="nav-link active show" href="#grd_bbs" data-toggle="tab" id="btn_bbs">
+				                          <a class="nav-link active show" onclick="fn_tabMove('BBS')" id="btn_bbs">
 				                            <h3 class="card-title ">공지사항</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
-				                        <li id="tab_code" class="nav-item">
-				                          <a class="nav-link" href="#grd_notice" data-toggle="tab" id="btn_notice">
-				                            <h3 class="card-title">게시판</h3>
+				                        <li id="tab_notice" class="nav-item">
+				                          <a class="nav-link" onclick="fn_tabMove('Notice')" id="btn_notice">
+				                            <h3 class="card-title">일반문의</h3>
 				                            <div class="ripple-container"></div>
 				                          </a>
 				                        </li>
@@ -45,7 +45,7 @@
 				                <div class="card-body">
 				                  <div class="tab-content">
 					                    <div class="tab-pane active" id="grd_bbs">
-					                      <table class="table table-hover">
+					                      <table class="table table-hover" id="table_bbs">
 						                      <thead class=" text-primary">
 						                        <th>No.</th>
 						                        <th>게시물</th>
@@ -57,21 +57,21 @@
 						                        <tr th:each="bbsList : ${bbsList}" style="cursor: pointer;">
 						                          <td th:text="${bbsList.no}">1</td>
 						                          <td th:text="${bbsList.title}"
-						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">title</td>
+						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">title</td>
 						                          <td th:text="${bbsList.viewcnt}"
-						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
+						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writer}"
-						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
+						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writedate}"
-						                              th:onclick="rowClickEvent('update',[[${bbsList}]])">Niger</td>
+						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">Niger</td>
 						                        </tr>
 						                      </tbody>
 						                    </table>
 						                    
 						                    <button type="button" class="btn btn-primary pull-right"
 						                            sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')"  
-						                            onclick="rowClickEvent('insert')">
-											  공지사항 등록
+						                            onclick="rowClickEvent('BBS','insert')">
+											등록
 											</button>
 											
 											<!-- Modal -->
@@ -80,7 +80,7 @@
 											
 					                    </div>
 					                   	<div class="tab-pane" id="grd_notice">
-					                      <table class="table table-hover">
+					                      <table class="table table-hover" id="table_notice">
 						                      <thead class=" text-primary">
 						                        <th>No.</th>
 						                        <th>게시물</th>
@@ -89,22 +89,28 @@
 						                        <th>작성일자</th>
 						                      </thead>
 						                      <tbody>
-						                        <tr th:each="build : ${buildingList}">
-						                          <td th:text="${build.bid}">1</td>
-						                          <td th:text="${build.bnm}">Dakota Rice</td>
-						                          <td th:text="${build.rid}">Niger</td>
-						                          <td th:text="${build.rnm}">Niger</td>
-						                          <td th:text="${build.rnm}">Niger</td>
+						                        <tr th:each="noticeList : ${noticeList}" style="cursor: pointer;">
+						                          <td th:text="${noticeList.no}">1</td>
+						                          <td th:text="${noticeList.title}"
+						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">title</td>
+						                          <td th:text="${noticeList.viewcnt}"
+						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">Niger</td>
+						                          <td th:text="${noticeList.writer}"
+						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">Niger</td>
+						                          <td th:text="${noticeList.writedate}"
+						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">Niger</td>
 						                        </tr>
 						                      </tbody>
 						                    </table>
 						                    
-						                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#bbsPopup">
-											  게시물 등록
+						                    <button type="button" class="btn btn-primary pull-right" 
+						                            sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')"  
+						                            onclick="rowClickEvent('Notice','insert')">>
+											등록
 											</button>
 											
 											<!-- Modal -->
-											<article id="modal" th:replace="fragments/popup/bbsPopup :: bbsPopup()"></article>
+											<article id="modal" th:replace="fragments/popup/noticePopup :: noticePopup()"></article>
 											
 					                    </div>
 					                   
@@ -128,7 +134,12 @@
 		
 		//화면 재조회를 위한 이벤트
 		$('#bbsPopup').on('hide.bs.modal', function(e) {
-			location.reload();
+			fn_tabMove("bbs");
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#noticePopup').on('hide.bs.modal', function(e) {
+			fn_tabMove("notice");
 		});
 		
 		function deleteNotice(title, sid, cid, bid) {
@@ -153,21 +164,28 @@
 			
 		}
 		
-		function rowClickEvent(gbn, row) {
+		function rowClickEvent(type, gbn, row) {
 			
-			$("#grp_title").removeClass("bmd-form-group");
-			$("#grp_link").removeClass("bmd-form-group");
+			$("#grp_title" + type).removeClass("bmd-form-group");
+			$("#grp_link" + type).removeClass("bmd-form-group");
 			
 			if(gbn == "insert") {
 				
-				$("#fv_gbn").val(gbn);
-				$("#sta_title").text("게시물 등록");
-				$("#btn_save").text("저장");
-				$("#btn_delete").css("display","none");
-				$("#bbsPopup").modal();
+				$("#fv_gbn" + type).val(gbn);
+				$("#sta_title" + type).text("공지사항 등록");
+				$("#btn_save" + type).text("저장");
+				$("#btn_delete" + type).css("display","none");
+				
+				if(type == "BBS") {
+					$("#bbsPopup").modal();	
+				} else if(type == "Notice") {
+					$("#noticePopup").modal();
+				}
 				
 			} else {
 				
+				var fv_url = "/select" + type;  
+					
 				console.log("inputData :: ");
 				console.log(row);
 				$.ajax({
@@ -177,65 +195,105 @@
 		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 						xhr.setRequestHeader(header, token);
 		            },
-					url : "/selectNotice",
+					url : fv_url,
 					success : function(data) {
 						
 						console.log("outputData :: ");
 						console.log(data)
 						if(data.CODE == "0") {
 							
-							
 							//modal화면에 key값 입력
-							$("#fv_gbn").val(gbn);
-							$("#fv_sid").val(data.DATA.sid);
-							$("#fv_cid").val(data.DATA.cid);
-							$("#fv_bid").val(data.DATA.bid);
+							$("#fv_gbn" + type).val(gbn);
+							$("#fv_sid" + type).val(data.DATA.sid);
+							$("#fv_cid" + type).val(data.DATA.cid);
+							$("#fv_bid" + type).val(data.DATA.bid);
 							
-							$("#ta_content").val(data.DATA.content);
-							$("#grp_content").addClass("is-filled");
-							$("#edt_link").val(data.DATA.link);
-							$("#cmb_build").val(data.DATA.bid);
-							$("#edt_title").val(data.DATA.title);
+							$("#ta_content" + type).val(data.DATA.content);
+							$("#grp_content" + type).addClass("is-filled");
+							$("#edt_link" + type).val(data.DATA.link);
+							$("#cmb_build" + type).val(data.DATA.bid);
+							$("#edt_title" + type).val(data.DATA.title);
 							
 							//첨부관련 객체 제어
-							$("#inputFile").css("display","none");
-							$("#edt_file").css("display","block");
-							$("#edt_file").val(data.DATA.filename);
-							$("#edt_file").removeAttr("disabled");
+							$("#inputFile" + type).css("display","none");
+							$("#edt_file" + type).css("display","block");
+							$("#edt_file" + type).val(data.DATA.filename);
+							$("#edt_file" + type).removeAttr("disabled");
 							
 							if(data.DATA.isupdate == 1) {
-								$("#sta_title").text("게시물 수정");
-								$("#upr_title").css("display","block");
+								$("#sta_title" + type).text("공지사항 수정");
+								$("#upr_title" + type).css("display","block");
 
-								$("#edt_title").removeAttr("readonly"); 
-								$("#ta_content").removeAttr("readonly"); 
-								$("#edt_link").removeAttr("readonly"); 
-								$("#cmb_build").removeAttr("disabled"); 
+								$("#edt_title" + type).removeAttr("readonly"); 
+								$("#ta_content" + type).removeAttr("readonly"); 
+								$("#edt_link" + type).removeAttr("readonly"); 
+								$("#cmb_build" + type).removeAttr("disabled"); 
 								
-								$("#btn_delFile").css("display","initial");
-								$("#btn_save").css("display","initial");
-								$("#btn_delete").css("display","initial");
-								$("#grp_error").css("display","block");
+								$("#btn_delFile" + type).css("display","initial");
+								$("#btn_save" + type).css("display","initial");
+								$("#btn_delete" + type).css("display","initial");
+								$("#grp_error" + type).css("display","block");
 							} else {
-								$("#sta_title").text(data.DATA.title);
-								$("#upr_title").css("display","none");
+								$("#sta_title" + type).text(data.DATA.title);
+								$("#upr_title" + type).css("display","none");
 								
-								$("#edt_title").attr("readonly",true);
-								$("#ta_content").attr("readonly",true);
-								$("#edt_link").attr("readonly",true);
-								$("#cmb_build").attr("disabled",true); 
+								$("#edt_title" + type).attr("readonly",true);
+								$("#ta_content" + type).attr("readonly",true);
+								$("#edt_link" + type).attr("readonly",true);
+								$("#cmb_build" + type).attr("disabled",true); 
 								
-								$("#btn_delFile").css("display","none");
-								$("#btn_save").css("display","none");
-								$("#btn_delete").css("display","none");
-								$("#grp_error").css("display","none");
+								$("#btn_delFile" + type).css("display","none");
+								$("#btn_save" + type).css("display","none");
+								$("#btn_delete" + type).css("display","none");
+								$("#grp_error" + type).css("display","none");
 							}
 							
-							$("#bbsPopup").modal();
+							if(type == "BBS") {
+								$("#bbsPopup").modal();	
+							} else if(type == "Notice") {
+								$("#noticePopup").modal();
+							}
 						}
 	                }
 				});	
 			}
+		}
+		
+		function fn_tabMove(type) {
+			
+			var fv_url = "/" + type + "List";
+			
+			$.ajax({
+				type : "POST",
+				data : "",
+				beforeSend : function(xhr)
+	            {   
+					xhr.setRequestHeader(header, token);
+	            },
+				url : fv_url,
+				success : function(data) {
+					if(data != null
+					&& type == "Notice") {
+						
+						$("#tab_notice").show();
+						$("#btn_bbs").removeClass("active show");
+						$("#btn_notice").addClass("active show");
+						$("#grd_bbs").removeClass("active");
+						$("#grd_notice").addClass("active");
+						$("#table_notice").replaceWith(data);
+					} else if(data != null
+						   && type == "BBS") {
+						
+						$("#tab_bbs").show();
+						$("#btn_notice").removeClass("active show");
+						$("#btn_bbs"   ).addClass(   "active show");
+						$("#grd_notice").removeClass("active");
+						$("#grd_bbs"   ).addClass(   "active");
+						$("#table_bbs" ).replaceWith(data);
+					}
+					
+                }
+			});	
 		}
         </script>
         

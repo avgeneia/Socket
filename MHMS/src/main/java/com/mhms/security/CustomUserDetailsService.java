@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.mhms.sqlite.entities.Account;
@@ -63,11 +62,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 			bidList.add(userRoleList.get(i).getBuilding().getBid());
 		}
 		
-        if(user == null){
-            throw new UsernameNotFoundException("사용자ID 또는 비밀번호를 확인바랍니다.");
-        } else if(bidList.isEmpty()) {
+        if(bidList.isEmpty()) {
         	throw new AccountExpiredException("사용자 권한이 없습니다.");
-        }
+        } 
         
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(user.getRole()));

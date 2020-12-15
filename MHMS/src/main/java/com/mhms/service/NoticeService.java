@@ -15,6 +15,8 @@ public interface NoticeService {
 	
     public List<NoticeDto> BBSList(UserContext user);
     
+    public List<NoticeDto> noticeList(UserContext user);
+    
     public int insertNotice(Map<String, String[]> map, UserContext user) throws SQLException;
     
     public void updateFile(Map<String, String[]> map, String filename, int sid) throws SQLException;
