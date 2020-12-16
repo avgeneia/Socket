@@ -11,21 +11,21 @@ import com.mhms.security.UserContext;
 
 public interface UserService {
 	
-	public List<UserDto> getUserList(UserContext user);
-	
-    public List<UserListDto> userList(UserContext user);
-    
-    public List<UserListDto> selectUser(int uid);
-    
-    public int insertUser(Map<String, String[]> map) throws SQLException;
-    
-    public long updateUser(Map<String, String[]> map) throws SQLException;
-    
-    public long changePassword(Map<String, String[]> map, UserContext user) throws SQLException;
-    
-    public long resetUser(Map<String, String[]> map, UserContext user) throws SQLException;
-    
-    public long updateUserUseyn(Map<String, String[]> map) throws SQLException;
-    
-    public long deleteUser(Map<String, String[]> map) throws SQLException;
+	List<UserDto> getUserList(UserContext paramUserContext);
+	  
+	List<UserListDto> userList(UserContext paramUserContext);
+  
+	List<UserListDto> selectUser(int paramInt);
+  
+	int insertUser(Map<String, String[]> paramMap) throws SQLException;
+  
+	long updateUser(Map<String, String[]> paramMap) throws SQLException;
+  
+	long changePassword(Map<String, String[]> paramMap, UserContext paramUserContext) throws SQLException;
+  
+	long resetUser(Map<String, String[]> paramMap, UserContext paramUserContext) throws SQLException;
+  
+	long updateUserUseyn(Map<String, String[]> paramMap) throws SQLException;
+  
+	long deleteUser(Map<String, String[]> paramMap) throws SQLException;
 }

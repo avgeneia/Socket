@@ -66,7 +66,9 @@ public class NoticeBoardController {
 			map.put("CODE", e.getErrorCode());
 			map.put("MSG", e.getMessage());
 		}
-
+		
+		map.put("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+		
 		return map;
 	}
 	
@@ -89,7 +91,9 @@ public class NoticeBoardController {
 			map.put("CODE", e.getErrorCode());
 			map.put("MSG", e.getMessage());
 		}
-
+		
+		map.put("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+		
 		return map;
 	}
 	
@@ -187,14 +191,10 @@ public class NoticeBoardController {
 			map.put("MSG", "완료되었습니다.");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.out.println("SQLException :: " + e.getErrorCode());
 
-			// if(e.getErrorCode() == 19) {
 			map.put("CODE", String.valueOf(e.getErrorCode()));
 			map.put("MSG", e.getMessage());
-			// }
 		}
 
 		return map;
@@ -238,10 +238,6 @@ public class NoticeBoardController {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			System.out.println("updateBuild SQLException :: " + e.getErrorCode());
 			map.put("CODE", String.valueOf(e.getErrorCode()));
 			map.put("MSG", e.getMessage());
 		}
@@ -265,9 +261,6 @@ public class NoticeBoardController {
 				map.put("MSG", "완료되었습니다.");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("deleteBuild SQLException :: " + e.getErrorCode());
 			map.put("CODE", String.valueOf(e.getErrorCode()));
 			map.put("MSG", e.getMessage());
 		}
@@ -321,4 +314,92 @@ public class NoticeBoardController {
 		return map;
 	}
 
-}
+	@RequestMapping("/selectAnswerBBS")
+	public String selectAnswerBBS(Model model, HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		model.addAttribute("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+		
+		return "fragments/popup/bbsPopup :: #answerBBS";
+	}
+	  
+	@RequestMapping("/selectAnswerNotice")
+	public String selectAnswerNotice(Model model, HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		model.addAttribute("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+		
+		return "fragments/popup/noticePopup :: #answerNotice";
+	}
+	 
+	
+	@RequestMapping("/insertAnswer")
+	public String insertAnswer(Model model, @AuthenticationPrincipal UserContext user, HttpServletRequest request) throws SQLException {
+		
+		int result = this.noticeService.insertAnswer(request.getParameterMap(), user);
+		
+	    Map<String, String> map = new HashMap<>();
+	    
+	    if (result > 0) {
+	    	map.put("CODE", "0");
+	    	map.put("MSG", "완료되었습니다.");
+	    }
+	    
+	    model.addAttribute("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+	    
+	    if (request.getParameter("type").equals("BBS")) {
+	    	return "fragments/popup/bbsPopup :: #answerBBS";
+	    } else {
+	    	return "fragments/popup/noticePopup :: #answerNotice";
+	    }
+	}
+	
+	@RequestMapping("/deleteAnswerBBS")
+	public String deleteAnswerBBS(Model model, HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, String> map = new HashMap<>();
+		
+		try {
+			
+			long result = this.noticeService.deleteAnswerBBS(request.getParameterMap());
+			
+			if (result == 1L) {
+				map.put("CODE", "0");
+				map.put("MSG", "완료되었습니다.");
+			} 
+			
+	    } catch (SQLException e) {
+	    	map.put("CODE", String.valueOf(e.getErrorCode()));
+	    	map.put("MSG", e.getMessage());
+	    } 
+		
+		model.addAttribute("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+	    model.addAttribute("resultVO", map);
+	    
+	    return "fragments/popup/bbsPopup :: #answerBBS";
+	}
+	  
+	@RequestMapping("/deleteAnswerNotice")
+	public String deleteAnswerNotice(Model model, HttpServletRequest request, @AuthenticationPrincipal UserContext user) {
+		
+		Map<String, String> map = new HashMap<>();
+		
+		try {
+			
+			long result = this.noticeService.deleteAnswerBBS(request.getParameterMap());
+			
+			if (result == 1L) {
+				map.put("CODE", "0");
+				map.put("MSG", "완료되었습니다.");
+			}
+		
+	    } catch (SQLException e) {
+	    	map.put("CODE", String.valueOf(e.getErrorCode()));
+	    	map.put("MSG", e.getMessage());
+	    }
+		
+		model.addAttribute("answerList", this.noticeService.selectAnswer(request.getParameterMap(), user));
+		model.addAttribute("resultVO", map);
+		
+		return "fragments/popup/noticePopup :: #answerNotice";
+	}
+	
+}	

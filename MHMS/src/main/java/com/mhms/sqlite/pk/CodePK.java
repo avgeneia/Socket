@@ -2,6 +2,11 @@ package com.mhms.sqlite.pk;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CodePK implements Serializable {
 
 	/**
@@ -25,19 +30,4 @@ public class CodePK implements Serializable {
 		return super.hashCode();
 	}
 
-	public String getUPR_CD() {
-		return upr_cd;
-	}
-
-	public void setUPR_CD(String uPR_CD) {
-		upr_cd = uPR_CD;
-	}
-
-	public String getCD() {
-		return cd;
-	}
-
-	public void setCD(String cD) {
-		cd = cD;
-	}
 }

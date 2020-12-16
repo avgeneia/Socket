@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
+	
     <!-- 공통 헤더-->
     <th:block th:replace="fragments/head :: headFragment"></th:block>
 
@@ -15,310 +15,117 @@
                     <th:block th:replace="fragments/topbar :: topbarFragment"></th:block>
                     <!-- 본문-->
                     <div class="content">
-				        <div class="container-fluid">
-				            <div class="row">
-				            <div class="col-lg-6 col-md-12">
-				              <div class="card">
-				                <div class="card-header card-header-tabs card-header-primary">
-				                  <div class="nav-tabs-navigation">
-				                    <div class="nav-tabs-wrapper">
-				                      <span class="nav-tabs-title">Tasks:</span>
-				                      <ul class="nav nav-tabs" data-tabs="tabs">
-				                        <li class="nav-item">
-				                          <a class="nav-link active" href="#profile" data-toggle="tab">
-				                            <i class="material-icons">bug_report</i> Bugs
-				                            <div class="ripple-container"></div>
-				                          </a>
-				                        </li>
-				                        <li class="nav-item">
-				                          <a class="nav-link" href="#messages" data-toggle="tab">
-				                            <i class="material-icons">code</i> Website
-				                            <div class="ripple-container"></div>
-				                          </a>
-				                        </li>
-				                        <li class="nav-item">
-				                          <a class="nav-link" href="#settings" data-toggle="tab">
-				                            <i class="material-icons">cloud</i> Server
-				                            <div class="ripple-container"></div>
-				                          </a>
-				                        </li>
-				                      </ul>
-				                    </div>
-				                  </div>
-				                </div>
-				                <div class="card-body">
-				                  <div class="tab-content">
-				                    <div class="tab-pane active" id="profile">
-				                      <table class="table">
-				                        <tbody>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="" checked>
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Sign contract for "What are conference organizers afraid of?"</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="">
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="">
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-				                            </td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="" checked>
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Create 4 Invisible User Experiences you Never Knew About</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                        </tbody>
-				                      </table>
-				                    </div>
-				                    <div class="tab-pane" id="messages">
-				                      <table class="table">
-				                        <tbody>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="" checked>
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-				                            </td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="">
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Sign contract for "What are conference organizers afraid of?"</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                        </tbody>
-				                      </table>
-				                    </div>
-				                    <div class="tab-pane" id="settings">
-				                      <table class="table">
-				                        <tbody>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="">
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="" checked>
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-				                            </td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                          <tr>
-				                            <td>
-				                              <div class="form-check">
-				                                <label class="form-check-label">
-				                                  <input class="form-check-input" type="checkbox" value="" checked>
-				                                  <span class="form-check-sign">
-				                                    <span class="check"></span>
-				                                  </span>
-				                                </label>
-				                              </div>
-				                            </td>
-				                            <td>Sign contract for "What are conference organizers afraid of?"</td>
-				                            <td class="td-actions text-right">
-				                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
-				                                <i class="material-icons">edit</i>
-				                              </button>
-				                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-				                                <i class="material-icons">close</i>
-				                              </button>
-				                            </td>
-				                          </tr>
-				                        </tbody>
-				                      </table>
-				                    </div>
-				                  </div>
-				                </div>
-				              </div>
-				            </div>
-				            <div class="col-lg-6 col-md-12">
-				              <div class="card">
-				              	<div class="card-header card-header-primary">
-				                  <h2 class="card-title ">게시판</h2>
-				                </div>
-				              	<div class="card-body">
-									<form>
-									
-										<div class="row">
-											<div class="col-md-8">
-												<div class="form-group">
-													<label id="codeTitle" class="bmd-label-floating">제목</label>
-													<input id="usernm" type="text" class="form-control">
-												</div>
-											</div>
-											
-											<div class="col-md-4">
-												<div class="form-group">
-													<label id="codeTitle" class="bmd-label-floating">등급</label>
-													<input id="usernm" type="text" class="form-control">
-												</div>
-											</div>
-										</div>
+					        <div class="container-fluid">
+					        
+					          <div class="row">
+					          
+					          	<div class="col-md-1">
+					          	</div>
+					          	
+					          	<div class="col-md-10">
+					          		<div class="thumbnail">
+								        <img class="img-fluid" th:src="@{/bootstrap/images/builder.jpg}" alt="Lights" style="width:100%">
+								    </div>
+					            </div>
+					            
+					            <div class="col-md-1">
+					          	</div>
+					          	
+					          </div>	
+					          
+					          <div class="row">
+					          	<br/>
+					          </div>
+					          
+					          <div class="row">
+					            <div class="col-md-6">
+					              <div class="card">
+					                <div class="card-header card-header-primary">
+					                	<a class="nav-link" href="/noticeBoard">
+					                  		<h3 class="card-title ">공지사항</h3>
+					                  	</a>
+					                </div>
+					                <div class="card-body">
+					                  <div class="table-responsive">
+					                    <table class="table table-hover" id="table_index_bbs">
+						                      <thead class=" text-primary">
+						                        <th>No.</th>
+						                        <th>게시물</th>
+						                        <th>작성자</th>
+						                        <th>작성일자</th>
+						                      </thead>
+						                      <colgroup>
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 70%;">
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 10%;">
+											  </colgroup>
+						                      <tbody>
+						                        <tr th:each="bbsList : ${bbsList}" style="cursor: pointer;">
+						                          <td th:text="${bbsList.no}">1</td>
+						                          <td th:text="${bbsList.title}"
+						                              th:onclick="rowClickEventIndex('BBS','update',[[${bbsList}]])">title</td>
+						                          <td th:text="${bbsList.writer}"
+						                              th:onclick="rowClickEventIndex('BBS','update',[[${bbsList}]])">Niger</td>
+						                          <td th:text="${bbsList.writedate}"
+						                              th:onclick="rowClickEventIndex('BBS','update',[[${bbsList}]])">Niger</td>
+						                        </tr>
+						                      </tbody>
+						                    </table>
+					                    
+										<!-- Modal -->
+										<article id="modalBBS" th:replace="fragments/popup/bbsPopup :: bbsPopup()"></article>
+										<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
 										
-										<div class="row">
-											<div class="col-md-12">
-												<div class="form-group">
-													<label class="bmd-label-floating">내용</label>
-													<textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
-												</div>
-											</div>
-										</div>
+					                  </div>
+					                </div>
+					              </div>
+					            </div>
+					            
+					            <div class="col-md-6">
+					              <div class="card">
+					                <div class="card-header card-header-primary">
+					                	<a class="nav-link" href="/noticeBoard">
+					                      <h3 class="card-title ">일반문의</h3>
+					                    </a>
+					                </div>
+					                <div class="card-body">
+					                  <div class="table-responsive">
+					                    <table class="table table-hover" id="table_index_notice">
+					                      <thead class=" text-primary">
+					                        <th>No.</th>
+					                        <th>게시물</th>
+					                        <th>작성자</th>
+					                        <th>작성일자</th>
+					                      </thead>
+					                      <colgroup>
+										       <col span="1" style="width: 10%;">
+										       <col span="1" style="width: 70%;">
+										       <col span="1" style="width: 10%;">
+										       <col span="1" style="width: 10%;">
+										  </colgroup>
+					                      <tbody>
+					                        <tr th:each="noticeList : ${noticeList}" style="cursor: pointer;">
+					                          <td th:text="${noticeList.no}">1</td>
+					                          <td th:text="${noticeList.title}"
+					                              th:onclick="rowClickEventIndex('Notice','update',[[${noticeList}]])">title</td>
+					                          <td th:text="${noticeList.writer}"
+					                              th:onclick="rowClickEventIndex('Notice','update',[[${noticeList}]])">Niger</td>
+					                          <td th:text="${noticeList.writedate}"
+					                              th:onclick="rowClickEventIndex('Notice','update',[[${noticeList}]])">Niger</td>
+					                        </tr>
+					                      </tbody>
+					                    </table>
+					                    
+										<!-- Modal -->
+										<article id="modalNotice" th:replace="fragments/popup/noticePopup :: noticePopup()"></article>
 										
-										<div class="row">
-											<div class="col-md-12">
-												<div class="form-group">
-													<label class="bmd-label-floating">링크</label>
-													<input id="bnm" type="text" class="form-control">
-												</div>
-											</div>
-										</div>
-										
-										<div class="row">
-											<div class="col-md-12">
-												<div class="form-group">
-													<label class="bmd-label-floating">첨부</label>
-													<input id="bnm" type="text" class="form-control">
-												</div>
-											</div>
-										</div>
-										
-									</form>
-								</div>
-				              </div>
-				            </div>
-				          </div>
-				        </div>
+					                  </div>
+					                </div>
+					              </div>
+					            </div>
+					          </div>
+					        </div>
 				      </div>
                 </div>
             </div>
@@ -326,5 +133,177 @@
 
         <!-- 공통 스크립트-->
         <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+        <script type="text/javascript">
+	    var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		var noticePop = false;
+		var bbsPop = false;
+		var gv_row;
+		var gv_type;
+		
+        $(document).ready(function(){
+			selectIndexBBS();
+			selectIndexNotice();
+		});
+		
+		function selectIndexBBS() {
+			$.ajax({
+				type : "POST",
+				data : "",
+				beforeSend : function(xhr)
+	            {   
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/selectBBStop5",
+				success : function(data) {
+					$("#table_index_bbs").replaceWith(data);
+                }
+			});	
+		}
+		
+		function selectIndexNotice() {
+			$.ajax({
+				type : "POST",
+				data : "",
+				beforeSend : function(xhr)
+	            {   
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/selectNoticetop5",
+				success : function(data) {
+					$("#table_index_notice").replaceWith(data);
+                }
+			});	
+		}
+		
+		function rowClickEventIndex(type, gbn, row) {
+			console.log("rowClickEventIndex :: " + type);
+			$("#grp_title" + type).removeClass("bmd-form-group");
+			$("#grp_link" + type).removeClass("bmd-form-group");
+			$("#edt_answer" + type).val("");
+			$("#grp_answer" + type).css("display","none");
+			$("#grp_answer" + type + "_content").css("display","none");
+			$("#answer" + type + " tbody").empty();
+			
+			var fv_url = "/select" + type;  
+			
+			gv_type = type;
+			gv_row = row;
+			console.log(row);
+			$.ajax({
+				type : "POST",
+				data : {"sid" : row.sid, "cid" : row.cid, "bid" : row.bid},
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : fv_url,
+				success : function(data) {
+					console.log(data);
+					if(data.CODE == "0") {
+						
+						//modal화면에 key값 입력
+						$("#fv_gbn" + type).val(gbn);
+						$("#fv_sid" + type).val(data.DATA.sid);
+						$("#fv_cid" + type).val(data.DATA.cid);
+						$("#fv_bid" + type).val(data.DATA.bid);
+						
+						$("#ta_content" + type).val(data.DATA.content);
+						$("#grp_content" + type).addClass("is-filled");
+						$("#edt_link" + type).val(data.DATA.link);
+						$("#cmb_build" + type).val(data.DATA.bid);
+						$("#edt_title" + type).val(data.DATA.title);
+						
+						//첨부관련 객체 제어
+						if(data.DATA.filename == null) {
+							$("#inputFile" + type).css("display","initial");
+							$("#edt_file" + type).css("display","none");
+						} else {
+							$("#inputFile" + type).css("display","none");
+							$("#edt_file" + type).css("display","block");
+							$("#edt_file" + type).val(data.DATA.filename);
+							$("#edt_file" + type).removeAttr("disabled");
+						}
+						
+						if(data.DATA.isupdate == 1) {
+							
+							$("#grp_answer" + type).css("display","-webkit-box");
+							$("#grp_answer" + type + "_content").css("display","-webkit-box");
+							
+							if(type == "BBS") {
+								$("#sta_title" + type).text("공지사항 수정");
+							} else {
+								$("#sta_title" + type).text("일반문의 수정");
+							}
+							
+							$("#upr_title" + type).css("display","block");
+
+							$("#edt_title" + type).removeAttr("readonly"); 
+							$("#ta_content" + type).removeAttr("readonly"); 
+							$("#edt_link" + type).removeAttr("readonly"); 
+							$("#cmb_build" + type).removeAttr("disabled"); 
+							
+							$("#btn_delFile" + type).css("display","initial");
+							$("#btn_save" + type).css("display","initial");
+							$("#btn_delete" + type).css("display","initial");
+							$("#grp_error" + type).css("display","block");
+						} else {
+							
+							$("#grp_answer" + type + "_content").css("display","-webkit-box");
+							
+							$("#sta_title" + type).text(data.DATA.title);
+							$("#upr_title" + type).css("display","none");
+							
+							$("#edt_title" + type).attr("readonly",true);
+							$("#ta_content" + type).attr("readonly",true);
+							$("#edt_link" + type).attr("readonly",true);
+							$("#cmb_build" + type).attr("disabled",true); 
+							
+							$("#btn_delFile" + type).css("display","none");
+							$("#btn_save" + type).css("display","none");
+							$("#btn_delete" + type).css("display","none");
+							$("#grp_error" + type).css("display","none");
+						}
+						
+						if(type == "BBS") {
+							bbsPop = true;
+							$("#bbsPopup").modal({backdrop: 'static', keyboard: false})
+						} else if(type == "Notice") {
+							noticePop = true;
+							$("#grp_answer" + type).css("display","-webkit-box");
+							$("#noticePopup").modal({backdrop: 'static', keyboard: false})
+						}
+						
+						//답변 데이터 처리
+						if(data.answerList.length > 0) {
+							if(type == "BBS") {
+								selectAnswerBBS();
+							} else if(type == "Notice") {
+								selectAnswerNotice();
+							}
+						}
+						
+					}
+                }
+			});	
+		}
+		
+		//화면 재조회를 위한 이벤트
+		$('#noticePopup').on('hidden.bs.modal', function(e) {
+			if(noticePop) {
+				rowClickEventIndex(gv_type, 'update', gv_row);
+				noticePop = false;
+			}
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#bbsPopup').on('hidden.bs.modal', function(e) {
+			if(bbsPop) {
+				rowClickEventIndex(gv_type, 'update', gv_row);
+				bbsPop = false;	
+			}
+		});
+		
+        </script>
     </body>
 </html>

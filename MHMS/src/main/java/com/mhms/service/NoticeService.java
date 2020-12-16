@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.mhms.dto.AnswerDto;
 import com.mhms.dto.NoticeDto;
 import com.mhms.security.UserContext;
 import com.mhms.sqlite.entities.Notice;
@@ -11,17 +12,23 @@ import com.mhms.sqlite.entities.Notice;
 
 public interface NoticeService {
 
-	public Notice selectNotice(Map<String, String[]> map, UserContext user) throws SQLException;
-	
-    public List<NoticeDto> BBSList(UserContext user);
-    
-    public List<NoticeDto> noticeList(UserContext user);
-    
-    public int insertNotice(Map<String, String[]> map, UserContext user) throws SQLException;
-    
-    public void updateFile(Map<String, String[]> map, String filename, int sid) throws SQLException;
-    
-    public long updateNotice(Map<String, String[]> map) throws SQLException;
-    
-    public long deleteNotice(Map<String, String[]> map) throws SQLException;
+  Notice selectNotice(Map<String, String[]> map, UserContext user) throws SQLException;
+	  
+  List<NoticeDto> BBSList(UserContext user);
+  
+  List<NoticeDto> noticeList(UserContext user);
+  
+  List<AnswerDto> selectAnswer(Map<String, String[]> map, UserContext user);
+  
+  int insertNotice(Map<String, String[]> map, UserContext user) throws SQLException;
+  
+  int insertAnswer(Map<String, String[]> map, UserContext user) throws SQLException;
+  
+  void updateFile(Map<String, String[]> map, String paramString, int paramInt) throws SQLException;
+  
+  long updateNotice(Map<String, String[]> map) throws SQLException;
+  
+  long deleteNotice(Map<String, String[]> map) throws SQLException;
+  
+  long deleteAnswerBBS(Map<String, String[]> map) throws SQLException;
 }

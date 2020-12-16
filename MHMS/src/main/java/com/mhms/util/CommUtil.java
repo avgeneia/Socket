@@ -2,6 +2,9 @@ package com.mhms.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -79,5 +82,24 @@ public class CommUtil {
 		}
 		
 		return result;
+	}
+	
+	public static String convertDateFormat(String arg) {
+		
+	    SimpleDateFormat fm = new SimpleDateFormat("yyyyMMdd");
+	    
+	    Date to = null;
+	    
+	    try {
+	      to = fm.parse(arg);
+	    } catch (ParseException e) {
+	      e.printStackTrace();
+	    }
+	    
+	    SimpleDateFormat fm2 = new SimpleDateFormat("yyyy.MM.dd");
+	    
+	    String to2 = fm2.format(to);
+	    
+	    return to2;
 	}
 }

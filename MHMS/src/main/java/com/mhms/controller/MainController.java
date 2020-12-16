@@ -1,22 +1,29 @@
 package com.mhms.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.mhms.dto.NoticeDto;
 import com.mhms.security.UserContext;
+import com.mhms.service.NoticeService;
 import com.mhms.vo.LoginVO;
 
 @Controller
 public class MainController {
-
+	
+	@Autowired
+	private NoticeService noticeService;
+	
 	@RequestMapping("/index")
 	public String Main(@ModelAttribute LoginVO loginVO, HttpServletRequest request, Model model, @AuthenticationPrincipal UserContext user) {
 		
@@ -31,53 +38,31 @@ public class MainController {
 		return "index";
 	}
 	
-	@RequestMapping("/icons")
-	public String icon(Model model) {
+	@RequestMapping("/selectBBStop5")
+	public String selectBBStop5(Model model, @AuthenticationPrincipal UserContext user) {
 		
-		Map<String, String> map = new HashMap<String, String>();
+		List<NoticeDto> dto = this.noticeService.BBSList(user);
 		
-		map.put("title", "아이콘");
-		
-		model.addAttribute("infoVO", map);
-		model.addAttribute("pageInfo", "icons");
-		
-		return "icons";
+		for (int i = dto.size() - 1; i > 4; i--) {
+			dto.remove(i);
+		}
+	       
+	    model.addAttribute("bbsList", dto);
+	    
+	    return "index :: #table_index_bbs";
 	}
 	
-//	@RequestMapping("/login.do")
-//	private ModelAndView doLogin(@Validated LoginVO loginVO, HttpServletRequest request) throws Exception {
-//		String userId = loginVO.getUser_nm();
-//		String userPw = loginVO.getUser_pw();
-//		User doc = usersRepo.findByUSERNMAndUSERPW(userId, userPw);
-//		
-//		ModelAndView modelAndView = new ModelAndView();
-//		
-//		if(doc == null) {
-//			System.out.println("로그인실패");
-//			
-//			//로그인 성공 시 메인화면 연결
-//			modelAndView.setViewName("login");
-//			
-//			return modelAndView;
-//		}
-//		
-//		userInfo.setUser_Nm(doc.getUSERNM());
-//		userInfo.setSessionId(request.getSession().getId());
-//		userInfo.setDeviceType("1");
-//		
-//		//로그인 성공 시 메인화면 연결
-//		modelAndView.setViewName("default");
-//      
-//		return modelAndView;
-//    }
-//	
-//	@RequestMapping("/logout.do")
-//	private String doLogout(HttpServletRequest request) throws Exception {
-//		
-//		request.getSession().invalidate();
-//		
-//		return "redirect:/";
-//		
-//    }
+	@RequestMapping("/selectNoticetop5")
+	public String selectNoticetop5(Model model, @AuthenticationPrincipal UserContext user) {
+		
+		List<NoticeDto> dto = this.noticeService.noticeList(user);
+		
+		for (int i = dto.size() - 1; i > 4; i--) {
+			dto.remove(i); 			
+		}
+		
+	    model.addAttribute("noticeList", dto);
+	    return "index :: #table_index_notice";
+	}
 	
 }

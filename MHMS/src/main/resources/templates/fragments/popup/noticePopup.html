@@ -19,8 +19,8 @@
 							<div class="ml-auto">
 								<button id="btn_saveNotice" type="button" 
 								        class="btn btn-primary modal-header-button" onclick="saveNotice()"><b>수정</b></button>
-								<button id="btn_deleteNotice" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
-								<button type="button" class="btn btn-secondary modal-header-button" data-dismiss="modal"><b>닫기</b></button>
+								<button id="btn_deleteNotice" type="button" class="btn btn-danger modal-header-button" onclick="deleteNotice()"><b>삭제</b></button>
+								<button type="button" class="btn btn-light modal-header-button" onclick="closeNotice()"><b>닫기</b></button>
 							</div>
 						</div>
 						
@@ -83,14 +83,14 @@
 												
 					                            <button type="button" id="btn_downloadNotice"
 					                                    rel="tooltip" title="download" 
-					                                    onclick="download()"
+					                                    onclick="downloadNotice()"
 					                                    class="btn btn-primary btn-link btn-sm">
 					                            <i class="material-icons">save_alt</i>
 					                            </button>
 					                            
 					                            <button type="button" id="btn_delFileNotice"
 					                                    rel="tooltip" title="Delete" 
-					                                    onclick="deleteFile()"
+					                                    onclick="deleteFileNotice()"
 					                                    class="btn btn-danger btn-link btn-sm">
 					                            <i class="material-icons">close</i>
 					                            </button>
@@ -102,6 +102,51 @@
 									<div class="row" id="grp_errorNotice">
 										<div class="text-right p-t-13 p-b-23 col-md-12">
 								            <p id="errorNotice" style="font-size: 20; color: #FF1C19; visibility: hidden;">중복된 데이터가 존재합니다.</p>
+										</div>
+									</div>
+									
+									<div class="row" id="grp_answerNotice">
+										<div class="col-md-10">
+											<div class="form-group" id="input_grp_answerNotice">
+												<label class="bmd-label-floating">댓글</label>
+												<textarea class="form-control" id="edt_answerNotice" rows="2"></textarea>
+											</div>
+										</div>
+										
+										<div class="col-md-2">
+											<button type="button" class="btn btn-primary float-md-right" onclick="insertNotice()">추가</button>
+										</div>
+									</div>
+									
+									<hr>
+									
+									<div class="row" id="grp_answerNotice_content">
+										<div class="col-md-12">
+											<table class="table table-hover" id="answerNotice">
+												<colgroup>
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 77%;">
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 3%;">
+											    </colgroup>
+						                    	<tbody>
+						                        	<tr th:each="answerList : ${answerList}">
+							                          	<td th:text="${answerList.writer}" style="font-weight: bold;">title</td>
+						                          		<td th:text="${answerList.content}" style="white-space:pre;">title</td>
+						                          		
+							                          	<td th:text="${answerList.writedate}">title</td>
+							                          	
+							                          	<td class="text-right">
+								                          	<button type="button" rel="tooltip" title="Remove" 
+								                                    class="btn btn-danger btn-link btn-sm"
+								                                    th:onclick="deleteAnswerNotice([[${answerList}]])"
+								                                    th:if="${answerList.isupdate}">
+								                              <i class="material-icons">close</i>
+								                            </button>
+							                            </td>
+						                        	</tr>
+						                      	</tbody>
+						                    </table>
 										</div>
 									</div>
 									
@@ -126,33 +171,33 @@
 	
 	function saveNotice() {
 		
-		var fv_gbn = $("#fv_gbn").val();
-		
+		var fv_gbn = $("#fv_gbnNotice").val();
+	
 		var formData = new FormData(); 
-		formData.append("title", $("#edt_title").val()); 
-		formData.append("content", $("#ta_content").val()); 
-		formData.append("file", $("#inputFile")[0].files[0]);
-		formData.append("link", $("#edt_link").val()); 
-		formData.append("bid", $("#cmb_build").val());
-		formData.append("notice", 0); 
+		formData.append("title", $("#edt_titleNotice").val()); 
+		formData.append("content", $("#ta_contentNotice").val()); 
+		formData.append("file", $("#inputFileNotice")[0].files[0]);
+		formData.append("link", $("#edt_linkNotice").val()); 
+		formData.append("bid", $("#cmb_buildNotice").val());
+		formData.append("notice", 1); 
 		
 		var isChk = true;
 		
-		if($("#edt_title").val() == "") {
+		if($("#edt_titleNotice").val() == "") {
 			showNotification('new_releases', 'warning', 'top', 'center', "제목은 필수 입력항목 입니다.");
-			$("#edt_title").focus();
+			$("#edt_titleNotice").focus();
 			isChk = false;
 		}
 		
-		if($("#ta_content").val() == "") {
+		if($("#ta_contentNotice").val() == "") {
 			showNotification('new_releases', 'warning', 'top', 'center', "내용은 필수 입력항목 입니다.");
-			$("#ta_content").focus();
+			$("#ta_contentNotice").focus();
 			isChk = false;
 		}
 		
-		if($("#cmb_build").val() == "-1") {
+		if($("#cmb_buildNotice").val() == "-1") {
 			showNotification('new_releases', 'warning', 'top', 'center', "대상건물은 필수 입력항목 입니다.");
-			$("#cmb_build").focus();
+			$("#cmb_buildNotice").focus();
 			isChk = false;
 		}
 		
@@ -165,8 +210,9 @@
 		var rtn = false;
 		if(fv_gbn == "update") {
 			
-			formData.append("sid", $("#fv_sid").val());
-			formData.append("cid", $("#fv_cid").val());
+			formData.append("sid", $("#fv_sidNotice").val());
+			formData.append("cid", $("#fv_cidNotice").val());
+			formData.append("bid", $("#fv_bidNotice").val());
 			
 			rtn = confirm("저장하시겠습니까?");
 			
@@ -183,7 +229,8 @@
 					url : fv_url,
 					success : function(data) {
 						if(data.CODE == "0") {
-							$("#bbsPopup").modal("hide");
+							showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+							$("#noticePopup").modal("hide");
 						} else {
 							showNotification('info', 'danger', 'top', 'center', data.MSG);
 						}
@@ -192,6 +239,7 @@
 			}
 			
 		} else {
+		
 			$.ajax({
 				type : "POST",
 				data : formData,
@@ -204,7 +252,8 @@
 				url : fv_url,
 				success : function(data) {
 					if(data.CODE == "0") {
-						$("#bbsPopup").modal("hide");
+						showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+						$("#noticePopup").modal("hide");
 					} else {
 						showNotification('info', 'danger', 'top', 'center', data.MSG);
 					}
@@ -214,19 +263,127 @@
 		
 	}
 	
-	function download() {
+	function deleteNotice() {
 		
-		var fv_sid = $("#fv_sid").val();
-		var fv_cid = $("#fv_cid").val();
-		var fv_bid = $("#fv_bid").val();
+		var fv_sid = $("#fv_sidNotice").val();
+		var fv_cid = $("#fv_cidNotice").val();
+		var fv_bid = $("#fv_bidNotice").val();
+		
+		var rtn = confirm("게시물을 삭제하시겠습니까?");
+		
+		if(rtn) {
+		
+			$.ajax({
+					type : "POST",
+					data : {"sid" : fv_sid, "cid" : fv_cid, "bid" : fv_bid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/deleteNotice",
+					success : function(data) {
+						showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+						$("#noticePopup").modal("hide");
+	                }
+			});
+		}
+		
+	}
+	
+	function downloadNotice() {
+		
+		var fv_sid = $("#fv_sidNotice").val();
+		var fv_cid = $("#fv_cidNotice").val();
+		var fv_bid = $("#fv_bidNotice").val();
 		
 		window.location.href = "/downloadNotice?sid=" + fv_sid + "&cid=" + fv_cid + "&bid=" + fv_bid;
 	}
 	
-	function deleteFile() {
-		$("#inputFile").css("display","initial");
-		$("#edt_file").css("display","none");
+	function deleteFileNotice() {
+		$("#inputFileNotice").css("display","initial");
+		$("#edt_fileNotice").css("display","none");
 	}
+	
+	function insertNotice() {
+		
+		var fv_answer = $("#edt_answerNotice").val();
+		var fv_sid = $("#fv_sidNotice").val();
+		var fv_bid = $("#fv_bidNotice").val();
+		
+		if(fv_answer == "") {
+			showNotification('new_releases', 'warning', 'top', 'center', "댓글은 필수 입력항목 입니다.");
+			return;
+		}
+		
+		$.ajax({
+				type : "POST",
+				data : {"sid" : fv_sid, "bid" : fv_bid, "type" : "BBS", "content" : fv_answer},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/insertAnswer",
+				success : function(data) {
+					//$("#input_grp_answerNotice").removeClass("is-filled");
+					//$("#edt_answerNotice").val("");
+					showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+					
+					//$("#answerNotice").replaceWith(data);
+					$("#noticePopup").modal("hide");
+                }
+		});
+	}
+	
+	function selectAnswerNotice() {
+		console.log("selectAnswerNotice");
+		var fv_sid = $("#fv_sidNotice").val();
+		var fv_bid = $("#fv_bidNotice").val();
+		
+		$.ajax({
+				type : "POST",
+				data : {"sid" : fv_sid, "bid" : fv_bid},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/selectAnswerNotice",
+				success : function(data) {
+					$("#answerNotice").replaceWith(data);
+                }
+		});
+	}
+	
+	function deleteAnswerNotice(arg) {
+		
+		var rtn = confirm("댓글을 삭제하시겠습니까?");
+		
+		if(rtn) {
+			console.log(arg);
+			$.ajax({
+				type : "POST",
+				data : {"sid" : arg.sid, "cid" : arg.cid, "bid" : arg.bid},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/deleteAnswerNotice",
+				success : function(data) {
+					$("#answerNotice").replaceWith(data);
+                }
+			});
+		}
+		
+	}
+	
+	function closeNotice() {
+		noticePop = false;
+		$("#noticePopup").modal("hide");
+	}
+	
+	
 	</script>
 	
 </article>

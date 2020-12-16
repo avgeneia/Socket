@@ -10,19 +10,19 @@ import com.mhms.sqlite.entities.Code;
 
 public interface CodeService {
 	
-	public Code selectCode(Map<String, String[]> map) throws SQLException;
-	
-	public List<CodeDto> getCode(String upcd, boolean isAsc, int type);
-	
-	public List<CodeDto> uprCodeList(UserContext user);
-	
-	public List<CodeDto> codeList(String uprCd);
-	
-	public int insertCode(Map<String, String[]> map) throws SQLException;
-	
-	public long updateCode(Map<String, String[]> map) throws SQLException;
-	
-	public long updateCodeUseyn(Map<String, String[]> map) throws SQLException;
-	
-	public long deleteCode(Map<String, String[]> map) throws SQLException;
+  Code selectCode(Map<String, String[]> paramMap) throws SQLException;
+  
+  List<CodeDto> getCode(String paramString, boolean paramBoolean, int paramInt);
+  
+  List<CodeDto> uprCodeList(UserContext paramUserContext);
+  
+  List<CodeDto> codeList(String paramString);
+  
+  int insertCode(Map<String, String[]> paramMap) throws SQLException;
+  
+  long updateCode(Map<String, String[]> paramMap) throws SQLException;
+  
+  long updateCodeUseyn(Map<String, String[]> paramMap) throws SQLException;
+  
+  long deleteCode(Map<String, String[]> paramMap) throws SQLException;
 }

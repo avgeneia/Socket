@@ -12,17 +12,17 @@ import com.mhms.sqlite.entities.Building;
 
 public interface BuildingService {
 
-	public Building selectBuild(Map<String, String[]> map) throws SQLException;
-	
-    public List<BuildingDto> buildingList(UserContext user);
-    
-    public List<BuildingDto> initBuild(UserContext user);
-    
-    public List<RoomDto> initRoom(UserContext user);
-    
-    public int insertBuild(Map<String, String[]> map, boolean authType) throws SQLException;
-    
-    public long updateBuild(Map<String, String[]> map) throws SQLException;
-    
-    public long deleteBuild(Map<String, String[]> map) throws SQLException;
+  Building selectBuild(Map<String, String[]> paramMap) throws SQLException;
+  
+  List<BuildingDto> buildingList(UserContext paramUserContext);
+  
+  List<BuildingDto> initBuild(UserContext paramUserContext);
+  
+  List<RoomDto> initRoom(UserContext paramUserContext);
+  
+  int insertBuild(Map<String, String[]> paramMap, boolean paramBoolean) throws SQLException;
+  
+  long updateBuild(Map<String, String[]> paramMap) throws SQLException;
+  
+  long deleteBuild(Map<String, String[]> paramMap) throws SQLException;
 }

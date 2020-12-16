@@ -18,9 +18,9 @@
 							<h5 class="modal-title" id="sta_titleBBS">공지사항 등록</h5>
 							<div class="ml-auto">
 								<button id="btn_saveBBS" type="button" 
-								        class="btn btn-primary modal-header-button" onclick="saveNotice()"><b>수정</b></button>
-								<button id="btn_deleteBBS" type="button" class="btn btn-danger modal-header-button" onclick="modifyAuth()"><b>삭제</b></button>
-								<button type="button" class="btn btn-secondary modal-header-button" data-dismiss="modal"><b>닫기</b></button>
+								        class="btn btn-primary modal-header-button" onclick="saveBBS()"><b>수정</b></button>
+								<button id="btn_deleteBBS" type="button" class="btn btn-danger modal-header-button" onclick="deleteBBS()"><b>삭제</b></button>
+								<button type="button" class="btn btn-light modal-header-button" onclick="closeBBS()"><b>닫기</b></button>
 							</div>
 						</div>
 						
@@ -83,14 +83,14 @@
 												
 					                            <button type="button" id="btn_downloadBBS"
 					                                    rel="tooltip" title="download" 
-					                                    onclick="download()"
+					                                    onclick="downloadBBS()"
 					                                    class="btn btn-primary btn-link btn-sm">
 					                            <i class="material-icons">save_alt</i>
 					                            </button>
 					                            
 					                            <button type="button" id="btn_delFileBBS"
 					                                    rel="tooltip" title="Delete" 
-					                                    onclick="deleteFile()"
+					                                    onclick="deleteFileBBS()"
 					                                    class="btn btn-danger btn-link btn-sm">
 					                            <i class="material-icons">close</i>
 					                            </button>
@@ -105,11 +105,58 @@
 										</div>
 									</div>
 									
+									<div class="row" id="grp_answerBBS">
+										<div class="col-md-10">
+											<div class="form-group" id="input_grp_answerBBS">
+												<label class="bmd-label-floating">댓글</label>
+												<textarea class="form-control" id="edt_answerBBS" rows="2"></textarea>
+											</div>
+										</div>
+										
+										<div class="col-md-2">
+											<button type="button" class="btn btn-primary float-md-right" onclick="insertBBS()">추가</button>
+										</div>
+									</div>
+									
+									<hr>
+									
+									<div class="row" id="grp_answerBBS_content">
+										<div class="col-md-12">
+											<table class="table table-hover" id="answerBBS">
+												<colgroup>
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 77%;">
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 3%;">
+											    </colgroup>
+						                    	<tbody>
+						                        	<tr th:each="answerList : ${answerList}">
+							                          	<td th:text="${answerList.writer}" style="font-weight: bold;">title</td>
+						                          		<td th:text="${answerList.content}" style="white-space:pre;">title</td>
+						                          		
+							                          	<td th:text="${answerList.writedate}">title</td>
+							                          	
+							                          	<td class="text-right">
+								                          	<button type="button" rel="tooltip" title="Remove" 
+								                                    class="btn btn-danger btn-link btn-sm"
+								                                    th:onclick="deleteAnswerBBS([[${answerList}]])"
+								                                    th:if="${answerList.isupdate}">
+								                              <i class="material-icons">close</i>
+								                            </button>
+							                            </td>
+						                        	</tr>
+						                      	</tbody>
+						                    </table>
+										</div>
+									</div>
+									
 								</form>
 							</div>
 						</div>
+						
 						<div class="modal-footer">
 						</div>
+						
 					</div>
 					
 				</div>
@@ -124,7 +171,7 @@
     var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
-	function saveNotice() {
+	function saveBBS() {
 		
 		var fv_gbn = $("#fv_gbnBBS").val();
 		
@@ -137,6 +184,8 @@
 		formData.append("notice", 0); 
 		
 		var isChk = true;
+		
+		console.log($("#edt_titleBBS").val());
 		
 		if($("#edt_titleBBS").val() == "") {
 			showNotification('new_releases', 'warning', 'top', 'center', "제목은 필수 입력항목 입니다.");
@@ -183,6 +232,7 @@
 					url : fv_url,
 					success : function(data) {
 						if(data.CODE == "0") {
+							showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
 							$("#bbsPopup").modal("hide");
 						} else {
 							showNotification('info', 'danger', 'top', 'center', data.MSG);
@@ -204,6 +254,7 @@
 				url : fv_url,
 				success : function(data) {
 					if(data.CODE == "0") {
+						showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
 						$("#bbsPopup").modal("hide");
 					} else {
 						showNotification('info', 'danger', 'top', 'center', data.MSG);
@@ -214,7 +265,35 @@
 		
 	}
 	
-	function download() {
+	function deleteBBS(title, sid, cid, bid) {
+			
+		var fv_sid = $("#fv_sidBBS").val();
+		var fv_cid = $("#fv_cidBBS").val();
+		var fv_bid = $("#fv_bidBBS").val();
+		
+		var rtn = confirm("게시물을 삭제하시겠습니까?");
+		
+		if(rtn) {
+		
+			$.ajax({
+					type : "POST",
+					data : {"sid" : fv_sid, "cid" : fv_cid, "bid" : fv_bid},
+					beforeSend : function(xhr)
+		            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+						xhr.setRequestHeader(header, token);
+		            },
+					url : "/deleteNotice",
+					success : function(data) {
+						showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+						$("#bbsPopup").modal("hide");
+	                }
+			});
+		}
+		
+	}
+	
+	
+	function downloadBBS() {
 		
 		var fv_sid = $("#fv_sidBBS").val();
 		var fv_cid = $("#fv_cidBBS").val();
@@ -223,10 +302,90 @@
 		window.location.href = "/downloadNotice?sid=" + fv_sid + "&cid=" + fv_cid + "&bid=" + fv_bid;
 	}
 	
-	function deleteFile() {
+	function deleteFileBBS() {
 		$("#inputFileBBS").css("display","initial");
 		$("#edt_fileBBS").css("display","none");
 	}
+	
+	function insertBBS() {
+		
+		var fv_answer = $("#edt_answerBBS").val();
+		var fv_sid = $("#fv_sidBBS").val();
+		var fv_bid = $("#fv_bidBBS").val();
+		
+		if(fv_answer == "") {
+			showNotification('new_releases', 'warning', 'top', 'center', "댓글은 필수 입력항목 입니다.");
+			return;
+		}
+		
+		$.ajax({
+				type : "POST",
+				data : {"sid" : fv_sid, "bid" : fv_bid, "type" : "BBS", "content" : fv_answer},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/insertAnswer",
+				success : function(data) {
+					//$("#input_grp_answerBBS").removeClass("is-filled");
+					//$("#edt_answerBBS").val("");
+					showNotification('info', 'info', 'top', 'right', '정상처리되었습니다.');
+					
+					//$("#answerBBS").replaceWith(data);
+					$("#bbsPopup").modal("hide");
+                }
+		});
+	}
+	
+	function selectAnswerBBS() {
+		console.log("selectAnswerBBS");
+		var fv_sid = $("#fv_sidBBS").val();
+		var fv_bid = $("#fv_bidBBS").val();
+		
+		$.ajax({
+				type : "POST",
+				data : {"sid" : fv_sid, "bid" : fv_bid},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/selectAnswerBBS",
+				success : function(data) {
+					$("#answerBBS").replaceWith(data);
+                }
+		});
+	}
+	
+	function deleteAnswerBBS(arg) {
+		
+		var rtn = confirm("댓글을 삭제하시겠습니까?");
+		
+		if(rtn) {
+			console.log(arg);
+			$.ajax({
+				type : "POST",
+				data : {"sid" : arg.sid, "cid" : arg.cid, "bid" : arg.bid},
+				async: false,
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+					xhr.setRequestHeader(header, token);
+	            },
+				url : "/deleteAnswerBBS",
+				success : function(data) {
+					$("#answerBBS").replaceWith(data);
+                }
+			});
+		}
+		
+	}
+	
+	function closeBBS() {
+		bbsPop = false
+		$("#bbsPopup").modal("hide");
+	}
+	
 	</script>
 	
 </article>

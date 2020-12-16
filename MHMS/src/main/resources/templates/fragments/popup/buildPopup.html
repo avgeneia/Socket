@@ -17,7 +17,7 @@
 					<div class="modal-content">
 					
 						<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">신규 건축물 추가</h5>
+						<h5 class="modal-title" id="exampleModalLongTitle">신규 건물 추가</h5>
 						<input id="edt_type" hidden="true" value="">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -50,7 +50,7 @@
 												<label class="bmd-label-floating"
 												       sec:authorize="hasRole('ROLE_MANAGER')">호수 관리번호</label>
 												<label class="bmd-label-floating"
-												       sec:authorize="hasRole('ROLE_ADMIN')" >건축물 관리번호</label>
+												       sec:authorize="hasRole('ROLE_ADMIN')" >건물 관리번호</label>
 												<input id="edt_rid" type="number" class="form-control">
 											</div>
 										</div>
@@ -60,7 +60,7 @@
 												<label class="bmd-label-floating"
 												       sec:authorize="hasRole('ROLE_MANAGER')">호수</label>
 												<label class="bmd-label-floating"
-												       sec:authorize="hasRole('ROLE_ADMIN')" >건축물</label>
+												       sec:authorize="hasRole('ROLE_ADMIN')" >건물</label>
 												<input id="edt_rnm" type="text" class="form-control">
 											</div>
 										</div>
@@ -77,7 +77,7 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button id="btn_cansel" type="button" class="btn btn-secondary" data-dismiss="modal" >취소</button>
+							<button id="btn_cansel" type="button" class="btn btn-light" data-dismiss="modal" >취소</button>
 							<button id="btn_save" type="button" class="btn btn-primary" onclick="modifyBuild()">저장</button>
 						</div>
 					</div>

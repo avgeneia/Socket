@@ -49,17 +49,20 @@
 						                      <thead class=" text-primary">
 						                        <th>No.</th>
 						                        <th>게시물</th>
-						                        <th>조회수</th>
 						                        <th>작성자</th>
 						                        <th>작성일자</th>
 						                      </thead>
+						                      <colgroup>
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 70%;">
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 10%;">
+											  </colgroup>
 						                      <tbody>
 						                        <tr th:each="bbsList : ${bbsList}" style="cursor: pointer;">
 						                          <td th:text="${bbsList.no}">1</td>
 						                          <td th:text="${bbsList.title}"
 						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">title</td>
-						                          <td th:text="${bbsList.viewcnt}"
-						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writer}"
 						                              th:onclick="rowClickEvent('BBS','update',[[${bbsList}]])">Niger</td>
 						                          <td th:text="${bbsList.writedate}"
@@ -75,7 +78,7 @@
 											</button>
 											
 											<!-- Modal -->
-											<article id="modal" th:replace="fragments/popup/bbsPopup :: bbsPopup()"></article>
+											<article id="modalBBS" th:replace="fragments/popup/bbsPopup :: bbsPopup()"></article>
 											<!-- <th:block th:replace="fragments/popup/userPopup :: userPopup()"></th:block> -->
 											
 					                    </div>
@@ -84,17 +87,20 @@
 						                      <thead class=" text-primary">
 						                        <th>No.</th>
 						                        <th>게시물</th>
-						                        <th>조회수</th>
 						                        <th>작성자</th>
 						                        <th>작성일자</th>
 						                      </thead>
+						                      <colgroup>
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 70%;">
+											       <col span="1" style="width: 10%;">
+											       <col span="1" style="width: 10%;">
+											  </colgroup>
 						                      <tbody>
 						                        <tr th:each="noticeList : ${noticeList}" style="cursor: pointer;">
 						                          <td th:text="${noticeList.no}">1</td>
 						                          <td th:text="${noticeList.title}"
 						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">title</td>
-						                          <td th:text="${noticeList.viewcnt}"
-						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">Niger</td>
 						                          <td th:text="${noticeList.writer}"
 						                              th:onclick="rowClickEvent('Notice','update',[[${noticeList}]])">Niger</td>
 						                          <td th:text="${noticeList.writedate}"
@@ -104,13 +110,12 @@
 						                    </table>
 						                    
 						                    <button type="button" class="btn btn-primary pull-right" 
-						                            sec:authorize="hasRole('ROLE_ADMIN') || hasRole('ROLE_MANAGER')"  
-						                            onclick="rowClickEvent('Notice','insert')">>
+						                            onclick="rowClickEvent('Notice','insert')">
 											등록
 											</button>
 											
 											<!-- Modal -->
-											<article id="modal" th:replace="fragments/popup/noticePopup :: noticePopup()"></article>
+											<article id="modalNotice" th:replace="fragments/popup/noticePopup :: noticePopup()"></article>
 											
 					                    </div>
 					                   
@@ -131,63 +136,60 @@
         <script th:inline="javascript">
         var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
+		var noticePop = false;
+		var bbsPop = false;
+		var gv_row;
+		var gv_type;
 		
 		//화면 재조회를 위한 이벤트
 		$('#bbsPopup').on('hide.bs.modal', function(e) {
-			fn_tabMove("bbs");
+			fn_tabMove("BBS");
 		});
 		
 		//화면 재조회를 위한 이벤트
 		$('#noticePopup').on('hide.bs.modal', function(e) {
-			fn_tabMove("notice");
+			fn_tabMove("Notice");
 		});
-		
-		function deleteNotice(title, sid, cid, bid) {
-			
-			var rtn = confirm("\'" + title + "\' 항목을 삭제하시겠습니까?");
-			
-			if(rtn) {
-			
-				$.ajax({
-						type : "POST",
-						data : {"sid" : sid, "cid" : cid, "bid" : bid},
-						beforeSend : function(xhr)
-			            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-							xhr.setRequestHeader(header, token);
-			            },
-						url : "/deleteNotice",
-						success : function(data) {
-							location.reload();
-		                }
-				});
-			}
-			
-		}
 		
 		function rowClickEvent(type, gbn, row) {
 			
 			$("#grp_title" + type).removeClass("bmd-form-group");
 			$("#grp_link" + type).removeClass("bmd-form-group");
+			$("#edt_answer" + type).val("");
+			$("#grp_answer" + type).css("display","none");
+			$("#grp_answer" + type + "_content").css("display","none");	
+			$("#answer" + type + " tbody").empty();
+			console.log(row);
 			
 			if(gbn == "insert") {
 				
 				$("#fv_gbn" + type).val(gbn);
-				$("#sta_title" + type).text("공지사항 등록");
+				
+				if(type == "BBS") {
+					$("#sta_title" + type).text("공지사항 등록");
+				} else {
+					$("#sta_title" + type).text("일반문의 등록");
+				}
 				$("#btn_save" + type).text("저장");
 				$("#btn_delete" + type).css("display","none");
 				
 				if(type == "BBS") {
-					$("#bbsPopup").modal();	
+					$("#bbsPopup").modal({backdrop: 'static', keyboard: false})
 				} else if(type == "Notice") {
-					$("#noticePopup").modal();
+					$("#noticePopup").modal({backdrop: 'static', keyboard: false})
 				}
+				
+				$("#edt_title" + type).val("");
+				$("#ta_content" + type).val("");
+				$("#edt_link" + type).val("");
+				$("#cmb_build" + type).val("-1");
+				$("#inputFile" + type).css("display","initial");
+				$("#edt_file" + type).css("display","none");
 				
 			} else {
 				
 				var fv_url = "/select" + type;  
 					
-				console.log("inputData :: ");
-				console.log(row);
 				$.ajax({
 					type : "POST",
 					data : {"sid" : row.sid, "cid" : row.cid, "bid" : row.bid},
@@ -196,10 +198,9 @@
 						xhr.setRequestHeader(header, token);
 		            },
 					url : fv_url,
+    				async: false,
 					success : function(data) {
-						
-						console.log("outputData :: ");
-						console.log(data)
+						console.log(data);
 						if(data.CODE == "0") {
 							
 							//modal화면에 key값 입력
@@ -215,13 +216,27 @@
 							$("#edt_title" + type).val(data.DATA.title);
 							
 							//첨부관련 객체 제어
-							$("#inputFile" + type).css("display","none");
-							$("#edt_file" + type).css("display","block");
-							$("#edt_file" + type).val(data.DATA.filename);
-							$("#edt_file" + type).removeAttr("disabled");
+							if(data.DATA.filename == null) {
+								$("#inputFile" + type).css("display","initial");
+								$("#edt_file" + type).css("display","none");
+							} else {
+								$("#inputFile" + type).css("display","none");
+								$("#edt_file" + type).css("display","block");
+								$("#edt_file" + type).val(data.DATA.filename);
+								$("#edt_file" + type).removeAttr("disabled");
+							}
 							
 							if(data.DATA.isupdate == 1) {
-								$("#sta_title" + type).text("공지사항 수정");
+								
+								$("#grp_answer" + type).css("display","-webkit-box");
+								$("#grp_answer" + type + "_content").css("display","-webkit-box");
+									
+								if(type == "BBS") {
+									$("#sta_title" + type).text("공지사항 수정");
+								} else {
+									$("#sta_title" + type).text("일반문의 수정");
+								}
+								
 								$("#upr_title" + type).css("display","block");
 
 								$("#edt_title" + type).removeAttr("readonly"); 
@@ -233,7 +248,11 @@
 								$("#btn_save" + type).css("display","initial");
 								$("#btn_delete" + type).css("display","initial");
 								$("#grp_error" + type).css("display","block");
+								
 							} else {
+								
+								$("#grp_answer" + type + "_content").css("display","-webkit-box");
+							
 								$("#sta_title" + type).text(data.DATA.title);
 								$("#upr_title" + type).css("display","none");
 								
@@ -248,11 +267,27 @@
 								$("#grp_error" + type).css("display","none");
 							}
 							
+							gv_row = row;
+							gv_type = type;
+							
 							if(type == "BBS") {
-								$("#bbsPopup").modal();	
+								bbsPop = true;
+								$("#bbsPopup").modal({backdrop: 'static', keyboard: false})
 							} else if(type == "Notice") {
-								$("#noticePopup").modal();
+								noticePop = true;
+								$("#grp_answer" + type).css("display","-webkit-box");
+								$("#noticePopup").modal({backdrop: 'static', keyboard: false})  
 							}
+							
+							//답변 데이터 처리
+							if(data.answerList.length > 0) {
+								if(type == "BBS") {
+									selectAnswerBBS();
+								} else if(type == "Notice") {
+									selectAnswerNotice();
+								}
+							}
+							
 						}
 	                }
 				});	
@@ -295,6 +330,22 @@
                 }
 			});	
 		}
+		
+		//화면 재조회를 위한 이벤트
+		$('#noticePopup').on('hidden.bs.modal', function(e) {
+			if(noticePop) {
+				rowClickEvent(gv_type, 'update', gv_row);
+				noticePop = false;
+			}
+		});
+		
+		//화면 재조회를 위한 이벤트
+		$('#bbsPopup').on('hidden.bs.modal', function(e) {
+			if(bbsPop) {
+				rowClickEvent(gv_type, 'update', gv_row);
+				bbsPop = false;	
+			}
+		});
         </script>
         
     </body>

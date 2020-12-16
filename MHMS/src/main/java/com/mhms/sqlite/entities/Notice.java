@@ -53,10 +53,6 @@ public class Notice {
 	@Column(name="filename")
 	private String filename;
 	
-//	@Column(name="filesize")
-//	@ColumnDefault("0") //default 0
-//	private int filesize;
-	
 	@Column(name="Writer")
 	private String writer;
 	
