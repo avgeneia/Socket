@@ -177,10 +177,10 @@ public class NoticeBoardController {
 			sid = noticeService.insertNotice(request.getParameterMap(), user);
 
 			if (!isFile) {
-				String filepath = request.getSession().getServletContext().getRealPath("/") + "upload" + File.separator;
+				String filepath = "D:/upload" + File.separator;
 				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
 
-				boolean successFile = CommUtil.fileUpload(file, filepath + filename);
+				boolean successFile = CommUtil.fileUpload(file, filepath, filename);
 
 				if (successFile) {
 					noticeService.updateFile(request.getParameterMap(), file.getOriginalFilename(), sid);
@@ -206,7 +206,7 @@ public class NoticeBoardController {
 	@RequestMapping("/updateNotice")
 	@ResponseBody
 	public Map<String, String> updateNotice(MultipartHttpServletRequest request) {
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 
 		MultipartFile file = request.getFile("file");
@@ -227,10 +227,10 @@ public class NoticeBoardController {
 			int sid = Integer.parseInt(request.getParameter("sid"));
 			
 			if (!isFile) {
-				String filepath = request.getSession().getServletContext().getRealPath("/") + "upload" + File.separator;
+				String filepath = "D:/upload" + File.separator;
 				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
 
-				boolean successFile = CommUtil.fileUpload(file, filepath + filename);
+				boolean successFile = CommUtil.fileUpload(file, filepath, filename);
 
 				if (successFile) {
 					noticeService.updateFile(request.getParameterMap(), file.getOriginalFilename(), sid);
@@ -275,8 +275,7 @@ public class NoticeBoardController {
 			  HttpServletRequest request
 		    , HttpServletResponse response
 		    , @AuthenticationPrincipal UserContext user) throws SQLException, IOException {
-		
-		String filepath = request.getSession().getServletContext().getRealPath("/") + "upload" + File.separator;
+		String filepath = "D:/upload" + File.separator;
 		String filename = CommUtil.getTransFileName(Integer.parseInt(request.getParameter("sid")),
 				Integer.parseInt(request.getParameter("cid")), Integer.parseInt(request.getParameter("bid")));
 

@@ -13,14 +13,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.mhms.dto.BuildingDto;
 import com.mhms.dto.NoticeDto;
 import com.mhms.security.UserContext;
+import com.mhms.service.BuildingService;
 import com.mhms.service.NoticeService;
 import com.mhms.vo.LoginVO;
 
 @Controller
 public class MainController {
-	
+
+	@Autowired
+	private BuildingService buildingService;
+
 	@Autowired
 	private NoticeService noticeService;
 	
@@ -31,7 +36,12 @@ public class MainController {
 		
 		map.put("title", "메인");
 		
+		List<BuildingDto> builList = buildingService.initBuild(user);
+		BuildingDto buildDto = new BuildingDto(-1, "선택");
+		builList.add(0, buildDto);
+		
 		model.addAttribute("infoVO", user);
+		model.addAttribute("initBuildVO", builList);
 		model.addAttribute("user", user);
 		model.addAttribute("pageInfo", "dashboard");
 		

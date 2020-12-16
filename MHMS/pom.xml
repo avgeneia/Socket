@@ -11,7 +11,7 @@
 	<groupId>com.mhms</groupId>
 	<artifactId>MHMS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>MHMS</name>
 	<description>Multigenerational Housing management System</description>
 
@@ -146,6 +146,14 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<resources>
+            <resource>
+                <directory>src/main/webapp</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 	</build>
 	
 </project>

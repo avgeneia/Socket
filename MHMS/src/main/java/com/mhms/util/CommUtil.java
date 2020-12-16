@@ -31,7 +31,7 @@ public class CommUtil {
 	}
 	
 	//파일 업로드 함수
-	public static boolean fileUpload(MultipartFile uploadFile, String filename)  {
+	public static boolean fileUpload(MultipartFile uploadFile, String filepath, String filename)  {
 		
 	    if (uploadFile != null) {
 	      
@@ -42,7 +42,18 @@ public class CommUtil {
 	        // output.write(fileData);
 	         
 	        // 2. File 사용
-	        File file = new File(filename);
+	        File folder = new File(filepath);
+	        
+	        if(!folder.exists()) {
+	        	try{
+	    		    folder.mkdir(); //폴더 생성합니다.
+	    	    } catch(Exception e){
+	    		    e.getStackTrace();
+	    		} 
+	        }
+	        
+	        File file = new File(filepath + filename);
+	        
 	        uploadFile.transferTo(file);
 	        
 	        return true;
@@ -102,4 +113,6 @@ public class CommUtil {
 	    
 	    return to2;
 	}
+
+	
 }
