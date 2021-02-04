@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
 
+import Common.IniFile;
+import Common.LogManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,15 +16,13 @@ import io.netty.util.ReferenceCountUtil;
 
 public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 	
-	//private final ByteBuf message;
-	
 	/** 
 	 * 2020-09-23 jslee
 	 * 클라이언트에서 동적으로 message를 전송하여야 하므로 변수선언 후 getter / setter 함수선언
 	 * */
 	
 	/** Logger */
-	static Logger logger = Common.LogManager.GetConfiguredLogger(ServerConnectionHandler.class);
+	private Logger logger = LogManager.GetConfiguredLogger(ServerConnectionHandler.class);
 	
 	/** 파일감지 후 서버에 보낼 전문변수 설정, DirWatchRunnable.java에서 대상파일 필터링 후 값 전달한다 jslee */
 	private ByteBuf message;
@@ -31,12 +31,19 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 	
 	int i = 1;
 	
+	int clientId = 0;
+	
 	public ByteBuf getMessage() {
 		return message;
 	}
 
 	public void setMessage(ByteBuf message) {
 		this.message = message;
+	}
+
+	public void setClientId(int id) {
+		// TODO Auto-generated method stub
+		this.clientId = id;
 	}
 	
 	/**
@@ -74,7 +81,7 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 		
 		/** 로그찍기용 메시지 형 변환 jslee */
 		String message = in.toString(Charset.forName("utf-8"));
-		logger.info("Server -> Client RECV : " + message);
+		logger.info("Server -> Client [" + clientId + "] RECV : " + message);
 		
 	    try {
 	    	
@@ -100,7 +107,11 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 		sendstat = true;
 		System.out.println("Complete PONG");
 		
-		if(i <= 100) {
+		IniFile ini = IniFile.getInstance();
+		
+		int sendCnt = Integer.parseInt(ini.getIni("Client", "SEND_CNT"));
+		
+		if(i <= sendCnt) {
 			sendMessage(ctx);
 			i++;
 		} else {
@@ -131,5 +142,6 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 		System.out.println("PING");
 		
     }
+
 	
 }

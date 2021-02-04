@@ -149,8 +149,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	 * @param len		전송할 메세지의 길이
 	 * @throws SocketException 
 	 */
-	public void SendToClient(byte[] msgBuf, int offset, int len) throws IOException
-	{
+	public void SendToClient(byte[] msgBuf, int offset, int len) throws IOException	{
 //		if (len < 256)
 //			logger.debug("Send To Client : " + new String(msgBuf, "utf-8"));
 //		else

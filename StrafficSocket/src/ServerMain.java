@@ -26,12 +26,12 @@ public class ServerMain {
 		
 		// log4j 설정
 		LogManager.SetLoggerProperties(
-				ini.getIni("LOG", "Path"), "ArgoSyncServer", 
+				ini.getIni("LOG", "Path"), ini.getIni("LOG", "ServerLogName"), 
 				ini.getIni("LOG", "Level"), ini.getIni("LOG", "DatePattern"),
 				Integer.parseInt(ini.getIni("LOG", "ExpireAfterDay")));
-
+		
 		// logger 생성
-		logger = LogManager.GetConfiguredLogger(this.getClass());
+		logger = LogManager.GetConfiguredLogger(ServerMain.class);
 		
 		// Socket listener 생성
 		sl = new ServerListener();
