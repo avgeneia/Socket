@@ -10,7 +10,7 @@ public class MhmsApplication{
 	public static void main(String[] args) {
 		//비밀번호 출력 테스트
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(encoder.encode("user04"));
+		System.out.println(encoder.encode("admin"));
 		
 		SpringApplication.run(MhmsApplication.class, args);
 	}

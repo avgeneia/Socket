@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -37,7 +38,10 @@ import com.mhms.util.CommUtil;
 @Controller
 @ControllerAdvice
 public class NoticeBoardController {
-
+	
+	@Value("${file.uploadPath}")
+	private String prpUploadPath;
+	
 	@Autowired
 	private BuildingService buildingService;
 
@@ -177,7 +181,7 @@ public class NoticeBoardController {
 			sid = noticeService.insertNotice(request.getParameterMap(), user);
 
 			if (!isFile) {
-				String filepath = "D:/upload" + File.separator;
+				String filepath = prpUploadPath + File.separator;
 				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
 
 				boolean successFile = CommUtil.fileUpload(file, filepath, filename);
@@ -227,7 +231,7 @@ public class NoticeBoardController {
 			int sid = Integer.parseInt(request.getParameter("sid"));
 			
 			if (!isFile) {
-				String filepath = "D:/upload" + File.separator;
+				String filepath = prpUploadPath + File.separator;
 				String filename = CommUtil.getTransFileName(sid, 0, Integer.parseInt(request.getParameter("bid")));
 
 				boolean successFile = CommUtil.fileUpload(file, filepath, filename);
@@ -275,7 +279,7 @@ public class NoticeBoardController {
 			  HttpServletRequest request
 		    , HttpServletResponse response
 		    , @AuthenticationPrincipal UserContext user) throws SQLException, IOException {
-		String filepath = "D:/upload" + File.separator;
+		String filepath = prpUploadPath + File.separator;
 		String filename = CommUtil.getTransFileName(Integer.parseInt(request.getParameter("sid")),
 				Integer.parseInt(request.getParameter("cid")), Integer.parseInt(request.getParameter("bid")));
 

@@ -160,6 +160,9 @@ public class CodeServiceimpl implements CodeService{
 			pstmt.setInt(5, Integer.parseInt(map.get("sort")[0]));
 			result = pstmt.executeUpdate();
 		}
+
+		pstmt.close();
+		conn.close();
 		
 		return result;
 	}

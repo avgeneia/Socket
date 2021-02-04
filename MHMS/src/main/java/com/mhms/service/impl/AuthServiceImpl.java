@@ -112,6 +112,9 @@ public class AuthServiceImpl implements AuthService {
 		pstmt.setInt(6, Integer.parseInt(map.get("uid")[0]));
 		pstmt.setInt(7, maxSid > 0 ? maxSid + 1 : 1);
 		result = pstmt.executeUpdate();
+
+		pstmt.close();
+		conn.close();
 		
 		return result;
 	

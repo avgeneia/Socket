@@ -168,6 +168,8 @@ public class BuildingServiceImpl implements BuildingService {
 			pstmt.setInt(3, Integer.parseInt(map.get("bid")[0]));
 			result = pstmt.executeUpdate();
 		}
+		pstmt.close();
+		conn.close();
 		
 		return result;
 	}

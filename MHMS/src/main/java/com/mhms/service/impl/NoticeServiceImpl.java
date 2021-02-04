@@ -173,6 +173,8 @@ public class NoticeServiceImpl implements NoticeService {
 		pstmt.setString(6, map.get("title")[0]);
 		pstmt.setString(7, user.getUsername());
 		pstmt.executeUpdate();
+		pstmt.close();
+		conn.close();
 		
 		return maxSid;
 	}
@@ -272,7 +274,9 @@ public class NoticeServiceImpl implements NoticeService {
 	    pstmt.setString(4, user.getUsername());
 	    pstmt.setInt(5, maxCid);
 	    int result = pstmt.executeUpdate();
-	    pstmt.getConnection().close();
+	    pstmt.close();
+	    conn.close();
+	    
 	    return result;
 	}
 

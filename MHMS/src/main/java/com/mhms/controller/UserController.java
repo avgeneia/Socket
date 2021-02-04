@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mhms.dto.CodeDto;
 import com.mhms.dto.UserListDto;
+import com.mhms.dto.UserPopupDto;
 import com.mhms.security.UserContext;
 import com.mhms.service.CodeService;
 import com.mhms.service.UserService;
@@ -82,6 +83,9 @@ public class UserController {
 			}
 		}
 		
+		UserPopupDto dto = new UserPopupDto(-1, "", "", "-1");
+		
+		model.addAttribute("userPopVO", dto);
 		model.addAttribute("initRoleVO", codeList);
 		model.addAttribute("userVO", userList);
 		model.addAttribute("pageInfo", "userList");

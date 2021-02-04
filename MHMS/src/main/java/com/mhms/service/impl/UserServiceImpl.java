@@ -63,8 +63,6 @@ public class UserServiceImpl implements UserService {
 		query.from(account);
 		query.leftJoin(account.userRole, userRole);
 		query.leftJoin(userRole.building, building);
-		query.on(userRole.building.bid.eq(building.bid));
-		query.on(userRole.building.rid.eq(building.rid));
 		query.join(code).on(account.role.eq(code.cd).and(code.upr_cd.eq("ROLE")));
 		
 		//사용자가 매니저의 경우 해당 건물의 사용자만 조회해야한다.
@@ -127,6 +125,8 @@ public class UserServiceImpl implements UserService {
 		pstmt.setString(2, map.get("usernm")[0]);
 		pstmt.setString(3, encoder.encode(map.get("usernm")[0]));
 		result = pstmt.executeUpdate();
+		pstmt.close();
+		conn.close();
 		
 		return result;
 	}

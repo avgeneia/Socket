@@ -71,17 +71,20 @@ public class AuthController {
 	public String authList(Model model, @AuthenticationPrincipal UserContext user) {
 		
 		//model.addAttribute("infoVO", map);
-		List<CodeDto> codeList = codeService.getCode("ROLE", false, 0);
+//		List<CodeDto> codeList = codeService.getCode("ROLE", false, 0);
+//		
+//		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
+//		
+//		//관리자권한 체크
+//		for(int i = 0; i < codeList.size(); i++) {
+//			
+//			if(!auth && codeList.get(i).getCd().equals("ROLE_ADMIN")) {
+//				codeList.remove(i);
+//			}
+//		}
 		
-		boolean auth = CommUtil.isRole(user, "ROLE_ADMIN");
-		
-		//관리자권한 체크
-		for(int i = 0; i < codeList.size(); i++) {
-			
-			if(!auth && codeList.get(i).getCd().equals("ROLE_ADMIN")) {
-				codeList.remove(i);
-			}
-		}
+//		CodeDto codeDto = new CodeDto("-1", "-1", "선택", "", 1, 0);
+//		codeList.add(0, codeDto);
 		
 		List<UserDto> userList = userService.getUserList(user);
 		UserDto userDto = new UserDto(-1, "선택");
@@ -97,7 +100,8 @@ public class AuthController {
 		
 		List<AuthDto> authList = authService.authList(user);
 		
-		model.addAttribute("initRoleVO", codeList);
+		//생각해보니 권한의 경우 이미 사용자 등록 때 등록되어있음 수정불가해야하는 항목... 아 빼버릴까...
+		//model.addAttribute("initRoleVO", codeList);
 		model.addAttribute("initBuildVO", builList);
 		model.addAttribute("initRoomVO", roomList);
 		model.addAttribute("initUserVO", userList);
