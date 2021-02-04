@@ -89,6 +89,8 @@ public class NettyClient extends Thread {
 		
 		EventLoopGroup group = new NioEventLoopGroup();
 		
+		Init();
+		
 		int cnt = Integer.parseInt(ini.getIni("Client", "CNT"));
 		
 		for(int i = 1 ; i <= cnt ; i++ ){
