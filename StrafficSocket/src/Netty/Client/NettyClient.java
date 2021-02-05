@@ -2,8 +2,6 @@ package Netty.Client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 

@@ -18,13 +18,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import vo.TelegramVO;
+
 public class TelegramParser {
 	
 	public TelegramParser telparser = null;
 	
 	static List<Map<String, String>> commHeaderList = new ArrayList<Map<String, String>>();
 	static List<Map<String, String>> interfaceList = new ArrayList<Map<String, String>>();
-	static List<Map<String, String>> dataSetList = new ArrayList<Map<String, String>>();
+	static List<Map<String, List<TelegramVO>>> dataSetList = new ArrayList<Map<String, List<TelegramVO>>>();
 	
 	public TelegramParser() throws ParserConfigurationException, SAXException, IOException {
 
@@ -87,20 +89,31 @@ public class TelegramParser {
 							
 							String InterfaceID = node.getAttributes().item(0).getChildNodes().item(0).getTextContent();
 							
-							Map<String, String> map = new HashMap<String, String>();
+							Map<String, List<TelegramVO>> map = new HashMap<String, List<TelegramVO>>();
 							
-							map.put("INTERFACE_ID", InterfaceID);
-							
+							List<TelegramVO> dataList = new ArrayList<TelegramVO>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
 								
+								
 								Node endNode = node.getChildNodes().item(j); 
+								
+								TelegramVO ds = new TelegramVO();
 								if(endNode.getAttributes() != null) {
-									String key = endNode.getAttributes().item(0).getNodeValue();
-									String value = endNode.getAttributes().item(1).getNodeValue();
-									map.put(key, value);
-									System.out.println("    Lv3 key :: " + key + " // value :: " + value);
+									
+									String id = endNode.getAttributes().item(0).getNodeValue();
+									int poz = Integer.parseInt(endNode.getAttributes().item(1).getNodeValue());
+									int size = Integer.parseInt(endNode.getAttributes().item(2).getNodeValue());
+									
+									ds.setId(id);
+									ds.setSize(size);
+									ds.setPoz(poz);
+								}
+								
+								if(ds.getId() != null) {
+									dataList.add(ds);
 								}
 							}
+							map.put(InterfaceID, dataList);
 							
 							dataSetList.add(map);
 						}
@@ -113,5 +126,6 @@ public class TelegramParser {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		
 		TelegramParser tp = new TelegramParser();
+		System.out.println("Result !!!!");
 	}
 }

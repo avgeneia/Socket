@@ -6,13 +6,20 @@
     </CommHeader>
     <Interface_id>
     	<Col id="IF0001" code="00EF"/>
+    	<Col id="IF0002" code="00EG"/>
     </Interface_id>
     <DataSetGroup>
     	<DataSet id="IF0001">
-	      	<Col id="A" size="5"/>
-	      	<Col id="B" size="5"/>
-	      	<Col id="C" size="5"/>
-	      	<Col id="D" size="5"/>
+	      	<Col id="A" poz="0" size="5"/>
+	      	<Col id="B" poz="5" size="5"/>
+	      	<Col id="C" poz="10" size="5"/>
+	      	<Col id="D" poz="15" size="5"/>
+      	</DataSet>
+    	<DataSet id="IF0002">
+	      	<Col id="A" poz="0" size="5"/>
+	      	<Col id="B" poz="5" size="5"/>
+	      	<Col id="C" poz="10" size="5"/>
+	      	<Col id="D" poz="15" size="5"/>
       	</DataSet>
     </DataSetGroup>
 </RULE>

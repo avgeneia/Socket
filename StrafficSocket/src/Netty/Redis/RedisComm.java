@@ -53,8 +53,15 @@ public class RedisComm {
 	} 
 	
 	public void set(String key, String value) {
-		this.syncCmd.lpush(key, value);
-		logger.info("REDIS lpush :: " + key + " // " + value);
+		
+		IniFile ini = IniFile.getInstance();
+		
+		boolean skip = Boolean.valueOf(ini.getIni("Redis", "SKIP"));
+		
+		if(skip != false) {
+			this.syncCmd.lpush(key, value);
+			logger.info("REDIS lpush :: " + key + " // " + value);			
+		}
 	}
 	 
 }

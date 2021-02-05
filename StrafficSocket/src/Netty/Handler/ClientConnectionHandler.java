@@ -3,11 +3,14 @@ package Netty.Handler;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 
-import org.apache.log4j.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+
+import Common.DataParser;
 import Common.LogManager;
 import Netty.Redis.RedisComm;
 import Netty.Redis.RedisManager;
@@ -40,9 +43,21 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	private String userIP = null;
 	private ChannelHandlerContext ctx = null;
 	
-	/** Client 접속시 실행됨 */
+	//private TelegramParser tp = null;
+	
 	@Override
-    public void channelActive(final ChannelHandlerContext ctx) { // (1)
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+				
+		//tp = new TelegramParser();
+    }
+	
+	/** Client 접속시 실행됨 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException */
+	@Override
+    public void channelActive(final ChannelHandlerContext ctx) throws ParserConfigurationException, SAXException, IOException { // (1)
+		
 		this.ctx = ctx;
 		userIP = ctx.channel().remoteAddress().toString();
 		String pid = userIP.substring(userIP.indexOf(":")+1);
@@ -50,7 +65,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		
 		synchronized(sync_conCnt) {
 			logger.info(userIP + " connected. connections : " + ++connectedCnt);
-
+			
 			RedisComm redis = new RedisComm();
 			
 			if(redis.getConnect()) {
@@ -106,8 +121,9 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		
 		redis.set(userIP, str);
     	
+		DataParser dp = new DataParser(str);
+		
 	    ctx.write(msg);
-
 		
 	}
 	
