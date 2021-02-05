@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE>
+	<CommHeader>
+      	<Col id="H" size="6"/>
+      	<Col id="DataLen" size="4"/>
+    </CommHeader>
+    <Interface_id>
+    	<Col id="IF0001" code="00EF"/>
+    </Interface_id>
+    <DataSetGroup>
+    	<DataSet id="IF0001">
+	      	<Col id="A" size="5"/>
+	      	<Col id="B" size="5"/>
+	      	<Col id="C" size="5"/>
+	      	<Col id="D" size="5"/>
+      	</DataSet>
+    </DataSetGroup>
+</RULE>
