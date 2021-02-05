@@ -2,12 +2,16 @@ package Netty.Client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 
 import Common.IniFile;
 import Common.LogManager;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -65,6 +69,17 @@ public class NettyClient extends Thread {
                  protected void initChannel(SocketChannel ch) throws Exception {
                 	 ServerConnectionHandler sch = new ServerConnectionHandler();
                 	 sch.setClientId(id);
+                	 
+                	 String msg = ini.getIni("Client", "MSG");
+                	 
+                	 byte[] str = new byte[msg.length()];
+             		
+             		 // 예제로 사용할 바이트 배열을 만듭니다.
+             		 str =  String.valueOf(msg).getBytes();
+                	 
+                	 ByteBuf bmsg = Unpooled.wrappedBuffer(str, 0, str.length);
+                	 
+                	 sch.setMessage(bmsg);
                 	 /** 
             	 	  * 2020-09-28 jslee
             	 	  * 
