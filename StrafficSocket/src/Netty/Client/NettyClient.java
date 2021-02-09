@@ -52,8 +52,6 @@ public class NettyClient extends Thread {
 
         try {
         	
-        	logger.info("client id :: " + id + "send !!!");
-        	
             Bootstrap b = new Bootstrap();
             
             String ip = ini.getIni("Client", "IP");
@@ -69,7 +67,9 @@ public class NettyClient extends Thread {
                 	 sch.setClientId(id);
                 	 
                 	 String msg = ini.getIni("Client", "MSG");
-                	 
+
+                 	logger.info("client msg send :: " + msg);
+                 	
                 	 byte[] str = new byte[msg.length()];
              		
              		 // 예제로 사용할 바이트 배열을 만듭니다.

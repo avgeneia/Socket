@@ -22,14 +22,33 @@ import vo.TelegramVO;
 
 public class TelegramParser {
 	
-	public TelegramParser telparser = null;
+	public static TelegramParser telparser;
 	
 	static List<Map<String, String>> commHeaderList = new ArrayList<Map<String, String>>();
 	static List<Map<String, String>> interfaceList = new ArrayList<Map<String, String>>();
 	static List<Map<String, List<TelegramVO>>> dataSetList = new ArrayList<Map<String, List<TelegramVO>>>();
 	
+	public static TelegramParser getInstance() {
+		
+		if(telparser == null) {
+			
+			try {
+				
+				telparser = new TelegramParser();
+			} catch (IOException | ParserConfigurationException | SAXException e) {
+				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return telparser;
+	}
+	
 	public TelegramParser() throws ParserConfigurationException, SAXException, IOException {
-
+		
+		System.out.println(" new TelegramParser !!!!!");
+		
 		File file = new File(System.getProperty("user.dir") + File.separator + "xml\\PACKET.xml");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -123,9 +142,9 @@ public class TelegramParser {
 		}
 	}
 	
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		
-		TelegramParser tp = new TelegramParser();
-		System.out.println("Result !!!!");
-	}
+//	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+//		
+//		TelegramParser tp = new TelegramParser();
+//		System.out.println("Result !!!!");
+//	}
 }

@@ -121,19 +121,19 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 	
 	public void sendMessage(ChannelHandlerContext ctx) {
 
-		ByteBuf message;
+		//ByteBuf message;
 		
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String realTime = format1.format(System.currentTimeMillis());
 		System.out.println("redis send start :: " + realTime);
-		
-		byte[] str = new byte[10];
-		
-		// 예제로 사용할 바이트 배열을 만듭니다.
-		str =  String.valueOf(i + " ").getBytes();
-		
-		message = Unpooled.wrappedBuffer(str, 0, str.length);
-			
+//		
+//		byte[] str = new byte[10];
+//		
+//		// 예제로 사용할 바이트 배열을 만듭니다.
+//		str =  String.valueOf(i + " ").getBytes();
+//		
+//		message = Unpooled.wrappedBuffer(str, 0, str.length);
+//			
 		// 메시지를 쓴 후 플러쉬합니다.
 		ctx.write(message);
 

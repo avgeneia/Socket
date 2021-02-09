@@ -1,7 +1,5 @@
 package Netty.Redis;
 
-import java.text.SimpleDateFormat;
-
 import org.apache.log4j.Logger;
 
 import com.lambdaworks.redis.RedisClient;

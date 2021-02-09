@@ -112,6 +112,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		// 바이트를 String 형으로 변환합니다.
 		String str = new String(byteMessage);
 		
+		logger.info("client msg rcv :: " + str);
 		userIP = ctx.channel().remoteAddress().toString();
 		String pid = userIP.substring(userIP.indexOf(":")+1);
 		userIP = userIP.substring(1, userIP.lastIndexOf(":")) + "." + pid;

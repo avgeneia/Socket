@@ -3,11 +3,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import Common.IniFile;
 import Common.LogManager;
 import Common.ProcessInfoGetter;
+import Common.TelegramParser;
 import Netty.Server.ServerListener;
 import Netty.Server.SyncSingleClient;
 
@@ -19,7 +23,9 @@ public class ServerMain {
 	/** Logger */
 	static Logger logger = null;
 	
-	public void Init() throws FileNotFoundException, IOException {
+	private static TelegramParser tp = null;
+	
+	public void Init() throws FileNotFoundException, IOException, ParserConfigurationException, SAXException {
 		
 		// 설정파일 관리자 선언
 		IniFile ini = IniFile.getInstance();
@@ -32,6 +38,8 @@ public class ServerMain {
 		
 		// logger 생성
 		logger = LogManager.GetConfiguredLogger(ServerMain.class);
+
+		tp = TelegramParser.getInstance();
 		
 		// Socket listener 생성
 		sl = new ServerListener();
@@ -47,7 +55,7 @@ public class ServerMain {
 		sl.StartListen();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException {
 		
 		// TODO Auto-generated method stub
 		ServerMain server = new ServerMain();

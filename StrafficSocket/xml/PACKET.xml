@@ -5,8 +5,8 @@
       	<Col id="DataLen" size="4"/>
     </CommHeader>
     <Interface_id>
-    	<Col id="IF0001" code="00EF"/>
-    	<Col id="IF0002" code="00EG"/>
+    	<Col id="IF0001" code="AK0012"/>
+    	<Col id="IF0002" code="BB0014"/>
     </Interface_id>
     <DataSetGroup>
     	<DataSet id="IF0001">
