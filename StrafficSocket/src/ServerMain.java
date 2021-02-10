@@ -23,7 +23,7 @@ public class ServerMain {
 	/** Logger */
 	static Logger logger = null;
 	
-	private static TelegramParser tp = null;
+	//private static TelegramParser tp = null;
 	
 	public void Init() throws FileNotFoundException, IOException, ParserConfigurationException, SAXException {
 		
@@ -39,7 +39,7 @@ public class ServerMain {
 		// logger 생성
 		logger = LogManager.GetConfiguredLogger(ServerMain.class);
 
-		tp = TelegramParser.getInstance();
+		TelegramParser.getInstance();
 		
 		// Socket listener 생성
 		sl = new ServerListener();

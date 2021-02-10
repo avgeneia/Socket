@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -124,8 +125,16 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
     	
 		DataParser dp = new DataParser(str);
 		
-	    ctx.write(msg);
+		//테스트 출력
+		for(String interfaceID : dp.getInterfaceList()) { 
+			
+			logger.info("interfaceID :: " + interfaceID);
+			Map<String, String> row = dp.getDataSet(interfaceID);
+			
+			logger.info(row);
+		}
 		
+	    ctx.write(msg);
 	}
 	
 	@Override
@@ -183,30 +192,30 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	 * @throws IOException
 	 */
 	public void SendFileToClient(String filePath) throws IOException {
-	        RandomAccessFile raf = null;
-	        long length = -1;
-	        try {
-	            raf = new RandomAccessFile(filePath, "r");
-	            length = raf.length();
-	        } catch (Exception e) {
-	            logger.error(e);
-	            return;
-	        } finally {
-	            if (length < 0 && raf != null) {
-	                raf.close();
-	            }
-	        }
+        RandomAccessFile raf = null;
+        long length = -1;
+        try {
+            raf = new RandomAccessFile(filePath, "r");
+            length = raf.length();
+        } catch (Exception e) {
+            logger.error(e);
+            return;
+        } finally {
+            if (length < 0 && raf != null) {
+                raf.close();
+            }
+        }
 
-	        logger.info("File Send Start. file : " + filePath + ", len : " + raf.length());
-	        if (ctx.pipeline().get(SslHandler.class) == null) {
-	            // SSL not enabled - can use zero-copy file transfer.
-	            ctx.write(new DefaultFileRegion(raf.getChannel(), 0, length));
-	        } else {
-	            // SSL enabled - cannot use zero-copy file transfer.
-	        	logger.debug("SSH");
-	            ctx.write(new ChunkedFile(raf));
-	        }
-	        ctx.flush();
-	        logger.info("File Send end. file : " + filePath);
-	    }
+        logger.info("File Send Start. file : " + filePath + ", len : " + raf.length());
+        if (ctx.pipeline().get(SslHandler.class) == null) {
+            // SSL not enabled - can use zero-copy file transfer.
+            ctx.write(new DefaultFileRegion(raf.getChannel(), 0, length));
+        } else {
+            // SSL enabled - cannot use zero-copy file transfer.
+        	logger.debug("SSH");
+            ctx.write(new ChunkedFile(raf));
+        }
+        ctx.flush();
+        logger.info("File Send end. file : " + filePath);
+    }
 }

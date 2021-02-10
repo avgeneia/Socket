@@ -10,7 +10,6 @@ import Common.LogManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -87,7 +86,7 @@ public class NettyClient extends Thread {
                  }
              });
             
-            ChannelFuture f = b.connect(ip, port).sync();
+            b.connect(ip, port).sync();
             
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block

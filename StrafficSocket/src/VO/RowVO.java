@@ -1,8 +1,9 @@
-package vo;
+package VO;
 
-public class HeaderVO {
+public class RowVO {
 	
 	String id;
+	int poz;
 	int size;
 	
 	public String getId() {
@@ -10,6 +11,12 @@ public class HeaderVO {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public int getPoz() {
+		return poz;
+	}
+	public void setPoz(int poz) {
+		this.poz = poz;
 	}
 	public int getSize() {
 		return size;

@@ -18,15 +18,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import vo.TelegramVO;
+import VO.DataSetVO;
+import VO.HeaderVO;
+import VO.RowVO;
 
 public class TelegramParser {
 	
 	public static TelegramParser telparser;
 	
-	static List<Map<String, String>> commHeaderList = new ArrayList<Map<String, String>>();
-	static List<Map<String, String>> interfaceList = new ArrayList<Map<String, String>>();
-	static List<Map<String, List<TelegramVO>>> dataSetList = new ArrayList<Map<String, List<TelegramVO>>>();
+	static List<HeaderVO> commHeaderList = new ArrayList<HeaderVO>();
+	static Map<String, String> interfaceList = new HashMap<String, String>();
+	static List<DataSetVO> dataSetList = new ArrayList<DataSetVO>();
 	
 	public static TelegramParser getInstance() {
 		
@@ -58,7 +60,6 @@ public class TelegramParser {
 		// root 구하기
 		Element root = doc.getDocumentElement();
 				
-		
 		// root의 속성
 		System.out.println("class name: " + root.getAttribute("CommHeader"));
 		
@@ -82,59 +83,49 @@ public class TelegramParser {
 						
 						if(Lv1NodeName.contentEquals("CommHeader")) {
 							
-							Map<String, String> map = new HashMap<String, String>();
-							for(int j = 0; j < nnm.getLength(); j++) {
-								
-								String key = nnm.item(j).getNodeName();
-								String value = nnm.item(j).getNodeValue();
-								map.put(key, value);
-							}
-							
-							commHeaderList.add(map);
+							HeaderVO hVO = new HeaderVO();
+							hVO.setId(nnm.getNamedItem("id").getNodeValue());
+							hVO.setSize(Integer.parseInt(nnm.getNamedItem("size").getNodeValue()));
+							commHeaderList.add(hVO);
 							
 						} else if(Lv1NodeName.contentEquals("Interface_id")) {
 							
-							Map<String, String> map = new HashMap<String, String>();
-							for(int j = 0; j < nnm.getLength(); j++) {
-								
-								String key = nnm.item(j).getNodeName();
-								String value = nnm.item(j).getNodeValue();
-								map.put(key, value);
-							}
-							
-							interfaceList.add(map);
+							String key = nnm.getNamedItem("code").getNodeValue();
+							String value = nnm.getNamedItem("id").getNodeValue();
+							interfaceList.put(key, value);
 							
 						} else if(node.getNodeName().equals("DataSet")) {
 							
+							DataSetVO dsVO = new DataSetVO();
+							
 							String InterfaceID = node.getAttributes().item(0).getChildNodes().item(0).getTextContent();
 							
-							Map<String, List<TelegramVO>> map = new HashMap<String, List<TelegramVO>>();
+							dsVO.setId(InterfaceID);
 							
-							List<TelegramVO> dataList = new ArrayList<TelegramVO>();
+							List<RowVO> listVO = new ArrayList<RowVO>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
 								
-								
 								Node endNode = node.getChildNodes().item(j); 
-								
-								TelegramVO ds = new TelegramVO();
+
+								RowVO rVO = new RowVO();
 								if(endNode.getAttributes() != null) {
 									
 									String id = endNode.getAttributes().item(0).getNodeValue();
 									int poz = Integer.parseInt(endNode.getAttributes().item(1).getNodeValue());
 									int size = Integer.parseInt(endNode.getAttributes().item(2).getNodeValue());
 									
-									ds.setId(id);
-									ds.setSize(size);
-									ds.setPoz(poz);
+									rVO.setId(id);
+									rVO.setSize(size);
+									rVO.setPoz(poz);
 								}
 								
-								if(ds.getId() != null) {
-									dataList.add(ds);
+								if(rVO.getId() != null) {
+									listVO.add(rVO);
 								}
 							}
-							map.put(InterfaceID, dataList);
+							dsVO.setRow(listVO);
 							
-							dataSetList.add(map);
+							dataSetList.add(dsVO);
 						}
 					}
 				}
@@ -142,9 +133,10 @@ public class TelegramParser {
 		}
 	}
 	
+	//단위테스트용
 //	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 //		
-//		TelegramParser tp = new TelegramParser();
+//		new TelegramParser();
 //		System.out.println("Result !!!!");
 //	}
 }

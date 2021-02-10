@@ -29,7 +29,7 @@ public class RedisComm {
 		 		 
 		 String ip = ini.getIni("Redis", "IP");
 		 int port = Integer.parseInt(ini.getIni("Redis", "PORT"));
-		 int timeOut = Integer.parseInt(ini.getIni("Redis", "TIMEOUT"));
+		 //int timeOut = Integer.parseInt(ini.getIni("Redis", "TIMEOUT"));
 		 
 		 String url = "redis://" + ip + ":" + port + "/0"; 
 		 System.out.println(url);
@@ -57,7 +57,7 @@ public class RedisComm {
 		boolean skip = Boolean.valueOf(ini.getIni("Redis", "SKIP"));
 		
 		if(skip != false) {
-			this.syncCmd.lpush(key, value);
+			syncCmd.lpush(key, value);
 			logger.info("REDIS lpush :: " + key + " // " + value);			
 		}
 	}
