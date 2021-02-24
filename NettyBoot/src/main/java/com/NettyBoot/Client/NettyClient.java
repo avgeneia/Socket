@@ -7,16 +7,17 @@ import org.apache.log4j.Logger;
 
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.LogManager;
+import com.NettyBoot.Handler.ServerConnectionHandler;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+/*
+ * 테스트용 전문을 전송하는 Class
+ */
 public class NettyClient extends Thread { 
 	
 	private int id;
@@ -34,15 +35,6 @@ public class NettyClient extends Thread {
 	
 	public static void Init() throws FileNotFoundException, IOException {
 
-		// 설정파일 관리자 선언
-		IniFile ini = IniFile.getInstance();
-		
-		// log4j 설정
-		LogManager.SetLoggerProperties(
-				ini.getIni("LOG", "Path"), ini.getIni("LOG", "ClientLogName"), 
-				ini.getIni("LOG", "Level"), ini.getIni("LOG", "DatePattern"),
-				Integer.parseInt(ini.getIni("LOG", "ExpireAfterDay")));
-		
 		// logger 생성
 		logger = LogManager.GetConfiguredLogger(NettyClient.class);
 		
@@ -62,31 +54,24 @@ public class NettyClient extends Thread {
              .handler(new ChannelInitializer<SocketChannel>() {
                  
 				@Override
-                 protected void initChannel(SocketChannel ch) throws Exception {
-                	 ServerConnectionHandler sch = new ServerConnectionHandler();
-                	 sch.setClientId(id);
+                protected void initChannel(SocketChannel ch) throws Exception {
+                	ServerConnectionHandler sch = new ServerConnectionHandler();
+                	sch.setClientId(id);
                 	 
-                	 String msg = ini.getIni("Client", "MSG");
+                	String msg = ini.getIni("Client", "MSG");
 
-                 	logger.info("client msg send :: " + msg);
-                 	
-                	 byte[] str = new byte[msg.length()];
-             		
-             		 // 예제로 사용할 바이트 배열을 만듭니다.
-             		 str =  String.valueOf(msg).getBytes();
-                	 
-                	 ByteBuf bmsg = Unpooled.wrappedBuffer(str, 0, str.length);
-                	 
-                	 sch.setMessage(bmsg);
-                	 /** 
+                	sch.setMsg(msg);
+                	/** 
             	 	  * 2020-09-28 jslee
             	 	  * 
             	 	  * 파일변경 감지 시 파일명과 파일경로 담을 변수 선언
             	 	  * */
-                     ch.pipeline().addLast(sch);	//SyncClientHandler 을 pipeline으로 설정 한다.
+                    ch.pipeline().addLast(sch);	//SyncClientHandler 을 pipeline으로 설정 한다.
                  }
-             });
+            });
             
+            logger.info("ip :: " + ip);
+            logger.info("port :: " + port);
             b.connect(ip, port).sync();
             
         } catch (InterruptedException e) {
@@ -95,22 +80,22 @@ public class NettyClient extends Thread {
 		} 
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		
-		IniFile ini = IniFile.getInstance();
-		
-		EventLoopGroup group = new NioEventLoopGroup();
-		
-		Init();
-		
-		int cnt = Integer.parseInt(ini.getIni("Client", "CNT"));
-		
-		for(int i = 1 ; i <= cnt ; i++ ){
-			NettyClient th = new NettyClient(i, ini, group);
-			th.start(); // 이 메소드를 실행하면 Thread 내의 run()을 수행한다.
-		}
-		
-	}
+	/*
+	 * public static void main(String[] args) throws FileNotFoundException,
+	 * IOException { // TODO Auto-generated method stub
+	 * 
+	 * IniFile ini = IniFile.getInstance();
+	 * 
+	 * EventLoopGroup group = new NioEventLoopGroup();
+	 * 
+	 * Init();
+	 * 
+	 * int cnt = Integer.parseInt(ini.getIni("Client", "CNT"));
+	 * 
+	 * for(int i = 1 ; i <= cnt ; i++ ){ NettyClient th = new NettyClient(i, ini,
+	 * group); th.start(); // 이 메소드를 실행하면 Thread 내의 run()을 수행한다. }
+	 * 
+	 * }
+	 */
 	
 }

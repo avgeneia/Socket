@@ -1,14 +1,15 @@
 package com.NettyBoot.Redis;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.NettyBoot.Common.IniFile;
+import com.NettyBoot.Common.LogManager;
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
-
-import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 
 public class RedisComm {
 	 
@@ -32,21 +33,24 @@ public class RedisComm {
 		 //int timeOut = Integer.parseInt(ini.getIni("Redis", "TIMEOUT"));
 		 
 		 String url = "redis://" + ip + ":" + port + "/0"; 
-		 System.out.println(url);
+		 redisLog(url);
 		 redisClient = RedisClient.create(RedisURI.create(url));
 		 
 		 connection = redisClient.connect();
 		 syncCmd = connection.sync();
 		 
 		 if(connection.isOpen()) {
-			 logger.info("REDIS CONNECT!!!");
+			 
+			 redisLog("REDIS CONNECT!!!");
 		 } else {
+			 
 			 //예외처리
-			 logger.error("REDIS NOT CONNECT!!!");			 
+			 redisLog("REDIS NOT CONNECT!!!");			 
 		 }
 	}
 	
 	public boolean getConnect() {
+		
 		return connection.isOpen();
 	} 
 	
@@ -56,10 +60,39 @@ public class RedisComm {
 		
 		boolean skip = Boolean.valueOf(ini.getIni("Redis", "SKIP"));
 		
-		if(skip != false) {
+		if(skip != true) {
+			
 			syncCmd.lpush(key, value);
-			logger.info("REDIS lpush :: " + key + " // " + value);			
+			redisLog("REDIS lpush :: " + key + " // " + value);			
 		}
 	}
-	 
+	
+	public String pop(String key) {
+		
+		String lpop = syncCmd.lpop(key);
+		
+		return lpop;
+	} 
+	
+	public List<String> getKeys() {
+		
+		return syncCmd.keys("*");
+	}
+	
+	public long getlen(String key) {
+		// TODO Auto-generated method stub
+		return syncCmd.llen(key);
+	}
+	
+	public void redisLog(String msg) {
+		
+		IniFile ini = IniFile.getInstance();
+		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
+		
+		if(Log != true) {
+			return;
+		}
+		
+		logger.info(msg);
+	}
 }

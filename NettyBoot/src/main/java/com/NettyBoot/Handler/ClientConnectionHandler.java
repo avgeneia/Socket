@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import com.NettyBoot.Common.DataParser;
+import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Redis.RedisComm;
 import com.NettyBoot.Redis.RedisManager;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -62,22 +62,22 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		this.ctx = ctx;
 		userIP = ctx.channel().remoteAddress().toString();
 		String pid = userIP.substring(userIP.indexOf(":")+1);
-		userIP = userIP.substring(1, userIP.lastIndexOf(":")) + "." + pid;
+		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
 		
 		synchronized(sync_conCnt) {
-			logger.info(userIP + " connected. connections : " + ++connectedCnt);
+			ServerLog("", userIP + " connected. connections : " + ++connectedCnt);
 			
 			RedisComm redis = new RedisComm();
 			
 			if(redis.getConnect()) {
 				SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String realTime = format1.format(System.currentTimeMillis());
-				//System.out.println("log redis connection :: " + userIP + " // " + realTime);
+				ServerLog("", "log redis connection :: " + userIP + " // " + realTime);
 			}
 			
 			RedisManager rm = RedisManager.getInstance();
 			rm.putRedisPool(userIP, redis);
-			logger.info("connect :: " + redis.getConnect());
+			ServerLog("", "connect :: " + redis.getConnect());
 		}		
     }
 	
@@ -85,7 +85,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		synchronized(sync_conCnt) {
-			logger.info(userIP + " disconnected. connections : " + --connectedCnt);	
+			ServerLog("", userIP + " disconnected. connections : " + --connectedCnt);	
 		}
 		
 		//super.channelInactive(ctx);
@@ -96,7 +96,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		
-		System.out.println("channelRead !!!");
+		ServerLog("", "channelRead !!!");
 		
 		// 받은 메시지를 ByteBuf형으로 캐스팅합니다.
 		ByteBuf byteBufMessage = (ByteBuf) msg;
@@ -113,26 +113,17 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		// 바이트를 String 형으로 변환합니다.
 		String str = new String(byteMessage);
 		
-		logger.info("client msg rcv :: " + str);
+		ServerLog("", "client msg rcv :: " + str);
 		userIP = ctx.channel().remoteAddress().toString();
 		String pid = userIP.substring(userIP.indexOf(":")+1);
-		userIP = userIP.substring(1, userIP.lastIndexOf(":")) + "." + pid;
+		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
 		
 		RedisManager rm = RedisManager.getInstance();
 		RedisComm redis = rm.getRedisPool(userIP);
 		
 		redis.set(userIP, str);
     	
-		DataParser dp = new DataParser(str);
-		
-		//테스트 출력
-		for(String interfaceID : dp.getInterfaceList()) { 
-			
-			logger.info("interfaceID :: " + interfaceID);
-			Map<String, String> row = dp.getDataSet(interfaceID);
-			
-			logger.info(row);
-		}
+		ServerLog("R",str);
 		
 	    ctx.write(msg);
 	}
@@ -141,12 +132,11 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 
 		ctx.flush();
-		System.out.println("PONG");
 	}
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		System.out.println("exceptionCaught ::" + cause);
+		ServerLog("", "exceptionCaught ::" + cause);
 		ctx.close();
 	}
 	
@@ -198,7 +188,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             raf = new RandomAccessFile(filePath, "r");
             length = raf.length();
         } catch (Exception e) {
-            logger.error(e);
+        	ServerLog("", e.getMessage());
             return;
         } finally {
             if (length < 0 && raf != null) {
@@ -206,7 +196,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             }
         }
 
-        logger.info("File Send Start. file : " + filePath + ", len : " + raf.length());
+        ServerLog("", "File Send Start. file : " + filePath + ", len : " + raf.length());
         if (ctx.pipeline().get(SslHandler.class) == null) {
             // SSL not enabled - can use zero-copy file transfer.
             ctx.write(new DefaultFileRegion(raf.getChannel(), 0, length));
@@ -216,6 +206,25 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             ctx.write(new ChunkedFile(raf));
         }
         ctx.flush();
-        logger.info("File Send end. file : " + filePath);
+        ServerLog("", "File Send end. file : " + filePath);
     }
+	
+	public void ServerLog(String type, String msg) {
+		
+		IniFile ini = IniFile.getInstance();
+		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
+		
+		if(Log != true) {
+			return;
+		}
+		
+		if(type.equals("R")) {
+			logger.info("[RECV] :: " + msg);			
+		} else if(type.equals("S")) {
+			logger.info("[SEND] :: " + msg);
+		} else {
+			logger.info(msg);
+		}
+
+	}
 }

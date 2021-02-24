@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE>
+	<JobGroup>
+    	<Job Id="IF0001" >
+	      	<Col Index="1" Type="Query" SqlID="dddd" Next="2"/>
+	      	<Col Index="2" Type="Log" SqlID="" Next="0"/>
+      	</Job>
+    </JobGroup>
+</RULE>

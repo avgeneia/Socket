@@ -93,8 +93,9 @@ public class ServerListener implements Runnable {
 	 * Listener 시작
 	 */
 	public void StartListen() {
-		 listenThread = new Thread(this);
-		 listenThread.start();
+		logger.info("=======================  Server IP    : " + this.ipStr);
+		listenThread = new Thread(this);
+		listenThread.start();
 	}
 		 
 	/**
@@ -125,8 +126,13 @@ public class ServerListener implements Runnable {
                      ch.pipeline().addLast((ClientConnectionHandler)clsClientCon.newInstance());
                  }
              })
-             .option(ChannelOption.SO_BACKLOG, 128)          // (5)
+             .option(ChannelOption.SO_BACKLOG, 1024)          // (5)
+             .childOption(ChannelOption.TCP_NODELAY, true)
+             .childOption(ChannelOption.SO_SNDBUF, 40960)
+             .option(ChannelOption.SO_RCVBUF, 40960)
              .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+             //.childOption(ChannelOption.SO_KEEPALIVE, false); // (6)
+             
 
             // Bind and start to accept incoming connections.
             f = b.bind(InetAddress.getByName(ipStr), portNo).sync(); // (7)

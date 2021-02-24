@@ -121,7 +121,9 @@ public class LogManager {
 		
 		// Level 설정
 		logger.setLevel(logLevel);
+		
 	}
+	
 }
 
 class LogDelete extends TimerTask {

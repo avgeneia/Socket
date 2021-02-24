@@ -1,97 +1,101 @@
 package com.NettyBoot;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.Collections;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.xml.sax.SAXException;
 
+import com.NettyBoot.Business.BusinessMain;
+import com.NettyBoot.Client.NettyClient;
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.LogManager;
-import com.NettyBoot.Common.ProcessInfoGetter;
-import com.NettyBoot.Common.PropertyUtil;
-import com.NettyBoot.Common.TelegramParser;
-import com.NettyBoot.Server.ServerListener;
-import com.NettyBoot.Server.SyncSingleClient;
+import com.NettyBoot.Common.MainApplicationArgument;
+import com.NettyBoot.Server.ServerMain;
+
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 
 @SpringBootApplication
 public class NettyBootApplication {
 	
-	/** 서버 소켓 Listener */
-	static ServerListener sl = null;	
-	
 	/** Logger */
 	static Logger logger = null;
-
-	public static void Init() throws FileNotFoundException, IOException, ParserConfigurationException, SAXException {
-		
-		// 설정파일 관리자 선언
-		IniFile ini = IniFile.getInstance();
-
-		TelegramParser.getInstance();
-		
-		// Socket listener 생성
-		sl = new ServerListener();
-		
-		// 서버 정보 설정
-		sl.SetIPAddress(ini.getIni("Network Interface", "ServiceAddress"));
-		sl.SetPortNo(Integer.parseInt(ini.getIni("Network Interface", "Port")));
-
-		// ClientConnection을 구현한 클래스가 SingleClientManager임을 ServerListener에 알려줌
-		sl.SetClientConnectionImpl(SyncSingleClient.class);
-		
-		// Listening 시작
-		sl.StartListen();
-	}
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		
-		//NettyBootApplication server = new NettyBootApplication();		
-		SpringApplication.run(NettyBootApplication.class, args);
-
+		SpringApplication app = new SpringApplication(NettyBootApplication.class);
+		String port = setPort(app, args); //GUI port를 args에서 읽어오도록
+		app.run(args); 
+		
+		//어플리케이션 시작 시 설정값을 저장한 변수를 읽어옴
+		Map<String, String> appArg = MainApplicationArgument.getAppArg();
+		
+		String systemMode = appArg.get("Mode").equals("S")?"Server":appArg.get("Mode").equals("B")?"Business":"Client";
+		
 		// 설정파일 관리자 선언
 		IniFile ini = IniFile.getInstance();
 
 		// logger 생성
 		logger = LogManager.GetConfiguredLogger(NettyBootApplication.class);
-
+		
+		//System 별 Log 출력파일 변경
+		String logFileName = appArg.get("Mode").equals("S")?ini.getIni("LOG", "ServerLogName"):appArg.get("Mode").equals("C")?ini.getIni("LOG", "ClientLogName"):ini.getIni("LOG", "BusinessLogName");
+		
 		// log4j 설정
 		LogManager.SetLoggerProperties(
-				ini.getIni("LOG", "Path"), ini.getIni("LOG", "ServerLogName"), 
+				ini.getIni("LOG", "Path"), logFileName, 
 				ini.getIni("LOG", "Level"), ini.getIni("LOG", "DatePattern"),
 				Integer.parseInt(ini.getIni("LOG", "ExpireAfterDay")));
 		
 		logger.info("==================================================================================");
-		logger.info("=======================  SYSTEM MODE : " + PropertyUtil.getProperty("System.Mode"));
+		logger.info("=======================  SYSTEM MODE : " + systemMode);
+		logger.info("=======================  GUI PORT    : " + port);
 		
-		try {
-			Init();		
-			
-			String pInfo = ProcessInfoGetter.getPid();
-			
-			logger.info("==================================================================================");
-			logger.info("=======================  SYNC SERVER START");
-			logger.info("=======================  [" + pInfo + "]");
-			logger.info("==================================================================================");
-			
-			//System.out.println("Initialized. type 'exit' to exit.");
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			while (true) {
-				String inStr = br.readLine();
-				if (inStr.equals("exit")) {
-					sl.EndListen();
-					break;
+		switch(systemMode) {
+			case "Server":
+				
+				new ServerMain();
+				
+				break;
+				
+			case "Client":
+				
+				EventLoopGroup group = new NioEventLoopGroup();
+				
+				int cnt = Integer.parseInt(ini.getIni("Client", "CNT"));
+				
+				NettyClient.Init();
+				
+				for(int i = 1 ; i <= cnt ; i++ ){
+					NettyClient th = new NettyClient(i, ini, group);
+					th.start(); // 이 메소드를 실행하면 Thread 내의 run()을 수행한다.
 				}
-			}
-		} catch (Exception e) {
-			System.out.println(e);
+				
+				break;
+			case "Business":
+				
+				new BusinessMain();
+				
+				break;
 		}
 	}
-
+	
+	public static String setPort(SpringApplication app, String[] args) {
+		
+		String port = "80";
+		
+		for(int i = 0; i < args.length; i++) {
+			
+			if(args[i].indexOf("Port") > 0) {
+				port = args[i].split("=")[1];
+			}
+		}
+		
+		app.setDefaultProperties(Collections.singletonMap("server.port", port));
+		
+		return port;
+	}
 }

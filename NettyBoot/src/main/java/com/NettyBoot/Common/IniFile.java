@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.Map;
 
 import org.ini4j.Config;
 import org.ini4j.Wini;
@@ -30,11 +31,26 @@ public class IniFile {
 		cfg.setFileEncoding(Charset.defaultCharset());
 		wini.setConfig(cfg);
 		
-		// 설정파일 로드
+		//어플리케이션 시작 시 설정값을 저장한 변수를 읽어옴
+		Map<String, String> appArg = MainApplicationArgument.getAppArg();
+		String systemMode = appArg.get("Mode");
 		
+		switch(systemMode) {
+			case "S": //Send/Recv Server Mode
+				confFilePath = "ServerConfig.ini";
+				break;
+			case "B": //Business Server Mode
+				confFilePath = "BusinessConfig.ini";
+				break;
+			case "C": //Client Mode
+				confFilePath = "ClientConfig.ini";
+				break;
+		}
+		
+		// 설정파일 로드
 		ClassPathResource cpr = new ClassPathResource(confFilePath);
 		
-		File file = new File("config.ini");
+		File file = new File(confFilePath);
 		if(file.exists() == false) {
 			Files.copy(cpr.getInputStream(), file.toPath());
 		}
