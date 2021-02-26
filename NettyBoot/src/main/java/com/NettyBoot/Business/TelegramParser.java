@@ -70,7 +70,6 @@ public class TelegramParser {
 		Element root = doc.getDocumentElement();
 				
 		// root의 속성
-		
 		for(int i = 0; i < root.getChildNodes().getLength(); i++) {
 			
 			NodeList nodeList = root.getChildNodes().item(i).getChildNodes(); 

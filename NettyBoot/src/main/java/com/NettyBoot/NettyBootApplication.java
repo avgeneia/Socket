@@ -1,6 +1,5 @@
 package com.NettyBoot;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class NettyBootApplication {
 	/** Logger */
 	static Logger logger = null;
 	
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws Exception {
 		
 		SpringApplication app = new SpringApplication(NettyBootApplication.class);
 		String port = setPort(app, args); //GUI port를 args에서 읽어오도록

@@ -24,8 +24,6 @@ public class DataParser {
 	
 	List<String> interfaceList = new ArrayList<String>();
 	
-	TelegramParser tp = TelegramParser.getInstance();
-	
 	public DataParser(String msg) {
 		
 		process(msg);
@@ -44,14 +42,13 @@ public class DataParser {
 		 *    -> 전문 분석 후 사이즈를 채크하여 재귀호출.
 		 */
 		
-		List<HeaderVO> chl = tp.commHeaderList;
+		List<HeaderVO> chl = TelegramParser.commHeaderList;
 		//[{size=6, id=H}, {size=4, id=DataLen}]
 		
 		int hSize = -1; //headerSize 구분
 		int dSize = -1; //DataSize 구분
 		
 		for(int i = 0; i < chl.size(); i++) {
-			
 			
 			if(chl.get(i).getId().equals("HeaderID")) {
 			
@@ -77,14 +74,14 @@ public class DataParser {
 		/* interfaceID 매핑 구간
 		 * 
 		 */
-		Map<String, String> ifl = tp.interfaceList;
+		Map<String, String> ifl = TelegramParser.interfaceList;
 		
 		Map<String, Map<String, String>> ds = new HashMap<String, Map<String, String>>();
 		String realIf = ifl.get(interfaceID); //code to real interface_id
 		
 		interfaceList.add(realIf);
 		
-		List<DataSetVO> dsl = tp.dataSetList;
+		List<DataSetVO> dsl = TelegramParser.dataSetList;
 		Map<String, String> map = new HashMap<String, String>();
 		for(int i = 0; i < dsl.size(); i++) {
 			
