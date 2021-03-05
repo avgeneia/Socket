@@ -1,12 +1,13 @@
 package com.NettyBoot.Common;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationContext;
 
 public class PropertyUtil {
 
 	/** Logger */
-	static Logger logger = LogManager.GetConfiguredLogger(PropertyUtil.class);;
+	static Logger logger = LogManager.getLogger(PropertyUtil.class);;
 	
 	public static String getProperty(String propertyName) {
 		

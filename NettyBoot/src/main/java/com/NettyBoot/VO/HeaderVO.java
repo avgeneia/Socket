@@ -4,7 +4,14 @@ public class HeaderVO {
 	
 	String id;
 	int size;
+	int poz;
 	
+	public int getPoz() {
+		return poz;
+	}
+	public void setPoz(int poz) {
+		this.poz = poz;
+	}
 	public String getId() {
 		return id;
 	}

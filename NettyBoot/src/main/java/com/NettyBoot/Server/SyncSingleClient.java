@@ -5,9 +5,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Common.ProcessInfoGetter;
 import com.NettyBoot.Common.SingleFile;
 import com.NettyBoot.Handler.ClientConnectionHandler;
@@ -56,7 +56,7 @@ public class SyncSingleClient extends ClientConnectionHandler {
 	byte[] rcvBuf = null;	
 	
 	/** Logger */
-	static Logger logger = LogManager.GetConfiguredLogger(SyncSingleClient.class);
+	static Logger logger = LogManager.getLogger(SyncSingleClient.class);
 	
 	/**
 	 * 클래스의 인스턴스가 언제 소멸되는지를 확인하기 위한 디버그용 함수.

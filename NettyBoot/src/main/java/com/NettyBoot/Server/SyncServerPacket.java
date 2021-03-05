@@ -2,13 +2,11 @@ package com.NettyBoot.Server;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.log4j.Logger;
-
-import com.NettyBoot.Common.LogManager;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * ArgoSync 서버~클라이언트간 송수신 패킷 클래스
+ * 서버~클라이언트간 송수신 패킷 클래스
  * 
  * @author jymoon
  *
@@ -20,7 +18,7 @@ public class SyncServerPacket {
 	String[] columns = null;	
 	
 	/** Logger */
-	static Logger logger = LogManager.GetConfiguredLogger(SyncServerPacket.class);
+	static Logger logger = LogManager.getLogger(SyncServerPacket.class);
 	
 	/**
 	 * 메세지 파싱(수신메세지 버퍼 파싱)

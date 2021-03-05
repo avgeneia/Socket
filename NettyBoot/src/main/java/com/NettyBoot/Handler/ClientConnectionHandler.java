@@ -7,11 +7,12 @@ import java.text.SimpleDateFormat;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.xml.sax.SAXException;
 
 import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Redis.RedisComm;
 import com.NettyBoot.Redis.RedisManager;
 
@@ -38,7 +39,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	static Object sync_conCnt = new Object();	
 	
 	/** Logger */
-	static Logger logger = LogManager.GetConfiguredLogger(ClientConnectionHandler.class);
+	static Logger logger = LogManager.getLogger(ClientConnectionHandler.class);
 	
 	/** 접속자 IP */
 	private String userIP = null;
@@ -210,13 +211,6 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
     }
 	
 	public void ServerLog(String type, String msg) {
-		
-		IniFile ini = IniFile.getInstance();
-		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
-		
-		if(Log != true) {
-			return;
-		}
 		
 		if(type.equals("R")) {
 			logger.info("[RECV] :: " + msg);			

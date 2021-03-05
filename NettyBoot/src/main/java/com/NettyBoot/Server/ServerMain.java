@@ -79,11 +79,6 @@ public class ServerMain {
 	public void printLog(String msg) {
 		
 		// 설정파일 관리자 선언
-		IniFile ini = IniFile.getInstance();
-		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
-		
-		if(Log) {
-			logger.info(msg);
-		}
+		logger.info(msg);
 	}
 }

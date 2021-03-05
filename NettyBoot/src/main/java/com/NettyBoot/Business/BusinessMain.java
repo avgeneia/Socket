@@ -14,26 +14,37 @@ public class BusinessMain {
 	
 	IniFile ini = IniFile.getInstance();
 	
+	BusinessThread[] bt = null;
+	
 	public BusinessMain() throws Exception {
 		
 		//job을 읽어오는 class 실행.
-		JobTemplateParser jp = new JobTemplateParser();
+		JobTemplateParser jp = null;
+		try {
+			jp = JobTemplateParser.getInstance();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		TelegramParser.getInstance();
 		
-		List<JobVO> jobList = jp.getJobTemplate();
+		bt = new BusinessThread[jp.getThreadCnt()];
 		
 		int sleep = Integer.parseInt(ini.getIni("Business", "ThreadSleep"));
+
+		String[] redisKey = ini.getIni("Business", "Keys").split(",");
 		
-		//interface 별 Thread 처리
-		for(int i = 0; i < jobList.size(); i++) {
+		for(int i = 0; i < redisKey.length; i++) {
+		
+			int threadCnt = Integer.parseInt(ini.getIni("Business", redisKey[i]));
 			
-			//interface_id
-			String interfaceId = jobList.get(i).getId();
-			String redisKey = jobList.get(i).getRedisKey();
-			
-			BusinessThread bt = new BusinessThread(interfaceId, redisKey, sleep);
-			bt.run();
+			for(int n = 0; n < threadCnt; n++) {
+				
+				bt[n] = new BusinessThread(redisKey[i], sleep);
+				bt[n].setDaemon(true);
+				bt[n].start();
+			}
 		}
 	}
 }

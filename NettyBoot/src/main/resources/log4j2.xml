@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="30">
+    <Properties>
+        <Property name="layoutPattern">%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Property>
+        <Property name="baseDir">D:/log</Property>
+        <!-- <Property name="baseDir">/log</Property> -->
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${layoutPattern}"/>
+        </Console>
+        <RollingFile name="File" fileName="${baseDir}/${env:LOGFILE}.log" filePattern="${baseDir}/${env:LOGFILE}_%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${layoutPattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${baseDir}">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info" additivity="false">
+            <!-- <AppenderRef ref="Console"/> -->
+            <AppenderRef ref="File" />
+        </Root>
+        <!-- <Logger name="org.springframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+            <AppenderRef ref="File_Appender"/>
+        </Logger> -->
+    </Loggers>
+</Configuration>

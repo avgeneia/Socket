@@ -48,7 +48,7 @@ public class JobTemplateParser {
 		ClassPathResource cpr = new ClassPathResource(filePath);
 
 		File file = new File("JOB.xml");
-		if(file.exists() == false) {
+		if(file.exists() == false) { 
 			Files.copy(cpr.getInputStream(), file.toPath());
 		}
 		
@@ -78,10 +78,12 @@ public class JobTemplateParser {
 							
 							String id = node.getAttributes().item(0).getNodeValue();
 							String redisKey = node.getAttributes().item(1).getNodeValue();
+							int threadCnt = Integer.parseInt(node.getAttributes().item(2).getNodeValue());
 							
 							JobVO vo = new JobVO();
 							vo.setId(id);
 							vo.setRedisKey(redisKey);
+							vo.setThreadCnt(threadCnt);
 							List<Map<String, String>> ifdata = new ArrayList<Map<String, String>>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
 								
@@ -129,5 +131,20 @@ public class JobTemplateParser {
 		}
 		
 		return null;
+	}
+	
+	/*
+	 * 필요한 Thread 갯수를 리턴
+	 */
+	public int getThreadCnt() {
+		
+		int result = 0;
+		
+		for(int i = 0; i < jobTemplate.size(); i++) {
+			
+			result += jobTemplate.get(i).getThreadCnt();
+		}
+		
+		return result;
 	}
 }

@@ -91,6 +91,7 @@ public class TelegramParser {
 							HeaderVO hVO = new HeaderVO();
 							hVO.setId(nnm.getNamedItem("id").getNodeValue());
 							hVO.setSize(Integer.parseInt(nnm.getNamedItem("size").getNodeValue()));
+							hVO.setPoz(Integer.parseInt(nnm.getNamedItem("poz").getNodeValue()));
 							commHeaderList.add(hVO);
 							
 						} else if(Lv1NodeName.contentEquals("Interface_id")) {

@@ -3,9 +3,9 @@ package com.NettyBoot.Server;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Handler.ClientConnectionHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -49,7 +49,7 @@ public class ServerListener implements Runnable {
 	/**
 	 * Logger
 	 */
-	static Logger logger = LogManager.GetConfiguredLogger(ServerListener.class);
+	static Logger logger = LogManager.getLogger(ServerListener.class);
 	
 
 	/**

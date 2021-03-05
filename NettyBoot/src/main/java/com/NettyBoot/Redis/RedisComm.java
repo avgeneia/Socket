@@ -2,10 +2,10 @@ package com.NettyBoot.Redis;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
@@ -22,7 +22,7 @@ public class RedisComm {
 	public static RedisCommands<String, String> syncCmd = null;
 	
 	/** Logger */
-	static Logger logger = LogManager.GetConfiguredLogger(RedisComm.class);
+	static Logger logger = LogManager.getLogger(RedisComm.class);
 	 
 	public RedisComm() {
 		 
@@ -68,7 +68,7 @@ public class RedisComm {
 	}
 	
 	public String pop(String key) {
-		
+		redisLog("REDIS pop :: " + key);
 		String lpop = syncCmd.lpop(key);
 		
 		return lpop;
@@ -85,13 +85,6 @@ public class RedisComm {
 	}
 	
 	public void redisLog(String msg) {
-		
-		IniFile ini = IniFile.getInstance();
-		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
-		
-		if(Log != true) {
-			return;
-		}
 		
 		logger.info(msg);
 	}

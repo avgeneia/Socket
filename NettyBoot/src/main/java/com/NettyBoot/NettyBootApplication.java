@@ -3,14 +3,14 @@ package com.NettyBoot;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.NettyBoot.Business.BusinessMain;
 import com.NettyBoot.Client.NettyClient;
 import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Common.MainApplicationArgument;
 import com.NettyBoot.Server.ServerMain;
 
@@ -19,9 +19,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 
 @SpringBootApplication
 public class NettyBootApplication {
-	
-	/** Logger */
-	static Logger logger = null;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -38,17 +35,11 @@ public class NettyBootApplication {
 		IniFile ini = IniFile.getInstance();
 
 		// logger 생성
-		logger = LogManager.GetConfiguredLogger(NettyBootApplication.class);
+
+		/** Logger */
+		Logger logger = LogManager.getLogger(NettyBootApplication.class);
 		
 		//System 별 Log 출력파일 변경
-		String logFileName = appArg.get("Mode").equals("S")?ini.getIni("LOG", "ServerLogName"):appArg.get("Mode").equals("C")?ini.getIni("LOG", "ClientLogName"):ini.getIni("LOG", "BusinessLogName");
-		
-		// log4j 설정
-		LogManager.SetLoggerProperties(
-				ini.getIni("LOG", "Path"), logFileName, 
-				ini.getIni("LOG", "Level"), ini.getIni("LOG", "DatePattern"),
-				Integer.parseInt(ini.getIni("LOG", "ExpireAfterDay")));
-		
 		logger.info("==================================================================================");
 		logger.info("=======================  SYSTEM MODE : " + systemMode);
 		logger.info("=======================  GUI PORT    : " + port);

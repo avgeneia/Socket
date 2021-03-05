@@ -8,8 +8,15 @@ public class JobVO {
 	
 	String id;
 	String redisKey;
+	int threadCnt;
 	List<Map<String, String>> rowdata = new ArrayList<Map<String, String>>();
 	
+	public int getThreadCnt() {
+		return threadCnt;
+	}
+	public void setThreadCnt(int threadCnt) {
+		this.threadCnt = threadCnt;
+	}
 	public String getRedisKey() {
 		return redisKey;
 	}

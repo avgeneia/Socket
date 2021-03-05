@@ -20,9 +20,11 @@ public class DataParser {
 	
 	private String msg = null;
 	
-	private List<Map<String, Map<String, String>>> dataSet = new ArrayList<Map<String, Map<String, String>>>();
+	private Map<String, Map<String, String>> dataSet = new HashMap<String, Map<String, String>>();
 	
 	List<String> interfaceList = new ArrayList<String>();
+	
+	boolean recursion = false;
 	
 	public DataParser(String msg) {
 		
@@ -46,29 +48,29 @@ public class DataParser {
 		//[{size=6, id=H}, {size=4, id=DataLen}]
 		
 		int hSize = -1; //headerSize 구분
+		int hPoz = -1;
+		
 		int dSize = -1; //DataSize 구분
+		int dPoz = -1;
 		
 		for(int i = 0; i < chl.size(); i++) {
 			
 			if(chl.get(i).getId().equals("HeaderID")) {
-			
+				
+				hPoz = chl.get(i).getPoz();
 				hSize = chl.get(i).getSize();
 			}
 			
 			if(chl.get(i).getId().equals("DataLen")) {
 				
+				dPoz = chl.get(i).getPoz();
 				dSize = chl.get(i).getSize();
 			}
 		}
 		
-		String interfaceID = msg.substring(0, hSize);
-		int telSize =  Integer.parseInt(msg.substring(hSize, hSize + dSize));
-		String telBody = msg.substring(hSize + dSize, hSize + dSize + telSize);
-		
-		//전문뒤에 데이터가 더 있는지 확인. 재귀호출 플래그 처리
-//		if(msg.substring(hSize + dSize + telSize).length() > 0) {
-//			recursion = true;
-//		}
+		String interfaceID = msg.substring(hPoz, hSize);
+		int telSize =  Integer.parseInt(msg.substring(dPoz, dPoz + dSize));
+		String telBody = msg.substring(dPoz + dSize, dPoz + dSize + telSize);
 		
 		//interface 처리
 		/* interfaceID 매핑 구간
@@ -76,7 +78,6 @@ public class DataParser {
 		 */
 		Map<String, String> ifl = TelegramParser.interfaceList;
 		
-		Map<String, Map<String, String>> ds = new HashMap<String, Map<String, String>>();
 		String realIf = ifl.get(interfaceID); //code to real interface_id
 		
 		interfaceList.add(realIf);
@@ -98,16 +99,7 @@ public class DataParser {
 			}
 		}
 		
-		ds.put(realIf, map);
-		dataSet.add(ds);
-		
-		/* 재귀 호출.
-		 * 처리된 전문을 Replace 처리 후 진행.
-		 */
-//		if(recursion) {
-//			recursion = false;
-//			process(msg.substring(hSize + dSize + telSize));
-//		}
+		dataSet.put(realIf, map);
 	}
 
 	public String getMsg() {
@@ -122,18 +114,10 @@ public class DataParser {
 		
 		Map<String, String> result = new HashMap<String, String>();
 		
-		for(int i = 0; i < dataSet.size(); i++) {
-			
-			if(dataSet.get(i).get(key) != null) {
-				
-				result = dataSet.get(i).get(key);
-			}
-		}
-		
-		return result;
+		return dataSet.get(key);
 	}
 	
-	public List<Map<String, Map<String, String>>> getDataSet() {
+	public Map<String, Map<String, String>> getDataSet() {
 		
 		return this.dataSet;
 	}

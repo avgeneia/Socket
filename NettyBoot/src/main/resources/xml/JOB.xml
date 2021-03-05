@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RULE>
 	<JobGroup>
-    	<Job Id="IF0001" Key="127.0.0.1">
+    	<Job Id="IF0001">
 	      	<Col Index="1" Type="Query" QueryType="insert" SqlID="insertTest" Next="2" Commit="false"/>
-	      	<Col Index="2" Type="Query" QueryType="update" SqlID="upTest0003" Next="3" Commit="false"/>
-	      	<Col Index="3" Type="Log" Next="0"/>
+	      	<Col Index="2" Type="If" Condition="&lt;" Input="A,B" TruePath="3" FalsePath="4"/>
+	      	<Col Index="3" Type="Query" QueryType="update" SqlID="upTest0003" Next="4" Commit="false"/>
+	      	<Col Index="4" Type="Log" Next="0"/>
       	</Job>
-      	<Job Id="IF0002" Key="127.0.0.1">
-	      	<Col Index="1" Type="Log" Next="0"/>
+      	<Job Id="IF0002">
+      		<Col Index="1" Type="Query" QueryType="insert" SqlID="insertTest" Next="2" Commit="false"/>
+	      	<Col Index="2" Type="If" Condition="&lt;" Input="A,B" TruePath="3" FalsePath="4"/>
+	      	<Col Index="3" Type="Query" QueryType="update" SqlID="upTest0003" Next="4" Commit="false"/>
+	      	<Col Index="4" Type="Log" Next="0"/>
       	</Job>
     </JobGroup>
 </RULE>

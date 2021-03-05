@@ -3,10 +3,10 @@ package com.NettyBoot.Client;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 import com.NettyBoot.Handler.ServerConnectionHandler;
 
 import io.netty.bootstrap.Bootstrap;
@@ -36,7 +36,7 @@ public class NettyClient extends Thread {
 	public static void Init() throws FileNotFoundException, IOException {
 
 		// logger 생성
-		logger = LogManager.GetConfiguredLogger(NettyClient.class);
+		logger = LogManager.getLogger(NettyClient.class);
 		
 	}
 	

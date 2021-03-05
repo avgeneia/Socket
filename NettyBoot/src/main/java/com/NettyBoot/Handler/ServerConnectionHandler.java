@@ -2,10 +2,10 @@ package com.NettyBoot.Handler;
 
 import java.nio.charset.Charset;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Common.LogManager;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -22,7 +22,7 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 	 * */
 	
 	/** Logger */
-	private Logger logger = LogManager.GetConfiguredLogger(ServerConnectionHandler.class);
+	private Logger logger = LogManager.getLogger(ServerConnectionHandler.class);
 	
 	/** 파일감지 후 서버에 보낼 전문변수 설정, DirWatchRunnable.java에서 대상파일 필터링 후 값 전달한다 jslee */
 	private ByteBuf message;
@@ -90,7 +90,6 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 		
 		/** 로그찍기용 메시지 형 변환 jslee */
 		String message = in.toString(Charset.forName("utf-8"));
-		clientLog("R",message);
 		
 	    try {
 	    	
@@ -123,7 +122,7 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 			sendMessage(ctx, this.msg);
 			i++;
 		} else {
-			logger.info("[" + clientId + "] Send Complete");
+			System.out.println("[" + clientId + "] Send Complete");
 			ctx.close();
 		}
 	}
@@ -144,14 +143,7 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
     }
 	
 	public void clientLog(String type, String msg) {
-		
-		IniFile ini = IniFile.getInstance();
-		boolean Log = ini.getIni("LOG", "Print").equals("true")?true:false;		
-		
-		if(Log != true) {
-			return;
-		}
-		
+
 		if(type.equals("R")) {
 			
 			logger.info("[" + this.clientId + "][RECV] :: " + msg);			
