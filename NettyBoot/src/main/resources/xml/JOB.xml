@@ -2,14 +2,21 @@
 <RULE>
 	<JobGroup>
     	<Job Id="IF0001">
-	      	<Col Index="1" Type="Query" QueryType="insert" SqlID="insertTest" Next="2" Commit="false"/>
-	      	<Col Index="2" Type="If" Condition="&lt;" Input="A,B" TruePath="3" FalsePath="4"/>
-	      	<Col Index="3" Type="Query" QueryType="update" SqlID="upTest0003" Next="4" Commit="false"/>
-	      	<Col Index="4" Type="Log" Next="0"/>
+	      	<Col Index="1"  Type="Query" QueryType="select" SqlID="selecttest" Result="DS" Next="2" Commit="false"/>
+	      	<Col Index="2"  Type="If" Condition="JobResult`==`0" TruePath="3" FalsePath="11"/>
+	      	<Col Index="3"  Type="FileCreate" Path="D:\Log\OUT.txt" Next="4"/>
+	      	<Col Index="4"  Type="If" Condition="JobResult`==`0" TruePath="5" FalsePath="11"/>
+	      	<Col Index="5"  Type="Assign" Target="i" Value="0" Next="6"/>
+	      	<Col Index="6"  Type="If" Condition="i`&lt;`DS.size" TruePath="7" FalsePath="11"/>
+	      	<Col Index="7"  Type="Assign" Target="str" Value="DS[i].A`'@'`DS[i].B`'@'`DS[i].C`'@'`DS[i].D" Next="8"/>
+	      	<Col Index="8"  Type="FileWrite" Path="D:\Log\OUT.txt" Value="str" Next="9"/>
+	      	<Col Index="9"  Type="Query" QueryType="update" SqlID="update0003" Next="10" Commit="false"/>
+	      	<Col Index="10" Type="Assign" Target="i" Value="i`+`1" Next="6"/>
+	      	<Col Index="11" Type="FileClose" Path="D:\Log\OUT.txt" Next="0"/>
       	</Job>
       	<Job Id="IF0002">
       		<Col Index="1" Type="Query" QueryType="insert" SqlID="insertTest" Next="2" Commit="false"/>
-	      	<Col Index="2" Type="If" Condition="&lt;" Input="A,B" TruePath="3" FalsePath="4"/>
+	      	<Col Index="2" Type="If" Condition="A`&lt;`B" TruePath="3" FalsePath="4"/>
 	      	<Col Index="3" Type="Query" QueryType="update" SqlID="upTest0003" Next="4" Commit="false"/>
 	      	<Col Index="4" Type="Log" Next="0"/>
       	</Job>

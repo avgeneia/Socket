@@ -3,18 +3,14 @@ package com.NettyBoot.Handler;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.xml.sax.SAXException;
 
-import com.NettyBoot.Common.IniFile;
-import com.NettyBoot.Redis.RedisComm;
-import com.NettyBoot.Redis.RedisManager;
+import com.NettyBoot.Server.ReceptionProcess;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -43,6 +39,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	
 	/** 접속자 IP */
 	private String userIP = null;
+	
 	private ChannelHandlerContext ctx = null;
 	
 	//private TelegramParser tp = null;
@@ -62,23 +59,23 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		
 		this.ctx = ctx;
 		userIP = ctx.channel().remoteAddress().toString();
-		String pid = userIP.substring(userIP.indexOf(":")+1);
+		//String pid = userIP.substring(userIP.indexOf(":")+1);
 		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
 		
 		synchronized(sync_conCnt) {
 			ServerLog("", userIP + " connected. connections : " + ++connectedCnt);
 			
-			RedisComm redis = new RedisComm();
-			
-			if(redis.getConnect()) {
-				SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String realTime = format1.format(System.currentTimeMillis());
-				ServerLog("", "log redis connection :: " + userIP + " // " + realTime);
-			}
-			
-			RedisManager rm = RedisManager.getInstance();
-			rm.putRedisPool(userIP, redis);
-			ServerLog("", "connect :: " + redis.getConnect());
+//			RedisComm redis = new RedisComm();
+//			
+//			if(redis.getConnect()) {
+//				SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				String realTime = format1.format(System.currentTimeMillis());
+//				ServerLog("", "log redis connection :: " + userIP + " // " + realTime);
+//			}
+//			
+//			RedisManager rm = RedisManager.getInstance();
+//			rm.putRedisPool(userIP, redis);
+//			ServerLog("", "connect :: " + redis.getConnect());
 		}		
     }
 	
@@ -114,15 +111,28 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		// 바이트를 String 형으로 변환합니다.
 		String str = new String(byteMessage);
 		
-		ServerLog("", "client msg rcv :: " + str);
-		userIP = ctx.channel().remoteAddress().toString();
-		String pid = userIP.substring(userIP.indexOf(":")+1);
-		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
+//		ServerLog("", "client msg rcv :: " + str);
+//		userIP = ctx.channel().remoteAddress().toString();
+//		//String pid = userIP.substring(userIP.indexOf(":")+1);
+//		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
 		
-		RedisManager rm = RedisManager.getInstance();
-		RedisComm redis = rm.getRedisPool(userIP);
+		//수신받은 전물을 처리하는 CLASS
+		new ReceptionProcess(str);
 		
-		redis.set(userIP, str);
+//		RedisManager rm = RedisManager.getInstance();
+//		RedisComm redis = rm.getRedisPool(userIP);
+//		
+//		/*
+//		 * 전문이 복수일 경우를 상정하여 packet의 hearder를 읽어서 전문을 분할, 저장 하도록 구성한다.
+//		 */
+//		TelegramSpliter ts = new TelegramSpliter();
+//		List<Map<String, String>> list = ts.getParser(str);
+//		
+//		for(int i = 0; i < list.size(); i++) {	
+//			//redis에 전문을 입력.
+//			redis.set(userIP, list.get(i));
+//			ServerLog("", list.get(i));
+//		}
     	
 		ServerLog("R",str);
 		

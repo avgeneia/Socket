@@ -5,15 +5,15 @@
       	<Col id="DataLen" poz="6" size="4"/>
     </CommHeader>
     <Interface_id>
-    	<Col id="IF0001" code="AK0012"/>
-    	<Col id="IF0002" code="BB0014"/>
+    	<Col id="IF0001" code="AK0012" type="REDIS" key="JOB01"/>
+    	<Col id="IF0002" code="BB0014" type="REDIS" key="JOB01"/>
     </Interface_id>
     <DataSetGroup>
     	<DataSet id="IF0001" >
-	      	<Col id="A" poz="0" size="5"/>
-	      	<Col id="B" poz="5" size="5"/>
-	      	<Col id="C" poz="10" size="5"/>
-	      	<Col id="D" poz="15" size="5"/>
+	      	<Col id="A" poz="0" size="5" type="Str" expr="toInt"/>
+	      	<Col id="B" poz="5" size="5" type="Int" expr=""/>
+	      	<Col id="C" poz="10" size="5" type="Int" expr=""/>
+	      	<Col id="D" poz="15" size="5" type="Int" expr=""/>
       	</DataSet>
     	<DataSet id="IF0002">
 	      	<Col id="A" poz="0" size="5"/>

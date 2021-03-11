@@ -1,7 +1,5 @@
 package com.NettyBoot.Handler;
 
-import java.nio.charset.Charset;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,22 +84,13 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		
 		/** 서버로부터 수신받은 전문 메시지를 ByteBuf형태로 변환한다. jslee */
-		ByteBuf in = (ByteBuf) msg;
+		//ByteBuf in = (ByteBuf) msg;
 		
 		/** 로그찍기용 메시지 형 변환 jslee */
-		String message = in.toString(Charset.forName("utf-8"));
+		//String message = in.toString(Charset.forName("utf-8"));
 		
 	    try {
 	    	
-	    	/** 
-	    	 * 서버로부터 전문 수신을 받았을 때 받은 전문을 바탕으로 
-	    	 * 데이터 가공 후 재 전송하거나 클라이언트 접속 종료하는 메소드.
-	    	 * 
-	    	 * 수신 전문의 맨 앞 세글자가 920이면 930전문 다시 송신,
-	    	 * 940이면 서버에서 파일수신 완료했다는 뜻이므로 접속 종료.
-	    	 * 
-	    	 * jslee
-	    	 *  */
 			//ctx.writeAndFlush(MessageToByteBuf(message, ctx));
 	    } finally {
 	        ReferenceCountUtil.release(msg); // (2)
@@ -147,9 +136,12 @@ public class ServerConnectionHandler extends ChannelInboundHandlerAdapter {
 		if(type.equals("R")) {
 			
 			logger.info("[" + this.clientId + "][RECV] :: " + msg);			
-		} else {
+		} else if(type.equals("S")) {
 			
 			logger.info("[" + this.clientId + "][SEND] :: " + msg);
+		} else {
+			
+			logger.info("[" + this.clientId + "] :: " + msg);
 		}
 	}
 }

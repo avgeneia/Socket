@@ -1,12 +1,10 @@
-package com.NettyBoot.Business;
+package com.NettyBoot.Common;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import com.NettyBoot.VO.DataSetVO;
 import com.NettyBoot.VO.HeaderVO;
+import com.NettyBoot.VO.InterfaceVO;
 import com.NettyBoot.VO.RowVO;
 
 /*
@@ -31,9 +30,9 @@ public class TelegramParser {
 	
 	public static TelegramParser telparser;
 	
-	static List<HeaderVO> commHeaderList = new ArrayList<HeaderVO>();
-	static Map<String, String> interfaceList = new HashMap<String, String>();
-	static List<DataSetVO> dataSetList = new ArrayList<DataSetVO>();
+	public static List<HeaderVO> commHeaderList = new ArrayList<HeaderVO>();
+	public static List<InterfaceVO> interfaceList = new ArrayList<InterfaceVO>();
+	public static List<DataSetVO> dataSetList = new ArrayList<DataSetVO>();
 	
 	public static TelegramParser getInstance() {
 		
@@ -53,6 +52,10 @@ public class TelegramParser {
 	}
 	
 	public TelegramParser() throws ParserConfigurationException, SAXException, IOException {
+		
+		commHeaderList.clear();
+		interfaceList.clear();
+		dataSetList.clear();
 		
 		ClassPathResource cpr = new ClassPathResource("xml" + File.separator + "PACKET.xml");
 
@@ -96,9 +99,16 @@ public class TelegramParser {
 							
 						} else if(Lv1NodeName.contentEquals("Interface_id")) {
 							
-							String key = nnm.getNamedItem("code").getNodeValue();
-							String value = nnm.getNamedItem("id").getNodeValue();
-							interfaceList.put(key, value);
+							InterfaceVO ivo = new InterfaceVO();
+							String id = fn_getItem(nnm, "id");
+							ivo.setId(id);
+							String code = fn_getItem(nnm, "code");
+							ivo.setCode(code);
+							String type = fn_getItem(nnm, "type");
+							ivo.setType(type);
+							String key = fn_getItem(nnm, "key");
+							ivo.setKey(key);
+							interfaceList.add(ivo);
 							
 						} else if(node.getNodeName().equals("DataSet")) {
 							
@@ -116,9 +126,10 @@ public class TelegramParser {
 								RowVO rVO = new RowVO();
 								if(endNode.getAttributes() != null) {
 									
-									String id = endNode.getAttributes().item(0).getNodeValue();
-									int poz = Integer.parseInt(endNode.getAttributes().item(1).getNodeValue());
-									int size = Integer.parseInt(endNode.getAttributes().item(2).getNodeValue());
+									
+									String id = endNode.getAttributes().getNamedItem("id").getChildNodes().item(0).getNodeValue();
+									int poz = Integer.parseInt(endNode.getAttributes().getNamedItem("poz").getChildNodes().item(0).getNodeValue());
+									int size = Integer.parseInt(endNode.getAttributes().getNamedItem("size").getChildNodes().item(0).getNodeValue());
 									
 									rVO.setId(id);
 									rVO.setSize(size);
@@ -137,6 +148,11 @@ public class TelegramParser {
 				}
 			}
 		}
+	}
+	
+	String fn_getItem(NamedNodeMap nnm, String key) {
+		
+		return nnm.getNamedItem(key)!=null?nnm.getNamedItem(key).getNodeValue():"";
 	}
 	
 	//단위테스트용

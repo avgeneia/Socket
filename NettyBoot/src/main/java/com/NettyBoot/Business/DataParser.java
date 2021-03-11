@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.NettyBoot.Common.TelegramParser;
 import com.NettyBoot.VO.DataSetVO;
 import com.NettyBoot.VO.HeaderVO;
+import com.NettyBoot.VO.InterfaceVO;
 import com.NettyBoot.VO.RowVO;
 
 /*
@@ -20,7 +22,7 @@ public class DataParser {
 	
 	private String msg = null;
 	
-	private Map<String, Map<String, String>> dataSet = new HashMap<String, Map<String, String>>();
+	private Map<String, Map<String, Object>> dataSet = new HashMap<String, Map<String, Object>>();
 	
 	List<String> interfaceList = new ArrayList<String>();
 	
@@ -76,14 +78,22 @@ public class DataParser {
 		/* interfaceID 매핑 구간
 		 * 
 		 */
-		Map<String, String> ifl = TelegramParser.interfaceList;
+		List<InterfaceVO> ifl = TelegramParser.interfaceList;
 		
-		String realIf = ifl.get(interfaceID); //code to real interface_id
+		String realIf = ""; //code to real interface_id
+		for(int i = 0; i < ifl.size(); i++) {
+			
+			if(ifl.get(i).getCode().equals(interfaceID)) {
+				
+				realIf = ifl.get(i).getId();
+				break;
+			}
+		}
 		
 		interfaceList.add(realIf);
 		
 		List<DataSetVO> dsl = TelegramParser.dataSetList;
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		for(int i = 0; i < dsl.size(); i++) {
 			
 			for(int j = 0; j < dsl.get(i).getRow().size(); j++) {
@@ -110,14 +120,12 @@ public class DataParser {
 		this.msg = msg;
 	}
 
-	public Map<String, String> getDataSet(String key) {
-		
-		Map<String, String> result = new HashMap<String, String>();
+	public Map<String, Object> getDataSet(String key) {
 		
 		return dataSet.get(key);
 	}
 	
-	public Map<String, Map<String, String>> getDataSet() {
+	public Map<String, Map<String, Object>> getDataSet() {
 		
 		return this.dataSet;
 	}

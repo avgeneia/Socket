@@ -77,13 +77,9 @@ public class JobTemplateParser {
 						if(Lv1NodeName.contentEquals("JobGroup")) {
 							
 							String id = node.getAttributes().item(0).getNodeValue();
-							String redisKey = node.getAttributes().item(1).getNodeValue();
-							int threadCnt = Integer.parseInt(node.getAttributes().item(2).getNodeValue());
 							
 							JobVO vo = new JobVO();
 							vo.setId(id);
-							vo.setRedisKey(redisKey);
-							vo.setThreadCnt(threadCnt);
 							List<Map<String, String>> ifdata = new ArrayList<Map<String, String>>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
 								

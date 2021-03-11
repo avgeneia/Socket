@@ -70,10 +70,15 @@ public class ServerMain {
 		sl.SetPortNo(Integer.parseInt(ini.getIni("Network Interface", "Port")));
 
 		// ClientConnection을 구현한 클래스가 SingleClientManager임을 ServerListener에 알려줌
-		sl.SetClientConnectionImpl(SyncSingleClient.class);
+		//sl.SetClientConnectionImpl(SyncSingleClient.class);
 		
 		// Listening 시작
 		sl.StartListen();
+		
+		//단위테스트 로직
+//		String msg = ini.getIni("Network Interface", "TestMSG");
+//		
+//		new ReceptionProcess(msg);
 	}
 	
 	public void printLog(String msg) {

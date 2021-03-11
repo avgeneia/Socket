@@ -3,12 +3,26 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="com.NettyBoot.DataBase.dao.MainDao">
+<mapper namespace="MainDao">
   	
  	<insert id="insertTest" parameterType="hashMap">
  	INSERT INTO IFDATA
-	(A, B, C, D)
-	VALUES(#{A}, #{B}, #{C}, #{D})
+	(A, B, C, D, FLAG)
+	VALUES(#{A}, #{B}, #{C}, #{D}, 'N')
  	</insert>
+ 	
+ 	<update id="update0003" parameterType="hashMap">
+ 	UPDATE IFDATA
+ 	   SET FLAG = 'Y'
+ 	 WHERE A = #{A}
+ 	   AND B = #{B}
+ 	   AND C = #{C}
+ 	   AND D = #{D}
+ 	</update>
+ 	
+ 	<select id="selecttest" parameterType="hashMap" resultType="hashMap">
+ 	SELECT A, B, C, D
+ 	  FROM IFDATA
+ 	</select>
  	
 </mapper>
