@@ -88,6 +88,8 @@ public class CmmUtil {
 	
 	/**
 	 * 문자열 추출 함수
+	 * @author seolhc
+	 * @since 2021.03.17
 	 * @param arg : 문자열
 	 * @param isp : 시작 포인트
 	 * @param iep : 종료 포인트
@@ -96,5 +98,16 @@ public class CmmUtil {
 	public static String SubStr(String arg, int isp, int iep) {
 		
 		return arg.substring(isp, iep);
+	}
+	
+	/**
+	 * 앞뒤 공백 제거
+	 * @author seolhc
+	 * @since 2021.03.17
+	 * @param arg
+	 * @return
+	 */
+	public static String trim(String arg) {
+		return arg.trim();
 	}
 }

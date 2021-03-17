@@ -36,7 +36,23 @@ public class BusinessItem {
 		
 		String key = data.get("Target");
 		String pattron = data.get("Value");
-		String value = ReadValue(pattron, arg);
+		
+		//String value = ReadValue(pattron, arg);
+		String value = "";
+		
+		
+		/*
+		 * 예외사항을 추가.
+		 * 내부함수사용에 대한.
+		 */
+		if(pattron.indexOf("(") > -1 
+		&& pattron.lastIndexOf(")") == pattron.length() - 1) {
+			
+			Object obj = CallFuntion(pattron, arg);
+			arg.put(key, obj);
+			setResult(arg, 0);
+			return;
+		}
 		
 		int result = -1;
 		
@@ -440,17 +456,7 @@ public class BusinessItem {
 				              .split("`");
 		
 		String result = "";
-		
-		/*
-		 * 예외사항을 추가.
-		 * 내부함수사용에 대한.
-		 */
-		if(pattron.indexOf("(") > -1 
-		&& pattron.lastIndexOf(")") == pattron.length() - 1) {
-			
-			return CallFuntion(pattron, data);
-		}
-		
+				
 		/*
 		 * CASE 1 : 일반 계산식, +1, -1(완료)
 		 * CASE 2 : 그 외, 조회 결과를 원하는 패턴으로 조립
@@ -611,13 +617,11 @@ public class BusinessItem {
 	 * @param data
 	 * @return
 	 */
-	private static String CallFuntion(String pattron, Map<String, Object> data) {
+	private static Object CallFuntion(String pattron, Map<String, Object> gArg) {
 		
 		//이유는 모르겠으나 특정 특수문자에 대한 split 처리가 안되어 1차로 변환하여 처리해야함.
 		pattron = pattron.replaceAll("\\(", "\\<")
 	                     .replaceAll("\\)", "\\>");
-		
-		String result = ""; //반환변수
 		
 		/*
 		 * step 1 : 함수와 입력값을 구분
@@ -645,7 +649,7 @@ public class BusinessItem {
 				arg[i] = Integer.parseInt(args[i]);
 			} else { //변수
 				
-				arg[i] = data.get(args[i]);
+				arg[i] = gArg.get(args[i]);
 			}
 		}
 		
@@ -655,14 +659,16 @@ public class BusinessItem {
 			switch(function.toLowerCase()) {
 			
 				case "substr":
-					result = CmmUtil.SubStr((String)arg[0], (int)arg[1], (int)arg[2]);
-					break;
+					return CmmUtil.SubStr((String)arg[0], (int)arg[1], (int)arg[2]);
+				
+				case "trim":
+					return CmmUtil.trim((String) arg[0]);
 			}
 		} catch(Exception e) {
 			CmmUtil.print("w", "함수 처리 오류 발생.");
 			return null;
 		}
 		
-		return result;
+		return new Object();
 	}
 }

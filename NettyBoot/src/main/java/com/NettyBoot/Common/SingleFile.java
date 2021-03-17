@@ -62,9 +62,7 @@ public class SingleFile {
 
 	/**
 	 * 생성자 2: 파일 풀패스, 백업파일 풀패스를 가지고 객체 생성
-	 * 
 	 * @param fullFilePath : 파일 풀패스
-	 * @param fullBackupfilePath : 백업파일 풀패스
 	 */
 	public SingleFile(String fullFilePath) {
 		mainfile = new File(fullFilePath);
@@ -74,7 +72,6 @@ public class SingleFile {
 
 	/**
 	 * 파일 존재 여부 확인
-	 * 
 	 * @return : 파일이 존재하는지 여부
 	 */
 	public boolean isExist()
