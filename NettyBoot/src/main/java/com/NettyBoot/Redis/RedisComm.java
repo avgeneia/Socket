@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Common.IniFile;
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
@@ -67,9 +68,9 @@ public class RedisComm {
 		}
 	}
 	
-	public String pop(String key) {
+	public String rpop(String key) {
 		redisLog("REDIS pop :: " + key);
-		String lpop = syncCmd.lpop(key);
+		String lpop = syncCmd.rpop(key);
 		
 		return lpop;
 	} 
@@ -86,6 +87,6 @@ public class RedisComm {
 	
 	public void redisLog(String msg) {
 		
-		logger.info(msg);
+		CmmUtil.print("i", msg);
 	}
 }

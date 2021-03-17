@@ -12,19 +12,20 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.DataBase.config.DatabaseConfiguration;
 import com.NettyBoot.Handler.MessageHandler;
 import com.NettyBoot.Redis.RedisComm;
 import com.NettyBoot.VO.JobVO;
 
+/**
+ * 사용안함
+ * @author avgen
+ *
+ */
 public class BusinessThread extends Thread {
-
-	/** Logger */
-	private final Logger logger = LogManager.getLogger(BusinessThread.class);
 
 	int sleep = 0;
 	String interfaceId = "";
@@ -38,16 +39,16 @@ public class BusinessThread extends Thread {
 	
 	JobTemplateParser jp = JobTemplateParser.getInstance();
 	
-	String defaultSql = "MainDao" + ".";
+	String defaultSql = "NettyBoot" + ".";
 	
 	//파일 처리를 위한 전역변수
 	File file = null;
 	BufferedWriter writer = null;
 	
-	public BusinessThread(String redisKey, int sleep) {
+	public BusinessThread(String redisKey, int sleep) throws IOException {
 		// TODO Auto-generated constructor stub
 		
-		printLog("Business init : " + redisKey);
+		CmmUtil.print("i", "Business init : " + redisKey);
 		this.redisKey = redisKey;
 		this.sleep = sleep;
 		this.rc = new RedisComm();
@@ -58,19 +59,19 @@ public class BusinessThread extends Thread {
 	
 	public void run(){
 		
-		printLog("Redis Run : " + this.redisKey);
+		CmmUtil.print("i", "Redis Run : " + this.redisKey);
 		
 		while(true) {
 			
 			int len = (int) rc.getlen(redisKey);
 			
-			printLog("Redis len :: " + len + " :: " + this.redisKey);
+			CmmUtil.print("i", "Redis len :: " + len + " :: " + this.redisKey);
 			
 			for(int i = 0; i < len; i++) {
 	    		
-				printLog("BusinessThread.run :: " + i);
+				CmmUtil.print("i", "BusinessThread.run :: " + i);
 	    		
-	    		String value = rc.pop(redisKey); //queue 인출
+	    		String value = rc.rpop(redisKey); //queue 인출
 	    		
 	    		if(value == null) {
 	    			
@@ -92,15 +93,16 @@ public class BusinessThread extends Thread {
 	    		//스케줄이 널이 아닌경우 진행
 	    		if(vo != null) {
 	    			
-	    			printLog("Run Process :: " + interfaceId);
+	    			CmmUtil.print("i", "Run Process :: " + interfaceId);
 	    			process(vo, row, 1);
 	    		} else {
 	    			
-	    			printLog("잘못된 Interface ID 참조 발생, Thread를 종료합니다.");
+	    			CmmUtil.print("i", "잘못된 Interface ID 참조 발생, Thread를 종료합니다.");
 	    			this.interrupt();
 	    		}
 	    	}
 			
+			System.out.println("Commit.");
 	    	//commit 단위 고려....
 	    	sqlSession.commit();
 	    	
@@ -137,7 +139,7 @@ public class BusinessThread extends Thread {
 		//다음에 실행해야하는 Process 세팅
 		int next = -1; 
 		
-		printLog(index + " :: " + Type + " :: " + data);
+		CmmUtil.print("i", index + " :: " + Type + " :: " + data);
 		switch(Type) {
 		
 			case "Query":
@@ -165,7 +167,7 @@ public class BusinessThread extends Thread {
 				} catch (ScriptException e) {
 					
 					// TODO Auto-generated catch block
-					printLog("조건식 오류 확인 필요.!!! :: " + conditionExpr);
+					CmmUtil.print("w", "조건식 오류 확인 필요.!!! :: " + conditionExpr);
 				}
 				
 				//결과에 따라 다음 프로세스를 진행한다.
@@ -177,7 +179,7 @@ public class BusinessThread extends Thread {
 					next = Integer.parseInt(rowData.get(row).get("FalsePath"));
 				}
 				
-				printLog("::::::::::::::::::::::: conditionExpr :: " + conditionExpr);
+				CmmUtil.print("i", "ConditionExpr :: " + conditionExpr);
 				break;
 				
 			case "FileCreate":
@@ -260,7 +262,7 @@ public class BusinessThread extends Thread {
 				break;
 		}
 
-		printLog("::::::::::::::::::::::: next :: " + next);
+		CmmUtil.print("i", "next :: " + next);
 		//Next 값이 "0" 이면 process를 종료한다.
 		if(next > 0) {
 			
@@ -283,6 +285,16 @@ public class BusinessThread extends Thread {
 			ResultArg = row.get("Result").equals("")||row.get("Result")==null?"DS":row.get("Result");
 		}
 		
+		Map map = data;
+		//쿼리에 사용할 데이터를 준비.
+		if(row.get("Data") != null) {
+			String frontStr = row.get("Data").replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[0];
+			String backStr = row.get("Data").replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[1].replaceAll("\\>", "");
+			
+			List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(frontStr);
+			map = list.get(Integer.parseInt(data.get(backStr).toString()));
+		}
+		
 		int result = 0;
 		try {
 			
@@ -290,33 +302,33 @@ public class BusinessThread extends Thread {
 			
 				case "select":
 					
-					printLog("::::::::::::::::::::::: " + QueryType + "." + sqlId);
-					List<Map<String, String>> list = sqlSession.selectList(defaultSql + sqlId, data);
+					CmmUtil.print("i", "query :: " + QueryType + "." + sqlId);
+					List<Map<String, String>> list = sqlSession.selectList(defaultSql + sqlId, map);
 					data.put(ResultArg, list);
 					data.put(ResultArg + ".size", list.size());
 					break;
 			
 				case "insert":
 					
-					printLog("::::::::::::::::::::::: " + QueryType + "." + sqlId);
-					sqlSession.insert(defaultSql + sqlId, data);
+					CmmUtil.print("i", "query :: " + QueryType + "." + sqlId);
+					sqlSession.insert(defaultSql + sqlId, map);
 					break;
 				case "update":
 					
-					printLog("::::::::::::::::::::::: " + QueryType + "." + sqlId);
-					sqlSession.update(defaultSql + sqlId, data);					
+					CmmUtil.print("i", "query :: " + QueryType + "." + sqlId);
+					sqlSession.update(defaultSql + sqlId, map);			
 					break;
 				case "delete":
 					
-					printLog("::::::::::::::::::::::: " + QueryType + "." + sqlId);
-					sqlSession.delete(defaultSql + sqlId, data);
+					CmmUtil.print("i", "query :: " + QueryType + "." + sqlId);
+					sqlSession.delete(defaultSql + sqlId, map);
 					break;
 			}
 			
 		} catch(Exception e) {
 			
 			result = MessageHandler.ErrHandler(e);
-			printLog("::::::::::::::::::::::: " + e.getCause().getMessage().replaceAll("\n", ""));
+			CmmUtil.print("w", "query :: " + e.getCause().getMessage().replaceAll("\n", ""));
 		}
 		
 		return result;
@@ -326,12 +338,6 @@ public class BusinessThread extends Thread {
 		
 		Class<?> clazz = Class.forName(pkg);
 		return clazz.newInstance();
-	}
-	
-	public void printLog(String msg) {
-		
-		logger.info(msg);
-		//System.out.println(msg);
 	}
 	
 	//조건식을 변환하기 위한 함수
@@ -405,8 +411,13 @@ public class BusinessThread extends Thread {
 		JobVO vo = jp.getJobSchedule(interfaceId);
 		
 		//스케줄이 널이 아닌경우 진행
-		printLog("Run Process :: " + interfaceId);
+		CmmUtil.print("i", "Run Process :: " + interfaceId);
 		process(vo, row, 1);		
+
+		CmmUtil.print("i", "Commit.");
+    	//commit 단위 고려....
+    	sqlSession.commit();
+    	
 	}
 	
 	//select 결과값을 틀에 맞게 재구성하여 리턴.
@@ -495,4 +506,5 @@ public class BusinessThread extends Thread {
 		
 		return result;
 	}
+	
 }

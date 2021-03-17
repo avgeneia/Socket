@@ -1,6 +1,7 @@
 package com.NettyBoot;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -67,7 +68,9 @@ public class NettyBootApplication {
 				break;
 			case "Business":
 				
-				new BusinessMain();
+				Map<String, Object> globalArg = new HashMap<String, Object>();
+				
+				new BusinessMain("MAIN", 1, globalArg);
 				
 				break;
 		}

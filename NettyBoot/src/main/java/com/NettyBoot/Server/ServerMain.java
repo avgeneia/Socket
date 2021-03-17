@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import com.NettyBoot.NettyBootApplication;
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.ProcessInfoGetter;
+import com.NettyBoot.Common.TelegramParser;
 
 public class ServerMain {
 
@@ -74,6 +75,8 @@ public class ServerMain {
 		
 		// Listening 시작
 		sl.StartListen();
+		
+		TelegramParser.getInstance();
 		
 		//단위테스트 로직
 //		String msg = ini.getIni("Network Interface", "TestMSG");

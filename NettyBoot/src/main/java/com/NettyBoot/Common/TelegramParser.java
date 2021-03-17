@@ -126,7 +126,6 @@ public class TelegramParser {
 								RowVO rVO = new RowVO();
 								if(endNode.getAttributes() != null) {
 									
-									
 									String id = endNode.getAttributes().getNamedItem("id").getChildNodes().item(0).getNodeValue();
 									int poz = Integer.parseInt(endNode.getAttributes().getNamedItem("poz").getChildNodes().item(0).getNodeValue());
 									int size = Integer.parseInt(endNode.getAttributes().getNamedItem("size").getChildNodes().item(0).getNodeValue());

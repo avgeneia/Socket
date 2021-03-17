@@ -17,7 +17,16 @@ public class ReceptionProcess {
 	static Logger logger = LogManager.getLogger(ReceptionProcess.class);
 	
 	public ReceptionProcess(String msg) {
-
+		
+		
+		//1. packet.xml load
+		
+		
+		
+		
+		
+		
+		
 		RedisComm rc = new RedisComm();
 		
 		if(!rc.getConnect()) {
