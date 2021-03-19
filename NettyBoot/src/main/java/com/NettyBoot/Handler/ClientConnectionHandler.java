@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Server.ReceptionProcess;
 
 import io.netty.buffer.ByteBuf;
@@ -63,7 +64,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
 		
 		synchronized(sync_conCnt) {
-			ServerLog("", userIP + " connected. connections : " + ++connectedCnt);
+			CmmUtil.print("i", userIP + " connected. connections : " + ++connectedCnt);
 			
 //			RedisComm redis = new RedisComm();
 //			
@@ -83,7 +84,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		synchronized(sync_conCnt) {
-			ServerLog("", userIP + " disconnected. connections : " + --connectedCnt);	
+			CmmUtil.print("i", userIP + " disconnected. connections : " + --connectedCnt);	
 		}
 		
 		//super.channelInactive(ctx);
@@ -94,7 +95,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		
-		ServerLog("", "channelRead !!!");
+		CmmUtil.print("i", "channelRead !!!");
 		
 		// 받은 메시지를 ByteBuf형으로 캐스팅합니다.
 		ByteBuf byteBufMessage = (ByteBuf) msg;
@@ -107,7 +108,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		for(int i = 0 ; i < size; i++){
 			byteMessage[i] = byteBufMessage.getByte(i);
 		}
-
+		
 		// 바이트를 String 형으로 변환합니다.
 		String str = new String(byteMessage);
 		
@@ -134,7 +135,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 //			ServerLog("", list.get(i));
 //		}
     	
-		ServerLog("R",str);
+		CmmUtil.print("i", str);
 		
 	    ctx.write(msg);
 	}
@@ -147,8 +148,8 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		ServerLog("", "exceptionCaught ::" + cause);
-		ctx.close();
+		CmmUtil.print("w", "exceptionCaught ::" + cause);
+		//ctx.close();
 	}
 	
 	/**
@@ -199,7 +200,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             raf = new RandomAccessFile(filePath, "r");
             length = raf.length();
         } catch (Exception e) {
-        	ServerLog("", e.getMessage());
+        	CmmUtil.print("w", e.getMessage());
             return;
         } finally {
             if (length < 0 && raf != null) {
@@ -207,7 +208,7 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             }
         }
 
-        ServerLog("", "File Send Start. file : " + filePath + ", len : " + raf.length());
+        CmmUtil.print("i", "File Send Start. file : " + filePath + ", len : " + raf.length());
         if (ctx.pipeline().get(SslHandler.class) == null) {
             // SSL not enabled - can use zero-copy file transfer.
             ctx.write(new DefaultFileRegion(raf.getChannel(), 0, length));
@@ -217,18 +218,6 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
             ctx.write(new ChunkedFile(raf));
         }
         ctx.flush();
-        ServerLog("", "File Send end. file : " + filePath);
+        CmmUtil.print("i", "File Send end. file : " + filePath);
     }
-	
-	public void ServerLog(String type, String msg) {
-		
-		if(type.equals("R")) {
-			logger.info("[RECV] :: " + msg);			
-		} else if(type.equals("S")) {
-			logger.info("[SEND] :: " + msg);
-		} else {
-			logger.info(msg);
-		}
-
-	}
 }

@@ -9,7 +9,7 @@ public class JobVO {
 	String id;
 	String redisKey;
 	int threadCnt;
-	List<Map<String, String>> rowdata = new ArrayList<Map<String, String>>();
+	List<Map<String, Object>> rowdata = new ArrayList<Map<String, Object>>();
 	
 	public int getThreadCnt() {
 		return threadCnt;
@@ -29,10 +29,10 @@ public class JobVO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public List<Map<String, String>> getRowdata() {
+	public List<Map<String, Object>> getRowdata() {
 		return rowdata;
 	}
-	public void setRowdata(List<Map<String, String>> rowdata) {
+	public void setRowdata(List<Map<String, Object>> rowdata) {
 		this.rowdata = rowdata;
 	}
 }

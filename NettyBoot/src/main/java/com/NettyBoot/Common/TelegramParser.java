@@ -41,10 +41,11 @@ public class TelegramParser {
 			try {
 				
 				telparser = new TelegramParser();
+				
 			} catch (IOException | ParserConfigurationException | SAXException e) {
 				
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				CmmUtil.print("w", e.getMessage());
 			}
 		}
 		

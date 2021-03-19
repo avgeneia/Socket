@@ -11,7 +11,7 @@
 			<Col Index="7"  Item="JobChange" Target="IFID" Next="1"/>
 			<Col Index="8"  Item="Sleep" Time="1" Type="ss" Next="1"/>
 		</Job>
-    	<Job Id="IF0001">
+    	<Job Id="SOX017A">
 	      	<Col Index="1"  Item="Query" QueryType="select" SqlID="selecttest" Result="DS" Next="2" Commit="false"/>
 	      	<Col Index="2"  Item="If" Condition="JobResult`==`0" TruePath="3" FalsePath="11"/>
 	      	<Col Index="3"  Item="FileCreate" Alias="OUT1" Path="D:\Log\OUT.txt" Next="4"/>

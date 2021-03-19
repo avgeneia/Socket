@@ -42,16 +42,16 @@ public class BusinessMain {
 		
 		gIndex = index;
 		
-		Map<String, String> data = new HashMap<String, String>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		for(int i = 0; i < job.getRowdata().size(); i++) {
 			
-			if(Integer.parseInt(job.getRowdata().get(i).get("Index")) == index) {
+			if(Integer.parseInt(job.getRowdata().get(i).get("Index").toString()) == index) {
 				data = job.getRowdata().get(i); 
 				break;
 			}
 		}
 		
-		String item = data.get("Item");
+		String item = (String) data.get("Item");
 
 		CmmUtil.print("i", index + " :: " + item + " :: " + gJobNm + " :: " + gIndex);
 		
@@ -102,6 +102,10 @@ public class BusinessMain {
 				BusinessItem.FileClose(data, globalArg);
 				break;
 			
+			case "StrToPkt":
+				BusinessItem.StrToPkt(data, globalArg);
+				break;
+				
 			case "Commit":
 				BusinessItem.Commit(globalArg);
 				break;
@@ -120,16 +124,17 @@ public class BusinessMain {
 			int next = -1; 
 			if(result == 0) {
 				
-				next = Integer.parseInt(data.get("TruePath"));
+				next = Integer.parseInt(data.get("TruePath").toString());
 			} else {
 				
-				next = Integer.parseInt(data.get("FalsePath"));
+				next = Integer.parseInt(data.get("FalsePath").toString());
 			}
 			
 			MainProcess(job, next);
+			
 		} else {
 			
-			int next = Integer.parseInt(data.get("Next"));
+			int next = Integer.parseInt(data.get("Next").toString());
 			
 			if(next > 0) {
 				

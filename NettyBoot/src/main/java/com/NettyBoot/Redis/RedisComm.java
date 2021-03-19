@@ -37,20 +37,26 @@ public class RedisComm {
 		 redisLog(url);
 		 redisClient = RedisClient.create(RedisURI.create(url));
 		 
-		 connection = redisClient.connect();
-		 syncCmd = connection.sync();
-		 
-		 if(connection.isOpen()) {
+		 try {
 			 
-			 redisLog("REDIS CONNECT!!!");
-		 } else {
+			 connection = redisClient.connect();
+			 syncCmd = connection.sync();
 			 
-			 //예외처리
-			 redisLog("REDIS NOT CONNECT!!!");			 
+			 if(connection.isOpen()) {
+				 
+				 redisLog("REDIS CONNECT!!!");
+			 }
+		 } catch(Exception e) {
+			 
+			 redisLog("REDIS NOT CONNECT!!!");
 		 }
 	}
 	
 	public boolean getConnect() {
+		
+		if(connection == null) {
+			return false;
+		}
 		
 		return connection.isOpen();
 	} 

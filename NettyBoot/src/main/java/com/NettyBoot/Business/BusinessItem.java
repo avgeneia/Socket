@@ -32,14 +32,10 @@ public class BusinessItem {
 	 * @param arg
 	 * @return
 	 */
-	public static void Assign(Map<String, String> data, Map<String, Object> arg) {
+	public static void Assign(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String key = data.get("Target");
-		String pattron = data.get("Value");
-		
-		//String value = ReadValue(pattron, arg);
-		String value = "";
-		
+		String key = (String) data.get("Target");
+		String pattron = (String) data.get("Value");
 		
 		/*
 		 * 예외사항을 추가.
@@ -53,6 +49,8 @@ public class BusinessItem {
 			setResult(arg, 0);
 			return;
 		}
+
+		String value = ReadValue(pattron, arg);
 		
 		int result = -1;
 		
@@ -81,24 +79,34 @@ public class BusinessItem {
 	 * @param arg
 	 * @return int : 음수이면 Error, 양수이면 정상처리
 	 */
-	public static void RedisRPop(Map<String, String> data, Map<String, Object> arg) {
+	public static void RedisRPop(Map<String, Object> data, Map<String, Object> arg) {
 		
 		//Redis 객체
 		RedisComm rc = new RedisComm();
 		int result = -1;
 		
 		if(rc.getConnect() == false) {
-			CmmUtil.print("w", "Redis 연결 안됨.");
-			result = -1;
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 재시도....");
+			rc = new RedisComm();
 		}
 		
-		String redisKey = ReadValue(data.get("Key"), arg);
+		if(rc.getConnect() == false) {
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 종료");
+			result = -1;
+			setResult(arg, result);
+			return;
+		}
+		
+		String redisKey = ReadValue((String) data.get("Key"), arg);
 		
 		String value = "";
-		String key = data.get("Target");
+		String key = (String) data.get("Target");
 		
 		//Redis에 데이터가 있는지 검사
 		if(rc.getlen(redisKey) == 0) {
+			
 			CmmUtil.print("w", "처리할 데이터가 없습니다. :: " + redisKey);
 			result = -1;
 		} else {
@@ -124,7 +132,7 @@ public class BusinessItem {
 	 * @param arg
 	 * @return int : 음수이면 Error, 양수이면 정상처리
 	 */
-	public static void If(Map<String, String> data, Map<String, Object> arg) {
+	public static void If(Map<String, Object> data, Map<String, Object> arg) {
 		
 		//xml에서 읽어온 조건부 String 데이터를 변환하여 진행하기 위한 JS 객체 선언
 		ScriptEngineManager mng = new ScriptEngineManager();
@@ -155,7 +163,7 @@ public class BusinessItem {
 	 * @param row
 	 * @param data
 	 */
-	public static void Query(Map<String, String> row, Map<String, Object> data) {
+	public static void Query(Map<String, Object> row, Map<String, Object> data) {
 
 		//쿼리 처리를 위한 기본 pkg
 		String defaultSql = "NettyBoot" + ".";
@@ -168,21 +176,21 @@ public class BusinessItem {
 			sqlSession = DatabaseConfiguration.getSqlSessionFactory().openSession(false);
 		}
 		
-		String QueryType = row.get("QueryType");
+		String QueryType = (String) row.get("QueryType");
 		
-		String sqlId = row.get("SqlID");
+		String sqlId = (String) row.get("SqlID");
 		
 		String ResultArg = "DS";
 		if(row.get("Result") != null) {
 			
-			ResultArg = row.get("Result").equals("")||row.get("Result")==null?"DS":row.get("Result");
+			ResultArg = row.get("Result").equals("")||row.get("Result")==null?"DS":(String) row.get("Result");
 		}
 		
 		Map<String, Object> map = data;
 		//쿼리에 사용할 데이터를 준비.
 		if(row.get("Data") != null) {
-			String frontStr = row.get("Data").replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[0];
-			String backStr = row.get("Data").replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[1].replaceAll("\\>", "");
+			String frontStr = ((String) row.get("Data")).replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[0];
+			String backStr = ((String) row.get("Data")).replaceAll("\\[", "\\<").replaceAll("\\]", "\\>").split("\\<")[1].replaceAll("\\>", "");
 			
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(frontStr);
@@ -236,7 +244,7 @@ public class BusinessItem {
 	 * @param row
 	 * @param data
 	 */
-	public static void getIFID(Map<String, String> data, Map<String, Object> arg) {
+	public static void getIFID(Map<String, Object> data, Map<String, Object> arg) {
 		
 		//PACKET.xml 파싱결과를 가져옴
 		TelegramParser.getInstance();
@@ -244,7 +252,7 @@ public class BusinessItem {
 		//인터페이스 목록에 대한 정보를 가져옴
 		List<InterfaceVO> list = interfaceList;
 		
-		String jobid = ReadValue(data.get("Value"), arg);
+		String jobid = ReadValue((String) data.get("Value"), arg);
 		
 		for(int i = 0; i < list.size(); i++) {
 			
@@ -253,7 +261,7 @@ public class BusinessItem {
 			}
 		}
 		
-		String key = data.get("Target");
+		String key = (String) data.get("Target");
 		
 		arg.put(key, jobid);
 	}
@@ -265,9 +273,9 @@ public class BusinessItem {
 	 * @param data
 	 * @param arg
 	 */
-	public static void JobChange(Map<String, String> data, Map<String, Object> arg) {
+	public static void JobChange(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String jobNm = ReadValue(data.get("Target"), arg);
+		String jobNm = ReadValue((String) data.get("Target"), arg);
 				
 		try {
 			
@@ -289,10 +297,10 @@ public class BusinessItem {
 	 * @param data
 	 * @param arg
 	 */
-	public static void Sleep(Map<String, String> data, Map<String, Object> arg) {
+	public static void Sleep(Map<String, Object> data, Map<String, Object> arg) {
 		
-		int time = Integer.parseInt(ReadValue(data.get("Time"), arg));
-		String type = data.get("Type");
+		int time = Integer.parseInt(ReadValue((String) data.get("Time"), arg));
+		String type = (String) data.get("Type");
 		
 		switch(type) {
 			case "ss":
@@ -318,9 +326,9 @@ public class BusinessItem {
 	 * @param pattron
 	 * @param data
 	 */
-	public static void FileCreate(Map<String, String> data, Map<String, Object> arg) {
+	public static void FileCreate(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String filePath = data.get("Path");
+		String filePath = (String) data.get("Path");
 		File file = new File(filePath);
 		BufferedWriter writer = null;
 		
@@ -345,7 +353,7 @@ public class BusinessItem {
 			e1.printStackTrace();
 		}
 		
-		String key = data.get("Alias");
+		String key = (String) data.get("Alias");
 		
 		arg.put(key, writer);
 		
@@ -357,13 +365,13 @@ public class BusinessItem {
 	 * @param data
 	 * @param arg
 	 */
-	public static void FileWrite(Map<String, String> data, Map<String, Object> arg) {
+	public static void FileWrite(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String key = data.get("Alias");
+		String key = (String) data.get("Alias");
 		
 		BufferedWriter writer = (BufferedWriter) arg.get(key);
 		
-		String val = ReadValue(data.get("Value"), arg);
+		String val = ReadValue((String) data.get("Value"), arg);
 		
 		if(writer != null) {
 			
@@ -393,17 +401,19 @@ public class BusinessItem {
 	 * @param data
 	 * @param arg
 	 */
-	public static void FileClose(Map<String, String> data, Map<String, Object> arg) {
+	public static void FileClose(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String key = data.get("Alias");
+		String key = (String) data.get("Alias");
 		
 		BufferedWriter writer = (BufferedWriter) arg.get(key);
 		
 		if(writer != null) {
 			
 			try {
+				
 				writer.close();
 			} catch (IOException e) {
+				
 				// TODO Auto-generated catch block
 				CmmUtil.print("w", e.getMessage());
 				setResult(arg, -1);
@@ -436,6 +446,21 @@ public class BusinessItem {
 		sqlSession.commit();
 		sqlSession.close();
 		setResult(arg, 0);
+	}
+	
+	/**
+	 * 문자열을 패킷 구조체로 생성
+	 * @param data
+	 * @param arg
+	 */
+	public static void StrToPkt(Map<String, Object> data, Map<String, Object> arg) {
+		
+		//PACKET.xml 파싱결과를 가져옴
+		TelegramParser.getInstance();
+		
+		//인터페이스 목록에 대한 정보를 가져옴
+		List<InterfaceVO> list = interfaceList;
+		
 	}
 	
 	/**
@@ -628,6 +653,7 @@ public class BusinessItem {
 		 * step 2 : 입력값에 변수가 사용되었는지 확인 및 처리
 		 * step 3 : 함수 호출 및 반환처리
 		 */
+		
 		//step1
 		String function = pattron.split("<")[0]; //함수 분리
 		String[] args = pattron.split("<")[1].replace(">", "").split(","); //입력값 1차 가공
@@ -663,12 +689,98 @@ public class BusinessItem {
 				
 				case "trim":
 					return CmmUtil.trim((String) arg[0]);
+				
+				case "split":
+					return CmmUtil.split((String)arg[0], (String)arg[1]);
+				
+				case "ltrim":
+					return CmmUtil.ltrim((String)arg[0]);
+				
+				case "rtrim":
+					return CmmUtil.rtrim((String)arg[0]);
+				
+				case "replace":
+					return CmmUtil.replace((String)arg[0], (String)arg[1], (String)arg[2]);
+				
+				case "lpad":
+					return CmmUtil.lpad((String)arg[0], (int)arg[1], (String)arg[2]);
+				
+				case "rpad":
+					return CmmUtil.rpad((String)arg[0], (int)arg[1], (String)arg[2]);
+				
+				case "atoi":
+					int i = CmmUtil.atoi((String)arg[0]);
+					
+					if(i == -999) {
+						throw new Exception();
+					}
+					
+					return i;
+				
+				case "atodbl":
+					double dbl = CmmUtil.atodbl((String)arg[0]);
+					
+					if(dbl == -999) {
+						throw new Exception();
+					}
+					
+					return dbl;
+				
+				case "itoa":
+					String str = CmmUtil.itoa((int)arg[0]);
+					
+					if(str == "") {
+						throw new Exception();
+					}
+					
+					return str;
+				
+				case "dbltoa":
+					String dbltos = CmmUtil.dbltoa((double)arg[0]);
+					
+					if(dbltos == "") {
+						throw new Exception();
+					}
+					
+					return dbltos;
+					
+				case "ftostr":
+					return CmmUtil.ftostr((float)arg[0]);
+					
+				case "atof":
+					float atof = CmmUtil.atof((String)arg[0]);
+					
+					if(atof == 0l) {
+						throw new Exception();
+					}
+					
+					return atof;
+				
+				case "getdatetime":
+					return CmmUtil.getdatetime();
+				
+				case "getdate":
+					String sDate = CmmUtil.getdate((int)arg[0]);
+					
+					if(sDate == "") {
+						throw new Exception();
+					}
+					
+					return sDate;
+					
+				case "bcdtochar":
+					return "";
+				
+				case "gettime":
+					return CmmUtil.gettime();
+					
+				default:
+					throw new Exception();
 			}
+			
 		} catch(Exception e) {
 			CmmUtil.print("w", "함수 처리 오류 발생.");
 			return null;
 		}
-		
-		return new Object();
 	}
 }

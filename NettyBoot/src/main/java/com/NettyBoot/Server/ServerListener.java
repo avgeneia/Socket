@@ -2,10 +2,11 @@ package com.NettyBoot.Server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Handler.ClientConnectionHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -16,6 +17,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.AbstractEventExecutor;
+import io.netty.util.concurrent.EventExecutor;
+import io.netty.util.concurrent.Future;
 
 /**
  * 서버 소켓 리스너<br>
@@ -45,12 +49,6 @@ public class ServerListener implements Runnable {
 	
 	/** 비동기 채널 */
 	private ChannelFuture f = null;
-
-	/**
-	 * Logger
-	 */
-	static Logger logger = LogManager.getLogger(ServerListener.class);
-	
 
 	/**
 	 * ClientConnection(추상클래스)를 구현한 클래스 설정
@@ -93,7 +91,7 @@ public class ServerListener implements Runnable {
 	 * Listener 시작
 	 */
 	public void StartListen() {
-		logger.info("=======================  Server IP    : " + this.ipStr);
+		CmmUtil.print("i", "=======================  Server IP    : " + this.ipStr);
 		listenThread = new Thread(this);
 		listenThread.start();
 	}
@@ -102,12 +100,12 @@ public class ServerListener implements Runnable {
 	 * Listener 종료
 	 */
 	public void EndListen() {
-		logger.info("서버 Listener 종료 요청");
+		CmmUtil.print("i", "서버 Listener 종료 요청");
 		
 		// 소켓 닫기
         f.channel().close(); 
 	}
-		
+
 	/**
 	 * Runnable Interface의 run 메소드 구현.
 	 * Listening 하면서, 소켓 접속시마다 ClientConnection구현 클래스의 인스턴스 생성  
@@ -137,20 +135,20 @@ public class ServerListener implements Runnable {
             // Bind and start to accept incoming connections.
             f = b.bind(InetAddress.getByName(ipStr), portNo).sync(); // (7)
 
-            logger.info("Server Listener Started");
+            CmmUtil.print("i", "Server Listener Started");
                                     
             // Wait until the server socket is closed.
             // In this example, this does not happen, but you can do that to gracefully
             // shut down your server.
             f.channel().closeFuture().sync();
         } catch (UnknownHostException e) {
-            logger.error(e);
+        	CmmUtil.print("w", e.getMessage());
 		} catch (InterruptedException e) {
-			logger.error(e);
+			CmmUtil.print("w", e.getMessage());
 		} finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
-            logger.info("Server Listener Stopped"); 
+            CmmUtil.print("i", "Server Listener Stopped"); 
         }
 	}
 		 

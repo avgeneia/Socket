@@ -4,13 +4,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.NettyBoot.Business.BusinessMain;
 import com.NettyBoot.Client.NettyClient;
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.MainApplicationArgument;
 import com.NettyBoot.Server.ServerMain;
@@ -35,15 +34,10 @@ public class NettyBootApplication {
 		// 설정파일 관리자 선언
 		IniFile ini = IniFile.getInstance();
 
-		// logger 생성
-
-		/** Logger */
-		Logger logger = LogManager.getLogger(NettyBootApplication.class);
-		
 		//System 별 Log 출력파일 변경
-		logger.info("==================================================================================");
-		logger.info("=======================  SYSTEM MODE : " + systemMode);
-		logger.info("=======================  GUI PORT    : " + port);
+		CmmUtil.print("i", "==================================================================================");
+		CmmUtil.print("i", "=======================  SYSTEM MODE : " + systemMode);
+		CmmUtil.print("i", "=======================  GUI PORT    : " + port);
 		
 		switch(systemMode) {
 			case "Server":

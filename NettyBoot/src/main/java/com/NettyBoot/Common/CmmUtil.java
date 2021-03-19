@@ -1,9 +1,13 @@
 package com.NettyBoot.Common;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.NettyBoot.Business.BusinessThread;
 
 /**
  * 공통함수를 선언한 클래스
@@ -58,7 +62,7 @@ public class CmmUtil {
 	public static void print(String type, String msg) {
 
 		/** Logger */
-		Logger logger = LogManager.getLogger(BusinessThread.class);
+		Logger logger = LogManager.getLogger(CmmUtil.class);
 		
 		//현재 메소드명 가져오기
 		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
@@ -108,6 +112,305 @@ public class CmmUtil {
 	 * @return
 	 */
 	public static String trim(String arg) {
+		
 		return arg.trim();
+	}
+	
+	/**
+	 * 문자열 자르기
+	 * #java 에서 split 처리 시 특정 특수문자를 거르지 못하는 문제가 발생.
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @param gbn
+	 * @return
+	 */
+	public static String[] split(String arg, String gbn) {
+		
+		//추후에 처리못하는 특수문자 발생시 해당 구문을 사용해서 치환처리
+		switch(gbn) {
+		
+			case "":
+				break;
+				
+			default:
+				break;
+		}
+		
+		return arg.split(gbn);
+	}
+	
+	/**
+	 * 왼쪽 공백제거
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @return
+	 */
+	public static String ltrim(String arg) {
+		
+		return arg.replaceAll("^\\s+","");
+	}
+	
+	/**
+	 * 오른쪽 공백제거
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @return
+	 */
+	public static String rtrim(String arg) {
+		
+		return arg.replaceAll("\\s+$","");
+	}
+	
+	/**
+	 * 문자바꾸기
+	 * #java 에서 특정 특수문자를 거르지 못하는 문제가 발생.
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @return
+	 */
+	public static String replace(String arg, String asis, String tobe) {
+		
+		return arg.replaceAll(asis, tobe);
+	}
+	
+	/**
+	 * 문자열 왼쪽 채우기
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param str
+	 * @param len
+	 * @param addStr
+	 * @return
+	 */
+	public static String lpad(String str, int len, String addStr) {
+		
+        String result = str;
+        
+        int templen   = len - result.length();
+
+        for (int i = 0; i < templen; i++){
+              result = addStr + result;
+        }
+        
+        return result;
+    }
+	
+	/**
+	 * 문자열  오른쪽 채우기
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param str
+	 * @param len
+	 * @param addStr
+	 * @return
+	 */
+	public static String rpad(String str, int len, String addStr) {
+		
+        String result = str;
+        
+        int templen   = len - result.length();
+
+        for (int i = 0; i < templen; i++){
+              result = result + addStr;
+        }
+        
+        return result;
+    }
+	
+	/**
+	 * 문자열 > 숫자 변환
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @return
+	 */
+	public static int atoi(String arg) {
+		
+		int result = -999;
+		
+		try {
+			
+			result = Integer.parseInt(arg);			
+		} catch(Exception e) {
+			
+			return result;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 문자열 > double 변환
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param arg
+	 * @return
+	 */
+	public static double atodbl(String arg) {
+		
+		double result = -999;
+
+		try {
+			
+			result = Double.parseDouble(arg);
+		} catch(Exception e) {
+			
+			return result;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 숫자 > 문자열 변환
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param i
+	 * @return
+	 */
+	public static String itoa(int i) {
+		
+		String str = "";
+		
+		try {
+			
+			str = String.valueOf(i);
+		} catch(Exception e) {
+			
+			return str;
+		}
+		
+		return str;
+	}
+	
+	/**
+	 * double > 문자열 변환
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param d
+	 * @return
+	 */
+	public static String dbltoa(double d) {
+		
+		String str = "";
+		
+		try {
+			
+			str = String.valueOf(d);
+		} catch(Exception e) {
+			
+			return str;
+		}
+		
+		return str;
+	}
+	
+	/**
+	 * float > 문자열 변환(소수점 이하 버림)
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param f
+	 * @return
+	 */
+	public static String ftostr(float f) {
+		
+		int i = Math.round(f);
+		
+		String str = String.valueOf(i);
+		
+		return str;
+	}
+	
+	/**
+	 * float형 문자열 > float 변환
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param str
+	 * @return
+	 */
+	public static float atof(String str) {
+		
+		float f = 0l;
+		
+		try {
+			
+			f = Float.parseFloat(str);
+		} catch(Exception e) {
+			
+			return f;
+		}
+		
+		return f;
+	}
+	
+	/**
+	 * 현재 날짜 + 시간 구하기(YYYYMMDDHH24MISS)
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @return
+	 */
+	public static String getdatetime() {
+
+		DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String datestr = format.format(Calendar.getInstance().getTime());
+
+		return datestr;
+	}
+	
+	/**
+	 * 날짜 구하기(YYYYMMDD)
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @param day 0:당일/음수:전일/양수:익일 
+	 * @return
+	 */
+	public static String getdate(int day) {
+		
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMdd");
+		
+		String date = "";
+		
+		if(day == 0) { //오늘 날짜
+			
+			date = dtFormat.format(Calendar.getInstance().getTime());
+		} else { //양수, 음수
+			
+			Calendar cal = Calendar.getInstance();
+			date = dtFormat.format(Calendar.getInstance().getTime());
+			
+			try {
+				
+				Date dt = dtFormat.parse(date);
+				cal.setTime(dt);
+				cal.add(Calendar.DATE, day);
+				
+				date = dtFormat.format(cal.getTime());
+			} catch (ParseException e) {
+				
+				// TODO Auto-generated catch block
+				return date;
+			}
+
+		} 
+		
+		return date;
+	}
+	
+	/**
+	 * 현재시간 구하기 (HH24MISS)
+	 * @author seolhc
+	 * @since 2021.03.18
+	 * @return
+	 */
+	public static String gettime() {
+		
+		DateFormat format = new SimpleDateFormat("HHmmss");
+		String datestr = format.format(Calendar.getInstance().getTime());
+		
+		return datestr;
 	}
 }

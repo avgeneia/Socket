@@ -23,10 +23,6 @@ public class ReceptionProcess {
 		
 		
 		
-		
-		
-		
-		
 		RedisComm rc = new RedisComm();
 		
 		if(!rc.getConnect()) {

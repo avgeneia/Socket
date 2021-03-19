@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RULE>
 	<CommHeader>
-      	<Col id="HeaderID" poz="0" size="6" type="Int"/>
-      	<Col id="DataLen" poz="6" size="4" type="Int"/>
+      	<Col id="CommHeader" poz="0" size="30"/>
     </CommHeader>
     <Interface_id>
-    	<Col id="IF0001" code="AK0012" type="REDIS" key="JOB01"/>
-    	<Col id="IF0002" code="BB0014" type="REDIS" key="JOB01"/>
+    	<Col id="SOX017A" code="017A" type="REDIS" key="JOB01"/>
     </Interface_id>
     <DataSetGroup>
-    	<DataSet id="IF0001" >
-    		<Col header="CommHeader"/> 
-	      	<Col id="A" poz="0" size="5" type="Str" expr="toInt"/>
-	      	<Col id="B" poz="5" size="5" type="Int" expr=""/>
-	      	<Col id="C" poz="10" size="5" type="Int" expr=""/>
-	      	<Col id="D" poz="15" size="5" type="Int" expr=""/>
-      	</DataSet>
-    	<DataSet id="IF0002">
-    		<Col header="CommHeader"/>
-	      	<Col id="A" poz="0" size="5"/>
-	      	<Col id="B" poz="5" size="5"/>
-	      	<Col id="C" poz="10" size="5"/>
-	      	<Col id="D" poz="15" size="5"/>
+    	<DataSet id="SMS_HEADER">
+    		<Col id="ExtrStaNo" poz="0" size="2" type="Int" expr="HexToBigInt"/>
+			<Col id="EqpNo" poz="2" size="1" type="Int" expr="HexToBigInt"/>
+			<Col id="EqpType" poz="3" size="1" type="Int" expr="HexToBigInt"/>
+			<Col id="CommSndSeq"  poz="4" size="4" type="Int" expr="HexToBigInt"/>
+			<Col id="SndDTime"  poz="8" size="7" type="Int" expr="HexToStr"/>
+			<Col id="CmdCode" poz="15" size="2" type="Hex" expr="HexToBig"/>
+			<Col id="CmdCodeSndSeq" poz="17" size="4" type="Int" expr="HexToBigInt"/>
+			<Col id="CnqeCode"  poz="21" size="1" type="Int" expr="HexToBigInt"/>
+			<Col id="MsgSize" poz="22" size="4" type="Int" expr="HexToBigInt"/>
+			<Col id="RecordCnt" poz="26" size="2" type="Int" expr="HexToBigInt"/>
+			<Col id="RecordSize"  poz="28" size="2" type="Int" expr="HexToBigInt"/>
+			<Col id="FileYN"  poz="30" size="1" type="Int" expr="HexToBigInt"/>
+			<Col id="RetryYN" poz="31" size="1" type="Str" expr="HexToBigChar"/>
+			<Col id="EqpMode" poz="32" size="4" type="Int" expr="HexToBigInt"/>
+			<Col id="EqpStat" poz="36" size="6" type="Int" expr="HexToBigInt"/>
+    	</DataSet>
+    	<DataSet id="SOX017A">
+	      	<Col id="IO_TEMPER" poz="64" size="1" type="Int" expr="HexToBigInt"/>
+	      	<Col id="RF_TEMPER" poz="65" size="1" type="Int" expr="HexToBigInt"/>
       	</DataSet>
     </DataSetGroup>
 </RULE>

@@ -1,17 +1,10 @@
 package com.NettyBoot.Server;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.xml.sax.SAXException;
-
-import com.NettyBoot.NettyBootApplication;
+import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Common.IniFile;
 import com.NettyBoot.Common.ProcessInfoGetter;
 import com.NettyBoot.Common.TelegramParser;
@@ -21,26 +14,19 @@ public class ServerMain {
 	/** 서버 소켓 Listener */
 	static ServerListener sl = null;	
 
-	/** Logger */
-	static Logger logger = null;
-	
 	public ServerMain() throws NumberFormatException, IOException {
 
 		// logger 생성
-		logger = LogManager.getLogger(NettyBootApplication.class);
-		
 		try {
-			
+
 			Init();		
 			
 			String pInfo = ProcessInfoGetter.getPid();
+			CmmUtil.print("i", "==================================================================================");
+			CmmUtil.print("i", "=======================  SYNC SERVER START");
+			CmmUtil.print("i", "=======================  [" + pInfo + "]");
+			CmmUtil.print("i", "==================================================================================");
 			
-			printLog("==================================================================================");
-			printLog("=======================  SYNC SERVER START");
-			printLog("=======================  [" + pInfo + "]");
-			printLog("==================================================================================");
-			
-			//System.out.println("Initialized. type 'exit' to exit.");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			while (true) {
 				
@@ -53,16 +39,19 @@ public class ServerMain {
 			}
 		} catch (Exception e) {
 			
-			printLog(e.getMessage());
+			CmmUtil.print("w", e.getMessage());
 		}
 		
 	}
 	
-	public static void Init() throws FileNotFoundException, IOException, ParserConfigurationException, SAXException {
+	public static void Init() {
+		
+		//packet 파싱
+		TelegramParser.getInstance();
 		
 		// 설정파일 관리자 선언
 		IniFile ini = IniFile.getInstance();
-
+		
 		// Socket listener 생성
 		sl = new ServerListener();
 		
@@ -71,22 +60,25 @@ public class ServerMain {
 		sl.SetPortNo(Integer.parseInt(ini.getIni("Network Interface", "Port")));
 
 		// ClientConnection을 구현한 클래스가 SingleClientManager임을 ServerListener에 알려줌
-		//sl.SetClientConnectionImpl(SyncSingleClient.class);
+		sl.SetClientConnectionImpl(SyncSingleClient.class);
 		
 		// Listening 시작
 		sl.StartListen();
 		
-		TelegramParser.getInstance();
-		
 		//단위테스트 로직
-//		String msg = ini.getIni("Network Interface", "TestMSG");
-//		
-//		new ReceptionProcess(msg);
+		String msg = ini.getIni("Server", "MSG");
+		
+		new ReceptionProcess(msg);
 	}
 	
-	public void printLog(String msg) {
+	public static byte[] hexStringToByteArray(String s) {
 		
-		// 설정파일 관리자 선언
-		logger.info(msg);
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
 	}
 }

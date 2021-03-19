@@ -80,7 +80,7 @@ public class JobTemplateParser {
 							
 							JobVO vo = new JobVO();
 							vo.setId(id);
-							List<Map<String, String>> ifdata = new ArrayList<Map<String, String>>();
+							List<Map<String, Object>> ifdata = new ArrayList<Map<String, Object>>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
 								
 								if(node.getChildNodes().item(j).getAttributes() == null) {
@@ -89,7 +89,7 @@ public class JobTemplateParser {
 								
 								NamedNodeMap nnm = node.getChildNodes().item(j).getAttributes();
 								
-								Map<String, String> att = new HashMap<String, String>();
+								Map<String, Object> att = new HashMap<String, Object>();
 								for(int k = 0; k < nnm.getLength(); k++) {
 									
 									String key = nnm.item(k).getNodeName();
