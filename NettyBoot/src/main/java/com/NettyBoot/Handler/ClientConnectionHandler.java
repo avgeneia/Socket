@@ -3,6 +3,8 @@ package com.NettyBoot.Handler;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -10,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
+import com.NettyBoot.Business.BusinessItem;
 import com.NettyBoot.Common.CmmUtil;
 import com.NettyBoot.Server.ReceptionProcess;
 
@@ -37,6 +40,8 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 	
 	/** Logger */
 	static Logger logger = LogManager.getLogger(ClientConnectionHandler.class);
+	
+	static List<String> returnMsg = new ArrayList<String>();
 	
 	/** 접속자 IP */
 	private String userIP = null;
@@ -108,41 +113,27 @@ public abstract class ClientConnectionHandler extends ChannelInboundHandlerAdapt
 		for(int i = 0 ; i < size; i++){
 			byteMessage[i] = byteBufMessage.getByte(i);
 		}
+
+		String pp = CmmUtil.byteArrayToHexString(byteMessage,0,byteMessage.length);
+		CmmUtil.print("i", pp);
 		
 		// 바이트를 String 형으로 변환합니다.
-		String str = new String(byteMessage);
-		
-//		ServerLog("", "client msg rcv :: " + str);
-//		userIP = ctx.channel().remoteAddress().toString();
-//		//String pid = userIP.substring(userIP.indexOf(":")+1);
-//		userIP = userIP.substring(1, userIP.lastIndexOf(":"));
+		//String str = new String(byteMessage);
 		
 		//수신받은 전물을 처리하는 CLASS
-		new ReceptionProcess(str);
-		
-//		RedisManager rm = RedisManager.getInstance();
-//		RedisComm redis = rm.getRedisPool(userIP);
+//		ReceptionProcess rp = new ReceptionProcess(byteMessage);
+//		String ackMsg = rp.getAckMsg();
 //		
-//		/*
-//		 * 전문이 복수일 경우를 상정하여 packet의 hearder를 읽어서 전문을 분할, 저장 하도록 구성한다.
-//		 */
-//		TelegramSpliter ts = new TelegramSpliter();
-//		List<Map<String, String>> list = ts.getParser(str);
-//		
-//		for(int i = 0; i < list.size(); i++) {	
-//			//redis에 전문을 입력.
-//			redis.set(userIP, list.get(i));
-//			ServerLog("", list.get(i));
+//		if (ackMsg != null || ackMsg != "") {
+//			ctx.write(ackMsg);
 //		}
-    	
-		CmmUtil.print("i", str);
-		
-	    ctx.write(msg);
+
+	    ctx.write(pp);
 	}
 	
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-
+		
 		ctx.flush();
 	}
 	

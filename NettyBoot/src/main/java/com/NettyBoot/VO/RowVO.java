@@ -5,7 +5,28 @@ public class RowVO {
 	String id;
 	int poz;
 	int size;
+	String type;
+	String expr;
+	Object value;
 	
+	public Object getValue() {
+		return value;
+	}
+	public void setValue(Object value) {
+		this.value = value;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getExpr() {
+		return expr;
+	}
+	public void setExpr(String expr) {
+		this.expr = expr;
+	}
 	public String getId() {
 		return id;
 	}

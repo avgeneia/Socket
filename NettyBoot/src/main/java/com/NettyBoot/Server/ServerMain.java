@@ -19,6 +19,7 @@ public class ServerMain {
 		// logger 생성
 		try {
 
+
 			Init();		
 			
 			String pInfo = ProcessInfoGetter.getPid();
@@ -68,7 +69,7 @@ public class ServerMain {
 		//단위테스트 로직
 		String msg = ini.getIni("Server", "MSG");
 		
-		new ReceptionProcess(msg);
+		new ReceptionProcess(CmmUtil.hexStringToByteArray(msg));
 	}
 	
 	public static byte[] hexStringToByteArray(String s) {

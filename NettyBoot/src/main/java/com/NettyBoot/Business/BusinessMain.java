@@ -69,6 +69,14 @@ public class BusinessMain {
 			case "RedisRPop":
 				BusinessItem.RedisRPop(data, globalArg);
 				break;
+			
+			case "RedisLLen":
+				BusinessItem.RedisLLen(data, globalArg);
+				break;
+			
+			case "RedisLPush":
+				BusinessItem.RedisLPush(data, globalArg);
+				break;
 				
 			case "If":
 				BusinessItem.If(data, globalArg);
@@ -76,6 +84,10 @@ public class BusinessMain {
 				
 			case "GetIFID":
 				BusinessItem.getIFID(data, globalArg);
+				break;
+				
+			case "GetKey":
+				BusinessItem.getKey(data, globalArg);
 				break;
 			
 			case "JobChange":
@@ -105,9 +117,17 @@ public class BusinessMain {
 			case "StrToPkt":
 				BusinessItem.StrToPkt(data, globalArg);
 				break;
+			
+			case "PktToStr":
+				BusinessItem.PktToStr(data, globalArg);
+				break;
 				
 			case "Commit":
 				BusinessItem.Commit(globalArg);
+				break;
+			
+			case "Format":
+				BusinessItem.Format(data, globalArg);
 				break;
 				
 			default:

@@ -20,7 +20,9 @@ import com.NettyBoot.Common.TelegramParser;
 import com.NettyBoot.DataBase.config.DatabaseConfiguration;
 import com.NettyBoot.Handler.MessageHandler;
 import com.NettyBoot.Redis.RedisComm;
+import com.NettyBoot.VO.DataSetVO;
 import com.NettyBoot.VO.InterfaceVO;
+import com.NettyBoot.VO.RowVO;
 
 public class BusinessItem {
 	
@@ -49,8 +51,8 @@ public class BusinessItem {
 			setResult(arg, 0);
 			return;
 		}
-
-		String value = ReadValue(pattron, arg);
+		
+		Object value = ReadValue(pattron, arg);
 		
 		int result = -1;
 		
@@ -82,7 +84,7 @@ public class BusinessItem {
 	public static void RedisRPop(Map<String, Object> data, Map<String, Object> arg) {
 		
 		//Redis 객체
-		RedisComm rc = new RedisComm();
+		RedisComm rc = RedisComm.getInstance();
 		int result = -1;
 		
 		if(rc.getConnect() == false) {
@@ -99,7 +101,7 @@ public class BusinessItem {
 			return;
 		}
 		
-		String redisKey = ReadValue((String) data.get("Key"), arg);
+		String redisKey = (String) ReadValue((String) data.get("Key"), arg);
 		
 		String value = "";
 		String key = (String) data.get("Target");
@@ -122,6 +124,71 @@ public class BusinessItem {
 		}
 		
 		setResult(arg, result);
+	}
+	
+	/**
+	 * Redis에 값을 저장하기 위한 메소드
+	 * @param data
+	 * @param arg
+	 */
+	public static void RedisLPush(Map<String, Object> data, Map<String, Object> arg) {
+		
+		//Redis 객체
+		RedisComm rc = RedisComm.getInstance();
+		int result = -1;
+		
+		if(rc.getConnect() == false) {
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 재시도....");
+			rc = new RedisComm();
+		}
+		
+		if(rc.getConnect() == false) {
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 종료");
+			result = -1;
+			setResult(arg, result);
+			return;
+		}
+		
+		String redisKey = (String) ReadValue((String) data.get("Key"), arg);
+		String value = (String) ReadValue((String) data.get("Value"), arg);
+		rc.set(redisKey, value);
+		setResult(arg, 0);
+	}
+	
+	/**
+	 * Redis에서 데이터 개수를 가져오는 메소드
+	 * @param data
+	 * @param arg
+	 */
+	public static void RedisLLen(Map<String, Object> data, Map<String, Object> arg) {
+		
+		//Redis 객체
+		RedisComm rc = RedisComm.getInstance();
+		int result = -1;
+		
+		if(rc.getConnect() == false) {
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 재시도....");
+			rc = new RedisComm();
+		}
+		
+		if(rc.getConnect() == false) {
+			
+			CmmUtil.print("w", "Redis 연결 안됨. 종료");
+			result = -1;
+			setResult(arg, result);
+			return;
+		}
+		
+		String redisKey = (String) ReadValue((String) data.get("Key"), arg);
+		String key = (String) data.get("Target");
+		int len = (int) rc.getlen(redisKey);
+		
+		arg.put(key, len);
+		
+		setResult(arg, 0);
 	}
 	
 	/**
@@ -252,7 +319,7 @@ public class BusinessItem {
 		//인터페이스 목록에 대한 정보를 가져옴
 		List<InterfaceVO> list = interfaceList;
 		
-		String jobid = ReadValue((String) data.get("Value"), arg);
+		String jobid = (String) ReadValue((String) data.get("Value"), arg);
 		
 		for(int i = 0; i < list.size(); i++) {
 			
@@ -266,6 +333,29 @@ public class BusinessItem {
 		arg.put(key, jobid);
 	}
 	
+	public static void getKey(Map<String, Object> data, Map<String, Object> arg) {
+		
+		//PACKET.xml 파싱결과를 가져옴
+		TelegramParser.getInstance();
+		
+		//인터페이스 목록에 대한 정보를 가져옴
+		List<InterfaceVO> list = interfaceList;
+		
+		String jobid = (String) ReadValue((String) data.get("Value"), arg);
+		
+		for(int i = 0; i < list.size(); i++) {
+			
+			if(list.get(i).getCode().equals(jobid)) {
+				jobid = list.get(i).getKey();
+			}
+		}
+		
+		String key = data.get("Target").toString();
+		
+		arg.put(key, jobid);
+		setResult(arg, 0);
+	}
+	
 	/**
 	 * Sub Job을 실행하기 위한 메소드
 	 * @author seolhc
@@ -275,10 +365,10 @@ public class BusinessItem {
 	 */
 	public static void JobChange(Map<String, Object> data, Map<String, Object> arg) {
 		
-		String jobNm = ReadValue((String) data.get("Target"), arg);
+		String jobNm = (String) ReadValue((String) data.get("Target"), arg);
 				
 		try {
-			
+			 
 			new BusinessMain(jobNm, 1, arg);
 		} catch (Exception e) {
 			
@@ -287,6 +377,7 @@ public class BusinessItem {
 			setResult(arg, -1);
 			return;
 		}
+		
 		setResult(arg, 0);
 	}
 	
@@ -299,7 +390,7 @@ public class BusinessItem {
 	 */
 	public static void Sleep(Map<String, Object> data, Map<String, Object> arg) {
 		
-		int time = Integer.parseInt(ReadValue((String) data.get("Time"), arg));
+		int time = Integer.parseInt((String) ReadValue((String) data.get("Time"), arg));
 		String type = (String) data.get("Type");
 		
 		switch(type) {
@@ -371,7 +462,7 @@ public class BusinessItem {
 		
 		BufferedWriter writer = (BufferedWriter) arg.get(key);
 		
-		String val = ReadValue((String) data.get("Value"), arg);
+		String val = (String) ReadValue((String) data.get("Value"), arg);
 		
 		if(writer != null) {
 			
@@ -450,6 +541,8 @@ public class BusinessItem {
 	
 	/**
 	 * 문자열을 패킷 구조체로 생성
+	 * @author seolhc
+	 * @since 2021.03.22
 	 * @param data
 	 * @param arg
 	 */
@@ -459,8 +552,66 @@ public class BusinessItem {
 		TelegramParser.getInstance();
 		
 		//인터페이스 목록에 대한 정보를 가져옴
-		List<InterfaceVO> list = interfaceList;
+		List<DataSetVO> dsList = TelegramParser.dataSetList;
+
+		String key = (String) data.get("DataSet");
 		
+		byte[] target = null;
+		String str = "";
+		
+		for(int i = 0; i < dsList.size(); i++) {
+		//SMS_HEADER, SOX017A
+			
+			if(dsList.get(i).getId().equals(key) == false) {
+				continue;
+			}
+			
+			String dsType = dsList.get(i).getType();
+			List<RowVO> row = dsList.get(i).getRow();
+			
+			if(dsType.equals("Byte")) {
+				
+				target = (byte[]) ReadValue((String) data.get("Value"), arg);
+				packetToByte(row, key, target, arg);
+			} else {
+				
+				str = ReadValue((String) data.get("Value"), arg).toString();
+				packetToStr(row, key, str, arg);
+			}
+		}		
+		
+		setResult(arg, 0);
+	}
+	
+	/**
+	 * 패킷구조체를 문자열로 생성
+	 * @author seolhc
+	 * @since 2021.03.16
+	 * @param data
+	 * @param globalArg
+	 */
+	public static void PktToStr(Map<String, Object> data, Map<String, Object> globalArg) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * 
+	 * @param globalArg
+	 */
+	public static void Format(Map<String, Object> data, Map<String, Object> globalArg) {
+		// TODO Auto-generated method stub
+		String format = (String) data.get("Format");
+		String[] valueArr = data.get("ValueArray").toString().split("\\|");
+		Object[] valObj = new Object[valueArr.length];
+		String Key = data.get("Target").toString();
+		
+		for(int i = 0; i < valueArr.length; i++) {
+			valObj[i] = ReadValue(valueArr[i], globalArg);
+		}
+		
+		globalArg.put(Key, String.format(format, valObj));
+		setResult(globalArg, 0);
 	}
 	
 	/**
@@ -472,15 +623,27 @@ public class BusinessItem {
 	 * @param data
 	 * @return
 	 */
-	private static String ReadValue(String pattron, Map<String, Object> data) {
+	private static Object ReadValue(String pattron, Map<String, Object> data) {
+		
+		/*
+		 * 예외사항을 추가.
+		 * 내부함수사용에 대한.
+		 */
+		if(pattron.indexOf("(") > -1 
+		&& pattron.lastIndexOf(")") == pattron.length() - 1) {
+			
+			Object obj = CallFuntion(pattron, data);
+			
+			return obj;
+		}
 		
 		//특수문자 제약이 걸려있어서 해당 특수문자를 치환해서 처리
-		String[] arg = pattron.replaceAll("\\.", ",")
+		String[] arg = pattron//.replaceAll("\\.", ",")
 				              .replaceAll("\\[", "\\<")
 				              .replaceAll("\\]", "\\>")
 				              .split("`");
 		
-		String result = "";
+		Object result = "";
 				
 		/*
 		 * CASE 1 : 일반 계산식, +1, -1(완료)
@@ -510,13 +673,20 @@ public class BusinessItem {
 						String front = arg[i].split(",")[0];
 						String back = arg[i].split(",")[1];
 						
-						String b = front.split("\\<")[0];
-						int c = Integer.parseInt(data.get(front.split("<")[1].replaceAll(">", "")).toString());
-						
-						@SuppressWarnings("unchecked")
-						List<Map<String, String>> list = (List<Map<String, String>>) data.get(b);
-						Map<String, String> row = list.get(c);
-						result += row.get(back);
+						//list구조의 변수인지 확인.
+						if(front.indexOf("<") > -1) {
+							
+							String b = front.split("\\<")[0];
+							int c = Integer.parseInt(data.get(front.split("<")[1].replaceAll(">", "")).toString());
+							
+							@SuppressWarnings("unchecked")
+							List<Map<String, String>> list = (List<Map<String, String>>) data.get(b);
+							Map<String, String> row = list.get(c);
+							result += row.get(back);
+						} else {
+							
+							result = (String) data.get(front + "." + back);
+						}
 						
 					} else if(arg[i].indexOf("'") == 0
 						   && arg[i].lastIndexOf("'") == arg[i].length() - 1) {
@@ -532,7 +702,7 @@ public class BusinessItem {
 						if(arg[i].matches(regExp)) {
 							result += arg[i];
 						} else {
-							result += data.get(arg[i]);
+							result = data.get(arg[i]);
 						}
 					}
 					
@@ -540,21 +710,21 @@ public class BusinessItem {
 			}
 		}
 		
-		if(result.indexOf("+") > -1
-		|| result.indexOf("-") > -1
-		|| result.indexOf("*") > -1
-		|| result.indexOf("/") > -1) {
-			
-			ScriptEngineManager mng = new ScriptEngineManager();
-			ScriptEngine eng = mng.getEngineByName("js");
-			
-			try {
-				result = eng.eval(result).toString();
-			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		if(result.indexOf("+") > -1
+//		|| result.indexOf("-") > -1
+//		|| result.indexOf("*") > -1
+//		|| result.indexOf("/") > -1) {
+//			
+//			ScriptEngineManager mng = new ScriptEngineManager();
+//			ScriptEngine eng = mng.getEngineByName("js");
+//			
+//			try {
+//				result = eng.eval(result).toString();
+//			} catch (ScriptException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		
 		return result;
 	}
@@ -610,7 +780,13 @@ public class BusinessItem {
 						 */
 						
 						//정규식의로 값을 확인하여 숫자의 경우 형번환하여 처리한다. ex) 00013 => 13
-						result += data.get(arg[i]);
+						if(data.get(arg[i]) instanceof Integer) {
+							
+							result += data.get(arg[i]);
+						} else {
+							
+							result += "\'" + data.get(arg[i]) + "\'";
+						}						
 					}
 					
 					break;
@@ -631,6 +807,137 @@ public class BusinessItem {
 	private static void setResult(Map<String, Object> arg, int result) {
 		
 		arg.put("JobResult", result);
+	}
+	
+	/**
+	 * *NOT ITEM*
+	 * Byte Array(hex) To Int
+	 * @author seolhc
+	 * @since 2021.03.22
+	 * @param hexbyte
+	 * @return
+	 */
+	private static int toInt(byte[] hexbyte) {
+		
+		/* hexbyte에 16진수가 들어가 있음 */
+
+		StringBuffer sb = new StringBuffer(hexbyte.length * 2);
+		String hexaDecimal;
+
+		/* Hex byte[] to  Hex String */
+		for(int x = 0; x < hexbyte.length; x++)
+		{
+			hexaDecimal = "0" + Integer.toHexString(0xff & hexbyte[x]);
+			sb.append( hexaDecimal.substring(hexaDecimal.length()-2));
+		}
+
+		/* Hex String  to   Decimal int */
+		int decimal = Integer.parseInt(sb.toString(),16);
+		
+		return decimal;
+	}
+	
+	/**
+	 * packet 구조체에 문자열 데이터를 분할해서 체운다.
+	 * @param row
+	 * @param key
+	 * @param target
+	 * @param arg
+	 */
+	private static void packetToStr(List<RowVO> row, String key, String Str, Map<String, Object> arg) {
+		
+		for(int i = 0; i < row.size(); i++) {
+			
+			RowVO rowData = row.get(i);
+			int poz = rowData.getPoz();
+			int size = rowData.getSize();
+			String id = key + "." + rowData.getId();
+			
+			String value = Str.substring(poz, poz + size);
+			CmmUtil.print("d", " ID :: " + id + " // VALUE :: " + value);
+			arg.put(id, value);
+		}
+	}
+	
+	/**
+	 * *NOT ITEM*
+	 * packet 구조체를 byte데이터를 가지고 구성한다.
+	 * @param row
+	 * @param key
+	 * @param target
+	 * @param arg
+	 */
+	private static void packetToByte(List<RowVO> row, String key, byte[] target, Map<String, Object> arg) {
+		
+		for(int n = 0; n < row.size(); n++) {
+			
+			RowVO rowData = row.get(n);
+			int poz = rowData.getPoz();
+			int size = rowData.getSize();
+			String id = key + "." + rowData.getId();
+			
+			if(target.length == poz) {
+				break;
+			}
+			
+			RowVO result = new RowVO();
+			
+			switch(rowData.getExpr()) {
+				
+				case "HexToBigInt":
+					
+					int iHexTBI = CmmUtil.hexToBigInt(target, poz, poz + size);
+					
+					result.setId(id);
+					result.setValue(iHexTBI);
+					break;
+				
+				case "HexToStr":
+					
+					String sHexTS = CmmUtil.hexToStr(target, poz, poz + size);
+					
+					result.setId(id);
+					result.setValue(sHexTS);
+					break;
+				
+				case "HexToBig":
+					
+					String sHexToB = CmmUtil.hexToBig(target, poz, poz + size);
+					       
+					result.setId(id);
+					result.setValue(sHexToB);
+					break;
+				
+				case "HexToBigChar":
+					
+					char cHexTBC = CmmUtil.hexToBigChar(target, poz, poz + size);
+
+					result.setId(id);
+					result.setValue(cHexTBC);
+					break;
+				
+				case "StrToBCD":
+					String sStrToBCD = CmmUtil.strToBCD(target, poz, poz + size);
+					
+					result.setId(id);
+					result.setValue(sStrToBCD);
+					break;
+				
+				case "HexToAscii":
+					
+					String sHexToAscii = CmmUtil.hexToAscii(target, poz, poz + size);
+					
+					result.setId(id);
+					result.setValue(sHexToAscii);
+					break;
+					
+				default:
+					break;
+			}
+			
+			CmmUtil.print("d", " ID :: " + result.getId() + " // VALUE :: " + result.getValue());
+			arg.put(result.getId(), result.getValue());
+		}
 	}
 	
 	/**
@@ -668,7 +975,7 @@ public class BusinessItem {
 			//변수가 아닌 일반 string
 			if(args[i].indexOf("'") == 0
 			&& args[i].lastIndexOf("'") == args[i].length() - 1) {
-				
+				 
 				arg[i] = args[i].replaceAll("'", ""); 
 			} else if(args[i].matches(regExp)) { //숫자
 				
@@ -686,7 +993,10 @@ public class BusinessItem {
 			
 				case "substr":
 					return CmmUtil.SubStr((String)arg[0], (int)arg[1], (int)arg[2]);
-				
+
+				case "subbyte":
+					return CmmUtil.SubByte((byte[])arg[0], (int)arg[1], (int)arg[2]);
+					
 				case "trim":
 					return CmmUtil.trim((String) arg[0]);
 				
@@ -773,6 +1083,9 @@ public class BusinessItem {
 				
 				case "gettime":
 					return CmmUtil.gettime();
+				
+				case "hextostr":
+					return CmmUtil.hexToStr((byte[])arg[0], 0, new String((byte[])arg[0]).length());
 					
 				default:
 					throw new Exception();
@@ -783,4 +1096,6 @@ public class BusinessItem {
 			return null;
 		}
 	}
+
+	
 }

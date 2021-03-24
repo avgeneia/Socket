@@ -104,6 +104,19 @@ public class CmmUtil {
 		return arg.substring(isp, iep);
 	}
 	
+	public static byte[] SubByte(byte[] arg, int isp, int iep) {
+		
+		int start = isp;
+		byte[] rtn = new byte[iep - isp];
+		
+		for(int n = 0; n < iep - isp; n++) {
+			rtn[n] = arg[start];
+			start++;
+		}
+		
+		return rtn;
+	}
+	
 	/**
 	 * 앞뒤 공백 제거
 	 * @author seolhc
@@ -412,5 +425,164 @@ public class CmmUtil {
 		String datestr = format.format(Calendar.getInstance().getTime());
 		
 		return datestr;
+	}
+
+	/**
+	 * *NOT ITEM*
+	 * Hex String to Byte Array
+	 * @author seolhc
+	 * @since 2021.03.22
+	 * @param s
+	 * @return
+	 */
+	public static byte[] hexStringToByteArray(String s) {
+	      
+		int len = s.length();
+		byte[] data = new byte[len / 2];
+		for (int i = 0; i < len; i += 2) {
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+									+ Character.digit(s.charAt(i+1), 16));
+       	}
+       	return data;
+	}
+	
+	/**
+	 * *NOT ITEM*
+	 * Byte Array To Hex String 
+	 * @author seolhc
+	 * @since 2021.03.22
+	 * @param bytes
+	 * @param si
+	 * @param len
+	 * @return
+	 */
+	public static String byteArrayToHexString(byte[] bytes, int si, int len){
+		
+		StringBuilder sb = new StringBuilder(); 
+		
+		for(int i = si; i < len; i++) {
+			sb.append(String.format("%02X", bytes[i]&0xff)); 
+		} 
+  
+		return sb.toString(); 
+	} 
+	
+	/**
+	 * *NOT ITEM*
+	 * Hex String To BigEndian 
+	 * @author seolhc
+	 * @since 2021.03.22
+	 * @param a
+	 * @return
+	 */
+	public static String hexToBigEndian(String a) {
+		
+		int n = a.length() / 2;
+		String[] temp = new String[n];
+		
+		if(a.length() == 2) {
+			return a;
+		}
+		
+		int k = a.length();
+		int j = a.length() - 2;
+		for(int i = n; i > 0; i--) {
+			temp[n-1] = a.substring(j, k);
+			j = j - 2;
+			k = k - 2;
+			n--;
+		}
+		
+		String result = "";
+		for(int i = temp.length; i > 0; i--) {
+			result += temp[i-1];
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Hex To Big Int
+	 * @param target
+	 * @param poz
+	 * @param size
+	 * @return
+	 */
+	public static int hexToBigInt(byte[] target, int poz, int size) {
+		
+		String sHexTBI = byteArrayToHexString(target, poz, size);
+		int iHexTBI = Integer.parseInt(hexToBigEndian(sHexTBI), 16);
+		
+		return iHexTBI;
+	}
+	
+	/**
+	 * Hex To Str
+	 * @param target
+	 * @param poz
+	 * @param size
+	 * @return
+	 */
+	public static String hexToStr(byte[] target, int poz, int size) {
+		
+		return byteArrayToHexString(target, poz, size);
+	}
+	
+	/**
+	 * Hex To Big
+	 * @param target
+	 * @param poz
+	 * @param size
+	 * @return
+	 */
+	public static String hexToBig(byte[] target, int poz, int size) {
+		
+		String result = byteArrayToHexString(target, poz, size);
+		
+		return hexToBigEndian(result);
+	}
+	
+	/**
+	 * Hex To Big Char
+	 * @param target
+	 * @param poz
+	 * @param size
+	 * @return
+	 */
+	public static char hexToBigChar(byte[] target, int poz, int size) {
+		
+		String sHexTBC = byteArrayToHexString(target, poz, size);
+		
+		return (char)Integer.parseInt(hexToBigEndian(sHexTBC),16);
+	}
+	
+	/**
+	 * Str To BCD
+	 * @param target
+	 * @param poz
+	 * @param size
+	 * @return
+	 */
+	public static String strToBCD(byte[] target, int poz, int size) {
+		
+		return byteArrayToHexString(target, poz, size);
+	}
+	
+	/**
+	 * Hex To Ascii Str
+	 * @param hexStr
+	 * @return
+	 */
+	public static String hexToAscii(byte[] target, int poz, int size) {
+		
+		String hexStr = byteArrayToHexString(target, poz, size);
+	    StringBuilder output = new StringBuilder("");
+	    
+	    for (int i = 0; i < hexStr.length(); i += 2) {
+	        String str = hexStr.substring(i, i + 2);
+	        output.append((char) Integer.parseInt(str, 16));
+	    }
+	    
+	    return output.toString();
 	}
 }

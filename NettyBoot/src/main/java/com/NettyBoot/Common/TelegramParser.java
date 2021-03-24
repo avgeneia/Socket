@@ -115,9 +115,11 @@ public class TelegramParser {
 							
 							DataSetVO dsVO = new DataSetVO();
 							
-							String InterfaceID = node.getAttributes().item(0).getChildNodes().item(0).getTextContent();
+							String InterfaceID = nnm.getNamedItem("id").getNodeValue();
+							String dstype = nnm.getNamedItem("type")==null?"":nnm.getNamedItem("type").getNodeValue();
 							
 							dsVO.setId(InterfaceID);
+							dsVO.setType(dstype);
 							
 							List<RowVO> listVO = new ArrayList<RowVO>();
 							for(int j = 0; j < node.getChildNodes().getLength(); j++) {
@@ -130,10 +132,14 @@ public class TelegramParser {
 									String id = endNode.getAttributes().getNamedItem("id").getChildNodes().item(0).getNodeValue();
 									int poz = Integer.parseInt(endNode.getAttributes().getNamedItem("poz").getChildNodes().item(0).getNodeValue());
 									int size = Integer.parseInt(endNode.getAttributes().getNamedItem("size").getChildNodes().item(0).getNodeValue());
+									String type = endNode.getAttributes().getNamedItem("type").getChildNodes().item(0).getNodeValue();
+									String expr = endNode.getAttributes().getNamedItem("expr").getChildNodes().item(0).getNodeValue();
 									
 									rVO.setId(id);
 									rVO.setSize(size);
 									rVO.setPoz(poz);
+									rVO.setType(type);
+									rVO.setExpr(expr);
 								}
 								
 								if(rVO.getId() != null) {

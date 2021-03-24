@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE>
+	<JobGroup>
+		<Job Id="MAIN">
+			<Col Index="1"  Item="initialize" Next="2"/>
+			<Col Index="2"  Item="Assign" Target="KEY1" Value="'JOB01'" Next="3"/>
+			<Col Index="3"  Item="RedisRPop" Key="KEY1" Target="Pktstr" Next="4"/>
+			<Col Index="4"  Item="If" Condition="JobResult`==`0" TruePath="5" FalsePath="8"/>
+			<Col Index="5"  Item="Assign" Target="JobID" Value="SubStr(Pktstr,0,6)" Next="6"/>
+			<Col Index="6"  Item="GetIFID" Target="IFID" Value="JobID" Next="7"/>
+			<Col Index="7"  Item="JobChange" Target="IFID" Next="1"/>
+			<Col Index="8"  Item="Sleep" Time="1" Type="ss" Next="1"/>
+		</Job>
+    	<Job Id="SOX017A">
+	      	<Col Index="1"  Item="Query" QueryType="select" SqlID="selecttest" Result="DS" Next="2" Commit="false"/>
+	      	<Col Index="2"  Item="If" Condition="JobResult`==`0" TruePath="3" FalsePath="11"/>
+	      	<Col Index="3"  Item="FileCreate" Alias="OUT1" Path="D:\Log\OUT.txt" Next="4"/>
+	      	<Col Index="4"  Item="If" Condition="JobResult`==`0" TruePath="5" FalsePath="11"/>
+	      	<Col Index="5"  Item="Assign" Target="i" Value="0" Next="6"/>
+	      	<Col Index="6"  Item="If" Condition="i`&lt;`DS.size" TruePath="7" FalsePath="11"/>
+	      	<Col Index="7"  Item="Assign" Target="str" Value="DS[i].A`'@'`DS[i].B`'@'`DS[i].C`'@'`DS[i].D" Next="8"/>
+	      	<Col Index="8"  Item="FileWrite" Alias="OUT1" Value="str" Next="9"/>
+	      	<Col Index="9"  Item="Query" QueryType="update" SqlID="update0003" Data="DS[i]" Next="10" Commit="false"/>
+	      	<Col Index="10" Item="Assign" Target="i" Value="i`+`1" Next="6"/>
+	      	<Col Index="11" Item="FileClose" Alias="OUT1" Next="12"/>
+	      	<Col Index="12" Item="Commit" Next="0"/>
+      	</Job>
+    </JobGroup>
+</RULE>

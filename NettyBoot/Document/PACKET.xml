@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RULE>
+	<CommHeader>
+		<Col id="CommHeader" poz="0" size="30"/>
+	</CommHeader>
+	<Interface_id>
+		<Col id="SOX017A" code="017A" type="REDIS" key="JOB01"/>
+	</Interface_id>
+	<DataSet id="SMS_REQ_MSG">
+		<Col id="Datalen" 		poz="0"		size="2"		type="Int"		expr="HexToBigInt"/>
+		<Col id="ChID" 				poz="2"		size="1"		type="Str"		expr=""/>
+		<Col id="FrameType"		poz="3"		size="1"		type="Str"		expr=""/>
+		<Col id="SendID"		 	poz="4"		size="2"		type="Int"		expr="HexToBigInt"/>
+		<Col id="RecvID" 			poz="6"		size="2"		type="Int"		expr="HexToBigInt"/>
+		<Col id="JobGb"		 		poz="8"		size="4"		type="Str"		expr=""/>
+		<Col id="SendDate" 		poz="12"	size="8"		type="Str"		expr="StrToBCD"/>
+		<Col id="MsgSeq"		 	poz="20"	size="4"		type="Int"		expr="IntToHexBig"/>
+		<Col id="MsgLen"		 	poz="24"	size="2"		type="Int"		expr="IntToHexBig"/>
+		<Col id="Rfu"				 	poz="26"	size="66"		type="Str"		expr=""/>
+	</DataSet>
+	<DataSet id="SMS_RSP_MSG">
+		<Col id="Datalen" 		poz="0" 	size="2"		type="Int"		expr="IntToHexBig"/>
+		<Col id="ChID" 				poz="2" 	size="1"		type="Str"		expr=""/>
+		<Col id="FrameType"		poz="3" 	size="1"		type="Str"		expr=""/>
+		<Col id="SendID"		 	poz="4" 	size="2"		type="Int"		expr="IntToHexBig"/>
+		<Col id="RecvID" 			poz="6" 	size="2"		type="Int"		expr="IntToHexBig"/>
+		<Col id="JobGb"		 		poz="8" 	size="4"		type="Str"		expr=""/>
+		<Col id="SendDate" 		poz="12"	size="8"		type="Str"		expr="StrToBCD"/>
+		<Col id="MsgSeq"		 	poz="20"	size="4"		type="Int"		expr="IntToHexBig"/>
+		<Col id="MsgLen"		 	poz="24"	size="2"		type="Int"		expr="IntToHexBig"/>
+		<Col id="RetCD"			 	poz="26"	size="4"		type="Str"		expr=""/>
+		<Col id="Rfu"				 	poz="30"	size="30"		type="Str"		expr=""/>
+		<Col id="CRC32"			 	poz="60"	size="4"		type="Int"		expr="IntToHexBig"/>
+	</DataSet>
+	<DataSet id="SMS_JOB">
+		<Col id="RC" 					poz="0"		size="1"		type="Str"		expr=""/>
+		<Col id="ChID" 				poz="1"		size="1"		type="Str"		expr=""/>
+		<Col id="ReqType"			poz="2"		size="1"		type="Str"		expr=""/>
+		<Col id="Retry"		 		poz="3"		size="1"		type="Str"		expr=""/>
+	</DataSet>
+	<DataSetGroup>
+	<DataSet id="SMS_HEADER">
+		<Col id="ExtrStaNo" poz="0" size="2" type="Int" expr="HexToBigInt"/>
+		<Col id="EqpNo" poz="2" size="1" type="Int" expr="HexToBigInt"/>
+		<Col id="EqpType" poz="3" size="1" type="Int" expr="HexToBigInt"/>
+		<Col id="CommSndSeq"  poz="4" size="4" type="Int" expr="HexToBigInt"/>
+		<Col id="SndDTime"  poz="8" size="7" type="Int" expr="HexToStr"/>
+		<Col id="CmdCode" poz="15" size="2" type="Hex" expr="HexToBig"/>
+		<Col id="CmdCodeSndSeq" poz="17" size="4" type="Int" expr="HexToBigInt"/>
+		<Col id="CnqeCode"  poz="21" size="1" type="Int" expr="HexToBigInt"/>
+		<Col id="MsgSize" poz="22" size="4" type="Int" expr="HexToBigInt"/>
+		<Col id="RecordCnt" poz="26" size="2" type="Int" expr="HexToBigInt"/>
+		<Col id="RecordSize"  poz="28" size="2" type="Int" expr="HexToBigInt"/>
+		<Col id="FileYN"  poz="30" size="1" type="Int" expr="HexToBigInt"/>
+		<Col id="RetryYN" poz="31" size="1" type="Str" expr="HexToBigChar"/>
+		<Col id="EqpMode" poz="32" size="4" type="Int" expr="HexToBigInt"/>
+		<Col id="EqpStat" poz="36" size="6" type="Int" expr="HexToBigInt"/>
+	</DataSet>
+	<DataSet id="SOX017A">
+		<Col id="IO_TEMPER" poz="64" size="1" type="Int" expr="HexToBigInt"/>
+		<Col id="RF_TEMPER" poz="65" size="1" type="Int" expr="HexToBigInt"/>
+	</DataSet>
+	</DataSetGroup>
+</RULE>

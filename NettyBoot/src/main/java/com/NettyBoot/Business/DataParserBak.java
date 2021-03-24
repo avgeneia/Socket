@@ -8,6 +8,7 @@ import java.util.Map;
 import com.NettyBoot.Common.TelegramParser;
 import com.NettyBoot.VO.DataSetVO;
 import com.NettyBoot.VO.HeaderVO;
+import com.NettyBoot.VO.InterfaceVO;
 import com.NettyBoot.VO.RowVO;
 
 /*
@@ -17,7 +18,7 @@ import com.NettyBoot.VO.RowVO;
  * getDataSet(interface_id) : 하나의 전문에 대한 그룹데이터를 반환하는 함수.
  * 								in_data : 인터페이스ID
  */
-public class DataParser {
+public class DataParserBak {
 	
 	private String msg = null;
 	
@@ -27,7 +28,7 @@ public class DataParser {
 	
 	boolean recursion = false;
 	
-	public DataParser(String msg) {
+	public DataParserBak(String msg) {
 		
 		process(msg);
 	}
@@ -50,20 +51,46 @@ public class DataParser {
 		
 		int hSize = -1; //headerSize 구분
 		int hPoz = -1;
-
+		
+		int dSize = -1; //DataSize 구분
+		int dPoz = -1;
+		
 		for(int i = 0; i < chl.size(); i++) {
 			
-			if(chl.get(i).getId().equals("CommHeader")) {
+			if(chl.get(i).getId().equals("HeaderID")) {
 				
-				hSize = chl.get(i).getSize();
 				hPoz = chl.get(i).getPoz();
+				hSize = chl.get(i).getSize();
 			}
 			
+			if(chl.get(i).getId().equals("DataLen")) {
+				
+				dPoz = chl.get(i).getPoz();
+				dSize = chl.get(i).getSize();
+			}
 		}
 		
-		//공통 헤더, 현재는 사용안함.
-		//String CommHeader = msg.substring(hPoz, hSize);
-		String telBody = msg.substring(hSize);
+		String interfaceID = msg.substring(hPoz, hSize);
+		int telSize =  Integer.parseInt(msg.substring(dPoz, dPoz + dSize));
+		String telBody = msg.substring(dPoz + dSize, dPoz + dSize + telSize);
+		
+		//interface 처리
+		/* interfaceID 매핑 구간
+		 * 
+		 */
+		List<InterfaceVO> ifl = TelegramParser.interfaceList;
+		
+		String realIf = ""; //code to real interface_id
+		for(int i = 0; i < ifl.size(); i++) {
+			
+			if(ifl.get(i).getCode().equals(interfaceID)) {
+				
+				realIf = ifl.get(i).getId();
+				break;
+			}
+		}
+		
+		interfaceList.add(realIf);
 		
 		List<DataSetVO> dsl = TelegramParser.dataSetList;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -82,8 +109,7 @@ public class DataParser {
 			}
 		}
 		
-		System.out.println(map);
-//		dataSet.put(realIf, map);
+		dataSet.put(realIf, map);
 	}
 
 	public String getMsg() {

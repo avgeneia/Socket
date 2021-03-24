@@ -131,7 +131,7 @@ public class Lang {
 	
 	public static int toInt(byte[] hexbyte) {
 		
-		/* hexbyte�� 16������ �� ���� */
+		/* hexbyte에 16진수가 들어가 있음 */
 
 		StringBuffer sb = new StringBuffer(hexbyte.length * 2);
 		String hexaDecimal;

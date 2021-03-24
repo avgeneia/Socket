@@ -24,7 +24,25 @@ public class RedisComm {
 	
 	/** Logger */
 	static Logger logger = LogManager.getLogger(RedisComm.class);
-	 
+	
+	public static RedisComm getInstance() {
+		
+		if(redisComm == null) {
+			
+			try {
+				
+				redisComm = new RedisComm();
+				
+			} catch (Exception e) {
+				
+				// TODO Auto-generated catch block
+				CmmUtil.print("w", e.getMessage());
+			}
+		}
+		
+		return redisComm;
+	}
+	
 	public RedisComm() {
 		 
 		 IniFile ini = IniFile.getInstance();
